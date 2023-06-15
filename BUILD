@@ -33,20 +33,19 @@ cc_library(
     hdrs = ["func.h"],
 )
 
-cc_binary(
-	name = "main",
-	srcs = [
-		"main.cpp",
-	],
-	deps = [
-		":func",
-	]
-)
+
 
 cc_binary(
     name = "hello-world-wasm.js",
     srcs = ["bindings.cpp"],
-    linkopts = DEFAULT_EMSCRIPTEN_LINKOPTS + WASM_LINKOPTS,
+    # linkopts = DEFAULT_EMSCRIPTEN_LINKOPTS + WASM_LINKOPTS,
+    linkopts = [
+		"--std=c++11",
+		"-Wall",
+		"-Wextra",
+		"-s WASM=1",
+		"-s USE_SDL=2",
+	],
     deps = [
         ":func",
     ],
@@ -55,4 +54,77 @@ cc_binary(
 wasm_cc_binary(
     name = "hello-world-wasm",
     cc_target = ":hello-world-wasm.js",
+)
+
+cc_binary(
+    name = "app_main",
+    srcs = ["app.cpp"],
+    linkopts = [
+		"--std=c++11",
+		"-Wall",
+		"-Wextra",
+		"-s WASM=1",
+		# "-s USE_SDL=2",
+	],
+
+)
+
+wasm_cc_binary(
+    name = "app_wasm",
+    cc_target = ":app_main",
+)
+
+cc_binary(
+    name = "imgui_demo",
+    srcs = ["imgui_demo.cpp",
+	],
+    linkopts = [
+		"--std=c++11",
+		"-lGL",
+		"-s USE_WEBGL2=1",
+		"-s USE_GLFW=3",
+		"-s FULL_ES3=1",
+		"-s WASM=1",
+		"-O2",
+		"-sAssertion",
+		"--preload-file data",
+	],
+	additional_linker_inputs = [
+		"data",
+	],
+	deps = [
+		"@imgui",
+	],
+)
+
+wasm_cc_binary(
+    name = "imgui_demo_wasm",
+    cc_target = ":imgui_demo",
+)
+
+cc_binary(
+	name = "stb_test",
+	srcs = [
+		"stb_test.cpp",
+	],
+    linkopts = [
+		"--std=c++11",
+		"-Wall",
+		"-Wextra",
+		"-s WASM=1",
+		"-O2",
+		"-sAssertion",
+		"--preload-file data",
+	],
+	additional_linker_inputs = [
+		"data",
+	],
+	deps = [
+		"@stb//:stb_image",
+	]
+)
+
+wasm_cc_binary(
+    name = "stb_test_wasm",
+    cc_target = ":stb_test",
 )

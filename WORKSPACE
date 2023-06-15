@@ -1,6 +1,8 @@
 workspace(name = "zen")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
 
 http_archive(
     name = "aspect_rules_js",
@@ -25,9 +27,9 @@ http_archive(
     name = "emsdk",
     # TODO: Remove repo_mapping when emsdk updates to rules_nodejs 5
     repo_mapping = {"@nodejs": "@nodejs_host"},
-    sha256 = "a2609fd97580e4e332acbf49b6cc363714982f06cb6970d54c9789df8e91381c",
-    strip_prefix = "emsdk-3.1.23/bazel",
-    urls = ["https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.23.tar.gz"],
+    sha256 = "147a2d72df34227bdb4ffedc587a8cb674a42269c40458f3f69ae37e8966cdc6",
+    strip_prefix = "emsdk-3.1.41/bazel",
+    urls = ["https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.41.tar.gz"],
 )
 
 load("@emsdk//:deps.bzl", emsdk_deps = "deps")
@@ -37,3 +39,19 @@ emsdk_deps()
 load("@emsdk//:emscripten_deps.bzl", emsdk_emscripten_deps = "emscripten_deps")
 
 emsdk_emscripten_deps()
+
+http_archive(
+    name = "imgui",
+    build_file = "imgui.BUILD",
+    sha256 = "96012e5dee6db965f45b04f27df58016815ec43e3214a7973cfe501b4a71395f",
+    strip_prefix = "imgui-1.89.6",
+    urls = ["https://github.com/ocornut/imgui/archive/refs/tags/v1.89.6.zip"],
+)
+
+http_archive(
+    name = "stb",
+    build_file = "stb.BUILD",
+    sha256 = "673732b215f4009f99a16d262c796870de1618dd09f25f40a31b2315b91725fd",
+    strip_prefix = "stb-052dce117ed989848a950308bd99eef55525dfb1",
+    urls = ["https://github.com/nothings/stb/archive/052dce117ed989848a950308bd99eef55525dfb1.zip"],
+)
