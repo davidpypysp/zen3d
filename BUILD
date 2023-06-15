@@ -128,3 +128,28 @@ wasm_cc_binary(
     name = "stb_test_wasm",
     cc_target = ":stb_test",
 )
+
+cc_binary(
+    name = "triangle_demo",
+    srcs = [
+		"triangle_demo.cpp",
+	],
+    linkopts = [
+		"--std=c++11",
+		"-lGL",
+		"-s USE_WEBGL2=1",
+		"-s USE_GLFW=3",
+		"-s FULL_ES3=1",
+		"-s WASM=1",
+		"-O2",
+		"-sAssertion",
+	],
+	deps = [
+		"@glm//:glm",
+	],
+)
+
+wasm_cc_binary(
+    name = "triangle_demo_wasm",
+    cc_target = ":triangle_demo",
+)

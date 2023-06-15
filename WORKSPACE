@@ -55,3 +55,11 @@ http_archive(
     strip_prefix = "stb-052dce117ed989848a950308bd99eef55525dfb1",
     urls = ["https://github.com/nothings/stb/archive/052dce117ed989848a950308bd99eef55525dfb1.zip"],
 )
+
+http_archive(
+    name = "glm",
+    build_file = "glm.BUILD",
+    sha256 = "aa5339670300e77c77e8c31b086294f0bd54ea4dd275865a563573c505011354",
+    strip_prefix = "glm-658d8960d081e0c9c312d49758c7ef919371b428",
+    urls = ["https://github.com/g-truc/glm/archive/658d8960d081e0c9c312d49758c7ef919371b428.zip"],
+)
