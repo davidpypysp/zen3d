@@ -12,6 +12,11 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtx/string_cast.hpp"
 
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "tiny_gltf.h"
+
 #include <iostream>
 
 GLFWwindow *g_window;
@@ -120,6 +125,10 @@ int init_gl() {
 void init_world() {
   glm::vec3 pos(1, 2, 3);
   std::cout << "pos: " << glm::to_string(pos) << std::endl;
+
+  tinygltf::Model model;
+  tinygltf::TinyGLTF loader;
+  std::cout << model.meshes.size() << std::endl;
 
   // build and compile our shader program
   // ------------------------------------
