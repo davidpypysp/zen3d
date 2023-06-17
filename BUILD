@@ -141,11 +141,18 @@ cc_binary(
 		"-s USE_GLFW=3",
 		"-s FULL_ES3=1",
 		"-s WASM=1",
+		"-Wextra",
+		"-Wno-error=unused-variable",
 		"-O2",
 		"-sAssertion",
 	],
+  	copts = [
+		"-Wno-error=unused-variable",
+		"-Wno-error=tautological-constant-out-of-range-compare",
+  	],
 	deps = [
 		"@glm//:glm",
+		"@tinygltf//:tinygltf",
 	],
 )
 

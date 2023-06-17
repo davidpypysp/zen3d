@@ -63,3 +63,11 @@ http_archive(
     strip_prefix = "glm-658d8960d081e0c9c312d49758c7ef919371b428",
     urls = ["https://github.com/g-truc/glm/archive/658d8960d081e0c9c312d49758c7ef919371b428.zip"],
 )
+
+http_archive(
+    name = "tinygltf",
+    build_file = "tinygltf.BUILD",
+    sha256 = "f3eef2b846ceb8b88951385f8a238c33fb340e2d91d323bac260b039c443d2c2",
+    strip_prefix = "tinygltf-2.8.12",
+    urls = ["https://github.com/syoyo/tinygltf/archive/refs/tags/v2.8.12.zip"],
+)
