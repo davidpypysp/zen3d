@@ -160,3 +160,11 @@ wasm_cc_binary(
     name = "triangle_demo_wasm",
     cc_target = ":triangle_demo",
 )
+
+filegroup(
+    name = "data",
+    srcs = glob([
+        "data/**/*",
+    ]),
+)
+
