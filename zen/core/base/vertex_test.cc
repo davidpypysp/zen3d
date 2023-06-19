@@ -9,7 +9,7 @@ void test_vertex() {
   core::Vertex vertex;
   Log(Info) << "zen vertex"
             << " " << 13;
-  Log(aInfo) << "zen vertex 2";
+  Log(Info) << "zen vertex 2";
 }
 
 } // namespace zen
