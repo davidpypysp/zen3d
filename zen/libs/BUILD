@@ -54,7 +54,7 @@ cc_library(
 cc_library(
 	name = "gtest_main",
 	deps = [
-		"@com_github_google_glog//:glog"
+		"@com_google_googletest//:gtest_main",
 	],
 )
 

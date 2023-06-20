@@ -3,7 +3,6 @@
 #include "zen/core/math/math.h"
 
 namespace zen {
-namespace core {
 
 struct Vertex {
   math::vec3 position;
@@ -13,5 +12,4 @@ struct Vertex {
   math::vec3 bitangent;
 };
 
-} // namespace core
 } //  namespace zen

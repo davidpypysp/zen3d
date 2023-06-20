@@ -14,7 +14,6 @@ cc_test(
 	# copts = ["-std=c++14"],
 	deps = [
 		":math",
-		"@com_google_googletest//:gtest_main",
-
+		"//zen/libs:gtest_main",
 	]
 )

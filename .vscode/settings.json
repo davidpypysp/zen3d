@@ -79,6 +79,12 @@
 		"memory_resource": "cpp",
 		"numeric": "cpp",
 		"type_traits": "cpp",
-		"utility": "cpp"
+		"utility": "cpp",
+		"any": "cpp",
+		"forward_list": "cpp",
+		"hash_map": "cpp",
+		"hash_set": "cpp",
+		"slist": "cpp",
+		"*.inc": "cpp"
 	}
 }
