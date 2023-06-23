@@ -53,3 +53,45 @@ zen_wasm_cc_binary(
 		":gl_render_api",
 	]
 )
+
+cc_library(
+	name = "shader_manager",
+	srcs = ["shader_manager.cc"],
+	hdrs = ["shader_manager.h"],
+	deps = [
+		"//zen/core/renderer:shader_program",
+		"//zen/core/base:handle",
+	]
+)
+
+cc_test(
+	name = "shader_manager_test",
+	srcs = ["shader_manager_test.cc"],
+	deps = [
+		":shader_manager",
+		"//zen/libs:gtest_main",
+	]
+)
+
+
+cc_library(
+	name = "rendering_pipeline",
+	srcs = ["rendering_pipeline.cc"],
+	hdrs = ["rendering_pipeline.h"],
+	deps = [
+		":render_api",
+		"//zen/base:geometry",
+		"//zen/base:material",
+		"//zen/base:camera",
+	]
+)
+
+cc_test(
+	name = "rendering_pipeline_test",
+	srcs = ["rendering_pipeline_test.cc"],
+	deps = [
+		":rendering_pipeline",
+		"//zen/libs:gtest_main",
+	]
+)
+
