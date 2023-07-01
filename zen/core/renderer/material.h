@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "zen/core/renderer/camera.h"
 #include "zen/core/renderer/render_api.h"
 #include "zen/core/renderer/shader_program.h"
 
@@ -10,7 +11,10 @@ namespace zen {
 struct Material {
   std::shared_ptr<ShaderProgram> shader_program;
 
-  virtual void render(std::shared_ptr<RenderAPI> render_api) = 0;
+  virtual void PrepareRender(std::shared_ptr<RenderAPI> render_api,
+                             std::shared_ptr<Camera> camera,
+                             const math::vec3 &camera_position,
+                             const math::vec3 &position) {}
 
   virtual ~Material() {}
 };

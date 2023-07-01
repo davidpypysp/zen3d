@@ -15,14 +15,14 @@ public:
 
   void Setup();
 
-  void InitGeometry(Geometry &geometry);
+  void InitGeometry(std::shared_ptr<Geometry> geometry);
 
-  void InitShader(Material &material);
+  void InitMaterial(std::shared_ptr<Material> material);
 
-  void SetTranslation(Material &material, const math::mat4 &model);
-
-  void PrepareDraw(Material &material, Camera &camera,
-                   const math::vec3 &camera_translation);
+  void PrepareDraw(std::shared_ptr<Material> material,
+                   std::shared_ptr<Camera> camera,
+                   const math::vec3 &camera_position,
+                   const math::vec3 &position);
 
   void DrawMesh(Geometry &geometry, Material &material);
 

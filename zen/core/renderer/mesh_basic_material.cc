@@ -3,11 +3,15 @@
 namespace kuro {
 namespace core {
 
-std::shared_ptr<ShaderHandle> MeshBasicMaterial::shader_handle =
-    std::make_shared<ShaderHandle>("mesh_basic_shader", "mesh.vert",
-                                   "mesh_basic.frag");
+MeshBasicMaterial::MeshBasicMaterial() {
+  shader_program = std::make_shared<ShaderProgram>(
+      "mesh_basic_shader", "data/mesh.vert", "data/mesh_basic.frag");
+};
 
-void render(std::shared_ptr<RenderAPI> render_api) {
+void PrepareRender(std::shared_ptr<RenderAPI> render_api,
+                   std::shared_ptr<Camera> camera,
+                   const math::vec3 &camera_position,
+                   const math::vec3 &position) {
   // use material
   unsigned int texture_num = 0;
   if (mesh_basic_material->diffuse_map) {

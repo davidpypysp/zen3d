@@ -21,20 +21,14 @@ public:
   }
 
   void InitFunc() {
-    std::cout << "init here yay111" << std::endl;
-    pipeline_.InitGeometry(*geometry_);
-    pipeline_.InitShader(*material_);
-    std::cout << "init func debug 1" << std::endl;
+    pipeline_.InitGeometry(geometry_);
+    pipeline_.InitMaterial(material_);
   }
 
   void RenderFunc() {
-    math::vec3 camera_position(3, 0, 0);
-    std::cout << "before prepare draw" << std::endl;
-    math::mat4 model(1.0);
-    model = math::translate(model, math::vec3(0, 0, 0));
-    std::cout << "model:" << math::to_string(model) << std::endl;
-    pipeline_.PrepareDraw(*material_, *camera_, camera_position);
-    pipeline_.SetTranslation(*material_, model);
+    math::vec3 camera_position(0, 0, 0);
+    math::vec3 object_position(0, 0, 0);
+    pipeline_.PrepareDraw(material_, camera_, camera_position, object_position);
     pipeline_.DrawMesh(*geometry_, *material_);
   }
 

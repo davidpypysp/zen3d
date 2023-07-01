@@ -14,42 +14,27 @@ RenderingPipeline::RenderingPipeline() {
 
 void RenderingPipeline::Setup() {}
 
-void RenderingPipeline::InitGeometry(Geometry &geometry) {
-  geometry.Setup(render_api_);
+void RenderingPipeline::InitGeometry(std::shared_ptr<Geometry> geometry) {
+  geometry->Setup(render_api_);
 }
 
-void RenderingPipeline::InitShader(Material &material) {
-  auto shader_program = material.shader_program;
-
-  material.shader_program = render_api_->CreateShaderProgram(
+void RenderingPipeline::InitMaterial(std::shared_ptr<Material> material) {
+  auto shader_program = material->shader_program;
+  material->shader_program = render_api_->CreateShaderProgram(
       shader_program->vertex_shader_path.c_str(),
       shader_program->fragment_shader_path.c_str(),
       shader_program->geometry_shader_path.c_str());
 }
 
-void RenderingPipeline::SetTranslation(Material &material,
-                                       const math::mat4 &model) {
-  render_api_->SetShaderMat4Param(material.shader_program, "model", model);
-}
-
-void RenderingPipeline::PrepareDraw(Material &material, Camera &camera,
-                                    const math::vec3 &camera_translation) {
-  std::cout << "prepare draw" << std::endl;
-  auto shader_program = material.shader_program;
-  render_api_->EnableShaderProgram(shader_program);
-
-  // // TODO: turn ratio to window height/width
-  // constexpr float kRatio = 300.0 / 150.0;
-  // const auto &perspective_matrix = camera.GetPerspectiveMatrix(kRatio);
-  // render_api_->SetShaderMat4Param(shader_program, "projection",
-  //                                 perspective_matrix);
-  // const auto &view_matrix = camera.GetViewMatrix(camera_translation);
-  // std::cout << "view_matrix: " << math::to_string(view_matrix) << std::endl;
-  // render_api_->SetShaderMat4Param(shader_program, "view", view_matrix);
+void RenderingPipeline::PrepareDraw(std::shared_ptr<Material> material,
+                                    std::shared_ptr<Camera> camera,
+                                    const math::vec3 &camera_position,
+                                    const math::vec3 &position) {
+  render_api_->EnableShaderProgram(material->shader_program);
+  material->PrepareRender(render_api_, camera, camera_position, position);
 }
 
 void RenderingPipeline::DrawMesh(Geometry &geometry, Material &material) {
-  material.render(render_api_);
   render_api_->DrawMeshInstance(geometry.handle);
 }
 

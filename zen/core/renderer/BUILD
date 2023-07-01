@@ -101,6 +101,7 @@ cc_library(
 	hdrs = ["material.h"],
 	deps = [
 		":shader_program",
+		":camera",
 		":render_api",
 	]
 )
@@ -214,7 +215,6 @@ cc_library(
 		":geometry",
 		":gl_render_api",
 		":material",
-		":camera",
 	]
 )
 

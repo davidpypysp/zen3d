@@ -48,11 +48,14 @@ public:
   std::shared_ptr<Handle>
   CreateGeometryInstance(const std::vector<Vertex> &vertices,
                          const std::vector<unsigned int> &indices);
+
   void DrawMeshInstance(std::shared_ptr<Handle> handle);
+
   std::shared_ptr<Handle> CreateTextureInstance(void *data,
                                                 const unsigned int width,
                                                 const unsigned int height,
                                                 const TextureFormat format);
+
   void EnableTextureUnit(const unsigned int unit = 0,
                          std::shared_ptr<Handle> handle = nullptr);
 

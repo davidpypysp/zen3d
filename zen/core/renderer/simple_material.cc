@@ -7,6 +7,4 @@ SimpleMaterial::SimpleMaterial() {
       "simple_material", "data/simple.vert", "data/mesh_flat.frag");
 }
 
-void SimpleMaterial::render(std::shared_ptr<RenderAPI> render_api) {}
-
 } //  namespace zen

@@ -62,7 +62,6 @@ public:
       glfwSetWindowSize(params_.window, params_.window_width,
                         params_.window_height);
     }
-    std::cout << "width = " << width << " height = " << height << std::endl;
 
     // ------
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

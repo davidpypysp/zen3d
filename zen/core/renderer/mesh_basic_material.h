@@ -13,7 +13,12 @@ struct MeshBasicMaterial : public Material {
   std::shared_ptr<Texture> normal_map;
   std::shared_ptr<Texture> height_map;
 
-  void render(std::shared_ptr<RenderAPI> render_api) override;
+  MeshBasicMaterial();
+
+  void PrepareRender(std::shared_ptr<RenderAPI> render_api,
+                     std::shared_ptr<Camera> camera,
+                     const math::vec3 &camera_position,
+                     const math::vec3 &position) override;
 };
 
 } // namespace core

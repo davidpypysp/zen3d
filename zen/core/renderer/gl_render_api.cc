@@ -55,7 +55,6 @@ GLRenderAPI::CreateShaderProgram(const char *vertex_path,
   std::ifstream fshader_file;
   std::ifstream gshader_file;
 
-  std::cout << "Debug: create shader program" << std::endl;
   std::cout << vertex_path << std::endl;
   std::cout << fragment_path << std::endl;
 
@@ -65,12 +64,9 @@ GLRenderAPI::CreateShaderProgram(const char *vertex_path,
 
   // TODO: exception special handling for wasm
   //   try {
-  std::cout << "Debug2 start" << std::endl;
   vshader_file.open(vertex_path);
-  std::cout << "Debug2 mid" << std::endl;
   fshader_file.open(fragment_path);
   std::stringstream vshader_stream, fshader_stream;
-  std::cout << "Debug2" << std::endl;
 
   vshader_stream << vshader_file.rdbuf();
   fshader_stream << fshader_file.rdbuf();
@@ -122,14 +118,10 @@ GLRenderAPI::CreateShaderProgram(const char *vertex_path,
   shader_program->id = glCreateProgram();
   glAttachShader(shader_program->id, vertex);
   glAttachShader(shader_program->id, fragment);
-  std::cout << "debug attach: " << shader_program->id << std::endl;
   if (geometry_path != nullptr && strlen(geometry_path) != 0) {
-    std::cout << "geopath: " << geometry_path << std::endl;
     glAttachShader(shader_program->id, geometry);
   }
-  std::cout << "debug attach2: " << shader_program->id << std::endl;
   glLinkProgram(shader_program->id);
-  std::cout << "debug attach end" << std::endl;
   CheckCompileErrors(shader_program->id, "PROGRAM");
   // delete the shaders as they're linked into our program now and no longer
   // necessery
@@ -143,7 +135,6 @@ GLRenderAPI::CreateShaderProgram(const char *vertex_path,
 
 void GLRenderAPI::EnableShaderProgram(std::shared_ptr<ShaderProgram> program) {
   auto glsl_program = std::static_pointer_cast<GLSLShaderProgram>(program);
-  std::cout << "shader program id: " << glsl_program->id << std::endl;
   glUseProgram(glsl_program->id);
 }
 
@@ -230,7 +221,6 @@ GLRenderAPI::CreateGeometryInstance(const std::vector<Vertex> &vertices,
 void GLRenderAPI::DrawMeshInstance(std::shared_ptr<Handle> handle) {
   auto gl_vertex_handle = std::static_pointer_cast<GLGeometryHandle>(handle);
   glBindVertexArray(gl_vertex_handle->vao);
-  std::cout << "draw vao: " << gl_vertex_handle->vao << std::endl;
   glDrawElements(GL_TRIANGLES, gl_vertex_handle->size, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
