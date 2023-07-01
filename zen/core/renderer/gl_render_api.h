@@ -7,9 +7,9 @@
 #include <GLES3/gl3.h>
 #include <GLFW/glfw3.h>
 
-#include "zen/core/base/vertex.h"
 #include "zen/core/renderer/render_api.h"
 #include "zen/core/renderer/shader_program.h"
+#include "zen/core/renderer/vertex.h"
 
 namespace zen {
 
@@ -41,6 +41,10 @@ public:
                          const std::string &name, const int value);
   void SetShaderMat4Param(std::shared_ptr<ShaderProgram> program,
                           const std::string &name, const math::mat4 &mat);
+
+  std::shared_ptr<Handle>
+  CreateGeometryInstanceWithPositions(const std::vector<math::vec3> &positions,
+                                      const std::vector<unsigned int> &indices);
   std::shared_ptr<Handle>
   CreateGeometryInstance(const std::vector<Vertex> &vertices,
                          const std::vector<unsigned int> &indices);

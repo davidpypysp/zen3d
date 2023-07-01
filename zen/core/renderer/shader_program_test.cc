@@ -2,6 +2,10 @@
 
 #include "zen/core/renderer/shader_program.h"
 
-TEST(ShaderProgram, BasicAssertions) {
-  zen::ShaderProgram shader_program("s1", "s1.vert", "s1.frag", "s1.geo");
+namespace zen {
+
+TEST(ShaderProgramTest, BasicAssertions) {
+  ShaderProgram shader_program("mesh.vert", "mesh_flat.frag");
 }
+
+} //  namespace zen

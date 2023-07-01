@@ -1,102 +1,56 @@
-#include "src/core/renderer/rendering_pipeline.h"
+#include "zen/core/renderer/rendering_pipeline.h"
 
+// TODO: refactor initialization of this
+#include "zen/core/renderer/gl_render_api.h"
+
+#include <iostream>
 #include <memory>
-
-// #include "src/core/base/mesh_basic_material.h"
-// #include "src/core/base/mesh_flat_material.h"
 
 namespace zen {
 
-RenderingPipeline::RenderingPipeline() {}
-
-void RenderingPipeline::Setup() {
-  // auto mesh_flat_shader =
-  //     render_api_->CreateShaderProgram(MeshFlatMaterial::shader_handle);
-  // shader_manager_->SetShaderProgram(MeshFlatMaterial::shader_handle,
-  //                                   mesh_flat_shader);
-  // auto mesh_basic_shader =
-  //     render_api_->CreateShaderProgram(MeshBasicMaterial::shader_handle);
-  // shader_manager_->SetShaderProgram(MeshBasicMaterial::shader_handle,
-  //                                   mesh_basic_shader);
+RenderingPipeline::RenderingPipeline() {
+  render_api_ = std::make_shared<GLRenderAPI>();
 }
 
-void RenderingPipeline::PrepareDraw(const Camera &camera) {
-  auto shader_program =
-      shader_manager_->GetShaderProgram(MeshBasicMaterial::shader_handle);
+void RenderingPipeline::Setup() {}
+
+void RenderingPipeline::InitGeometry(Geometry &geometry) {
+  geometry.Setup(render_api_);
+}
+
+void RenderingPipeline::InitShader(Material &material) {
+  auto shader_program = material.shader_program;
+
+  material.shader_program = render_api_->CreateShaderProgram(
+      shader_program->vertex_shader_path.c_str(),
+      shader_program->fragment_shader_path.c_str(),
+      shader_program->geometry_shader_path.c_str());
+}
+
+void RenderingPipeline::SetTranslation(Material &material,
+                                       const math::mat4 &model) {
+  render_api_->SetShaderMat4Param(material.shader_program, "model", model);
+}
+
+void RenderingPipeline::PrepareDraw(Material &material, Camera &camera,
+                                    const math::vec3 &camera_translation) {
+  std::cout << "prepare draw" << std::endl;
+  auto shader_program = material.shader_program;
   render_api_->EnableShaderProgram(shader_program);
 
-  // TODO: turn ratio to window height/width
-  constexpr float kRatio = 3600.0 / 1800.0;
-
-  render_api_->SetShaderMat4Param(shader_program, "projection",
-                                  camera.GetPerspectiveMatrix(kRatio));
-  render_api_->SetShaderMat4Param(
-      shader_program, "view", camera_comp->GetViewMatrix(camera.translation()));
+  // // TODO: turn ratio to window height/width
+  // constexpr float kRatio = 300.0 / 150.0;
+  // const auto &perspective_matrix = camera.GetPerspectiveMatrix(kRatio);
+  // render_api_->SetShaderMat4Param(shader_program, "projection",
+  //                                 perspective_matrix);
+  // const auto &view_matrix = camera.GetViewMatrix(camera_translation);
+  // std::cout << "view_matrix: " << math::to_string(view_matrix) << std::endl;
+  // render_api_->SetShaderMat4Param(shader_program, "view", view_matrix);
 }
 
-void RenderingPipeline::DrawMesh(const Geometry &geometry,
-                                 const Material &material) {
-  auto shader_program =
-      shader_manager_->GetShaderProgram(material->GetShaderHandle());
-
-  // TODO: refactor material selection pipeline
-  if (auto mesh_basic_material =
-          std::dynamic_pointer_cast<MeshBasicMaterial>(material)) {
-    // use material
-    unsigned int texture_num = 0;
-    if (mesh_basic_material->diffuse_map) {
-      render_api_->SetShaderIntParam(shader_program, "texture_diffuse",
-                                     texture_num);
-      render_api_->EnableTextureUnit(texture_num++,
-                                     mesh_basic_material->diffuse_map->handle);
-    }
-    if (mesh_basic_material->specular_map) {
-      render_api_->SetShaderIntParam(shader_program, "texture_specular",
-                                     texture_num);
-      render_api_->EnableTextureUnit(texture_num++,
-                                     mesh_basic_material->specular_map->handle);
-    }
-    if (mesh_basic_material->normal_map) {
-      render_api_->SetShaderIntParam(shader_program, "texture_normal",
-                                     texture_num);
-      render_api_->EnableTextureUnit(texture_num++,
-                                     mesh_basic_material->normal_map->handle);
-    }
-    if (mesh_basic_material->height_map) {
-      render_api_->SetShaderIntParam(shader_program, "texture_height",
-                                     texture_num);
-      render_api_->EnableTextureUnit(texture_num++,
-                                     mesh_basic_material->height_map->handle);
-    }
-  }
-
+void RenderingPipeline::DrawMesh(Geometry &geometry, Material &material) {
+  material.render(render_api_);
   render_api_->DrawMeshInstance(geometry.handle);
-}
-
-void RenderingPipeline::DrawSceneNode(std::shared_ptr<SceneNode> scene_node) {
-  scene_node->UpdateTransforms();
-  auto shader_program =
-      shader_manager_->GetShaderProgram(MeshBasicMaterial::shader_handle);
-  render_api_->SetShaderMat4Param(shader_program, "model",
-                                  scene_node->WorldTransform());
-
-  for (auto component : scene_node->GetComponents()) {
-    if (auto mesh_comp = std::dynamic_pointer_cast<MeshComp>(component)) {
-      // visual comp pass data to pipeline
-      DrawMesh(mesh_comp->mesh_data());
-    }
-  }
-
-  // recursively pass child nodes
-  for (auto child_node : scene_node->child_nodes()) {
-    DrawSceneNode(child_node);
-  }
-}
-
-void RenderingPipeline::DrawFrame(std::shared_ptr<SceneNode> root_node,
-                                  std::shared_ptr<SceneNode> camera_node) {
-  PrepareDraw(camera_node);
-  DrawSceneNode(root_node);
 }
 
 } //  namespace zen

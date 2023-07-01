@@ -1,12 +1,12 @@
 #include <iostream>
 
 #include "zen/core/base/logging.h"
-#include "zen/core/base/vertex.h"
+#include "zen/core/renderer/vertex.h"
 
 namespace zen {
 
 void test_vertex() {
-  core::Vertex vertex;
+  Vertex vertex;
   Log(Info) << "zen vertex"
             << " " << 13;
   Log(Info) << "zen vertex 2";

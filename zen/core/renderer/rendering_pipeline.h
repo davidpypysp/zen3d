@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "src/core/renderer/render_api.h"
-#include "src/core/renderer/shader_manager.h"
-#include "zen/core/base/geometry.h"
-#include "zen/core/base/material.h"
+#include "zen/core/renderer/camera.h"
+#include "zen/core/renderer/geometry.h"
+#include "zen/core/renderer/material.h"
+#include "zen/core/renderer/render_api.h"
 
 namespace zen {
 
@@ -15,18 +15,19 @@ public:
 
   void Setup();
 
-  // // Render one frame by gpu (given all mesh, light...)
-  // void DrawFrame(std::shared_ptr<SceneNode> root_node,
-  //                std::shared_ptr<SceneNode> camera_node);
+  void InitGeometry(Geometry &geometry);
 
-  // dependencies
-  std::shared_ptr<RenderAPI> render_api_;
-  std::shared_ptr<ShaderManager> shader_manager_;
+  void InitShader(Material &material);
+
+  void SetTranslation(Material &material, const math::mat4 &model);
+
+  void PrepareDraw(Material &material, Camera &camera,
+                   const math::vec3 &camera_translation);
+
+  void DrawMesh(Geometry &geometry, Material &material);
 
 protected:
-  void PrepareDraw(const Camera &camera);
-
-  void DrawMesh(const Geometry &geometry, const Material &material);
+  std::shared_ptr<RenderAPI> render_api_;
 };
 
 } //  namespace zen

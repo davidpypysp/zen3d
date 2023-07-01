@@ -3,15 +3,17 @@
 #include <memory>
 #include <vector>
 
-#include "zen/core/base/geometry.h"
-#include "zen/core/base/texture.h"
 #include "zen/core/renderer/shader_program.h"
+#include "zen/core/renderer/texture.h"
+#include "zen/core/renderer/vertex.h"
 
 namespace zen {
 
 class RenderAPI {
 public:
   RenderAPI(){};
+
+  virtual ~RenderAPI() = default;
 
   virtual void Init() = 0;
 
@@ -27,6 +29,10 @@ public:
   virtual void SetShaderMat4Param(std::shared_ptr<ShaderProgram> program,
                                   const std::string &name,
                                   const math::mat4 &mat) = 0;
+
+  virtual std::shared_ptr<Handle> CreateGeometryInstanceWithPositions(
+      const std::vector<math::vec3> &positions,
+      const std::vector<unsigned int> &indices) = 0;
 
   virtual std::shared_ptr<Handle>
   CreateGeometryInstance(const std::vector<Vertex> &vertices,

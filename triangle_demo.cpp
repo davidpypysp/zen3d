@@ -237,8 +237,12 @@ extern "C" int main(int argc, char **argv) {
 
   std::cout << "something!!!" << std::endl;
 
+  auto a = loop;
+  auto b = []() {};
+  auto c = &b;
+
 #ifdef __EMSCRIPTEN__
-  emscripten_set_main_loop(loop, 0, 1);
+  emscripten_set_main_loop(b, 0, 1);
 #endif
 
   quit();

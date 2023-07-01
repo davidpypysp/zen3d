@@ -1,11 +1,15 @@
 #pragma once
 
+#include <memory>
 #include <string>
+
+#include "zen/core/math/math.h"
 
 namespace zen {
 
 struct ShaderProgram {
   ShaderProgram() {}
+
   ShaderProgram(const std::string &name, const std::string &vertex_shader_path,
                 const std::string &fragment_shader_path,
                 const std::string &geometry_shader_path = "")
@@ -17,6 +21,8 @@ struct ShaderProgram {
   std::string vertex_shader_path;
   std::string fragment_shader_path;
   std::string geometry_shader_path;
+
+  unsigned int id;
 };
 
 } //  namespace zen

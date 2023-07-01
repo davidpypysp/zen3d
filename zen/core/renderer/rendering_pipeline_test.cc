@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "zen/renderer/rendering_pipeline.h"
+#include "zen/core/renderer/rendering_pipeline.h"
 
 namespace zen {
 

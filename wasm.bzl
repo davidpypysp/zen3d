@@ -11,10 +11,9 @@ def zen_wasm_cc_binary(name, linkopts = [], **kwargs):
             "-s FULL_ES3=1",
             "-s WASM=1",
             "-O2",
-            "-sAssertion",
+            "-sASSERTIONS",
             # "-fwasm-exceptions",
             # "-fexceptions",
-            "-o test.html"
         ] + linkopts,
         **kwargs,
     )

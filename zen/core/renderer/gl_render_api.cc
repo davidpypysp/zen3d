@@ -55,15 +55,22 @@ GLRenderAPI::CreateShaderProgram(const char *vertex_path,
   std::ifstream fshader_file;
   std::ifstream gshader_file;
 
+  std::cout << "Debug: create shader program" << std::endl;
+  std::cout << vertex_path << std::endl;
+  std::cout << fragment_path << std::endl;
+
   vshader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   fshader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   gshader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
   // TODO: exception special handling for wasm
   //   try {
+  std::cout << "Debug2 start" << std::endl;
   vshader_file.open(vertex_path);
+  std::cout << "Debug2 mid" << std::endl;
   fshader_file.open(fragment_path);
   std::stringstream vshader_stream, fshader_stream;
+  std::cout << "Debug2" << std::endl;
 
   vshader_stream << vshader_file.rdbuf();
   fshader_stream << fshader_file.rdbuf();
@@ -115,9 +122,14 @@ GLRenderAPI::CreateShaderProgram(const char *vertex_path,
   shader_program->id = glCreateProgram();
   glAttachShader(shader_program->id, vertex);
   glAttachShader(shader_program->id, fragment);
-  if (geometry_path != nullptr)
+  std::cout << "debug attach: " << shader_program->id << std::endl;
+  if (geometry_path != nullptr && strlen(geometry_path) != 0) {
+    std::cout << "geopath: " << geometry_path << std::endl;
     glAttachShader(shader_program->id, geometry);
+  }
+  std::cout << "debug attach2: " << shader_program->id << std::endl;
   glLinkProgram(shader_program->id);
+  std::cout << "debug attach end" << std::endl;
   CheckCompileErrors(shader_program->id, "PROGRAM");
   // delete the shaders as they're linked into our program now and no longer
   // necessery
@@ -131,6 +143,7 @@ GLRenderAPI::CreateShaderProgram(const char *vertex_path,
 
 void GLRenderAPI::EnableShaderProgram(std::shared_ptr<ShaderProgram> program) {
   auto glsl_program = std::static_pointer_cast<GLSLShaderProgram>(program);
+  std::cout << "shader program id: " << glsl_program->id << std::endl;
   glUseProgram(glsl_program->id);
 }
 
@@ -143,6 +156,33 @@ void GLRenderAPI::SetShaderMat4Param(std::shared_ptr<ShaderProgram> program,
                                      const std::string &name,
                                      const math::mat4 &mat) {
   glUniformMatrix4fv(GetShaderParam(program, name), 1, GL_FALSE, &mat[0][0]);
+}
+
+std::shared_ptr<Handle> GLRenderAPI::CreateGeometryInstanceWithPositions(
+    const std::vector<math::vec3> &positions,
+    const std::vector<unsigned int> &indices) {
+  auto handle = std::make_shared<GLGeometryHandle>();
+  handle->size = indices.size();
+
+  glGenVertexArrays(1, &handle->vao);
+  glGenBuffers(1, &handle->vbo);
+  glGenBuffers(1, &handle->ebo);
+
+  glBindVertexArray(handle->vao);
+  glBindBuffer(GL_ARRAY_BUFFER, handle->vbo);
+  glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(math::vec3),
+               &positions[0], GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle->ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+               &indices[0], GL_STATIC_DRAW);
+
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(math::vec3),
+                        (void *)0);
+
+  glBindVertexArray(0);
+  return std::static_pointer_cast<Handle>(handle);
 }
 
 std::shared_ptr<Handle>
@@ -190,6 +230,7 @@ GLRenderAPI::CreateGeometryInstance(const std::vector<Vertex> &vertices,
 void GLRenderAPI::DrawMeshInstance(std::shared_ptr<Handle> handle) {
   auto gl_vertex_handle = std::static_pointer_cast<GLGeometryHandle>(handle);
   glBindVertexArray(gl_vertex_handle->vao);
+  std::cout << "draw vao: " << gl_vertex_handle->vao << std::endl;
   glDrawElements(GL_TRIANGLES, gl_vertex_handle->size, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }

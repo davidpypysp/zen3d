@@ -1,4 +1,4 @@
-#include "zen/core/base/camera.h"
+#include "zen/core/renderer/camera.h"
 
 namespace zen {
 
