@@ -22,7 +22,7 @@ public:
   void PrepareDraw(std::shared_ptr<Material> material,
                    std::shared_ptr<Camera> camera,
                    const math::vec3 &camera_position,
-                   const math::vec3 &position);
+                   const math::mat4 &world_transform);
 
   void DrawMesh(Geometry &geometry, Material &material);
 

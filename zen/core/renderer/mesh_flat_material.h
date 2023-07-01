@@ -10,7 +10,7 @@ struct MeshFlatMaterial : public Material {
   void PrepareRender(std::shared_ptr<RenderAPI> render_api,
                      std::shared_ptr<Camera> camera,
                      const math::vec3 &camera_position,
-                     const math::vec3 &position) override;
+                     const math::mat4 &world_transform) override;
 };
 
 } // namespace zen

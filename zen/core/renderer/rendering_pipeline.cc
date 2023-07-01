@@ -29,9 +29,10 @@ void RenderingPipeline::InitMaterial(std::shared_ptr<Material> material) {
 void RenderingPipeline::PrepareDraw(std::shared_ptr<Material> material,
                                     std::shared_ptr<Camera> camera,
                                     const math::vec3 &camera_position,
-                                    const math::vec3 &position) {
+                                    const math::mat4 &world_transform) {
   render_api_->EnableShaderProgram(material->shader_program);
-  material->PrepareRender(render_api_, camera, camera_position, position);
+  material->PrepareRender(render_api_, camera, camera_position,
+                          world_transform);
 }
 
 void RenderingPipeline::DrawMesh(Geometry &geometry, Material &material) {

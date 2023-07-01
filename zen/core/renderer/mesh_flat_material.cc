@@ -1,5 +1,7 @@
 #include "zen/core/renderer/mesh_flat_material.h"
 
+#include <iostream>
+
 namespace zen {
 
 MeshFlatMaterial::MeshFlatMaterial() {
@@ -10,7 +12,8 @@ MeshFlatMaterial::MeshFlatMaterial() {
 void MeshFlatMaterial::PrepareRender(std::shared_ptr<RenderAPI> render_api,
                                      std::shared_ptr<Camera> camera,
                                      const math::vec3 &camera_position,
-                                     const math::vec3 &position) {
+                                     const math::mat4 &world_transform) {
+  render_api->SetShaderMat4Param(shader_program, "model", world_transform);
   constexpr float kRatio = 3600.0 / 1800.0;
   render_api->SetShaderMat4Param(shader_program, "projection",
                                  camera->GetPerspectiveMatrix(kRatio));

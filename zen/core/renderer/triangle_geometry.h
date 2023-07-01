@@ -8,7 +8,8 @@ struct TriangleGeometry : public Geometry {
   TriangleGeometry() {
     positions = {math::vec3(0.5, 0.5, 0.0), math::vec3(0.5, -0.5, 0.0),
                  math::vec3(-0.5, -0.5, 0.0), math::vec3(-0.5, 0.5, 0.0)};
-    indices = {0, 1, 3, 1, 2, 3};
+    // indices = {0, 1, 3, 1, 2, 3};
+    indices = {0, 1, 3};
   }
 
   void Setup(std::shared_ptr<RenderAPI> render_api) {

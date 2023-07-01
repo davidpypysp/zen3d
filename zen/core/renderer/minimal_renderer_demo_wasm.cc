@@ -14,8 +14,15 @@ namespace zen {
 class TestBody {
 public:
   TestBody() {
-    material_ = std::make_shared<SimpleMaterial>();
-    geometry_ = std::make_shared<TriangleGeometry>();
+    bool use_cube = true;
+    if (use_cube) {
+      material_ = std::make_shared<MeshFlatMaterial>();
+      geometry_ = std::make_shared<CubeGeometry>();
+    } else {
+      // use triangle and render in 2d without camera
+      material_ = std::make_shared<SimpleMaterial>();
+      geometry_ = std::make_shared<TriangleGeometry>();
+    }
 
     camera_ = std::make_shared<Camera>();
   }
@@ -27,8 +34,10 @@ public:
 
   void RenderFunc() {
     math::vec3 camera_position(0, 0, 0);
-    math::vec3 object_position(0, 0, 0);
-    pipeline_.PrepareDraw(material_, camera_, camera_position, object_position);
+    math::vec3 object_position(0, 0, -5);
+    math::mat4 world_transform =
+        math::translate(math::mat4(1.0), object_position);
+    pipeline_.PrepareDraw(material_, camera_, camera_position, world_transform);
     pipeline_.DrawMesh(*geometry_, *material_);
   }
 
