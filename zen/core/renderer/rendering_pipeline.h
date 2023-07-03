@@ -13,8 +13,6 @@ class RenderingPipeline {
 public:
   RenderingPipeline(std::shared_ptr<RenderAPI> render_api);
 
-  void Setup();
-
   void InitGeometry(std::shared_ptr<Geometry> geometry);
 
   void InitMaterial(std::shared_ptr<Material> material);
