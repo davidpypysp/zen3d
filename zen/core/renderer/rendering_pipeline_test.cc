@@ -1,11 +1,13 @@
 #include <gtest/gtest.h>
 
+#include "zen/core/renderer/gl_render_api.h"
 #include "zen/core/renderer/rendering_pipeline.h"
 
 namespace zen {
 
 TEST(RenderingPipelineTest, BasicAssertions) {
-  RenderingPipeline rendering_pipeline;
+  auto render_api = std::make_shared<GLRenderAPI>();
+  RenderingPipeline rendering_pipeline(render_api);
 }
 
 } //  namespace zen

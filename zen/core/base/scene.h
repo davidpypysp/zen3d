@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "zen/core/scene/scene_node.h"
+#include "zen/core/base/scene_node.h"
 
 namespace zen {
 
@@ -15,6 +15,8 @@ public:
   std::shared_ptr<SceneNode> root_node() { return root_node_; }
 
   std::shared_ptr<SceneNode> camera_node() { return camera_node_; }
+
+  void AddNode(std::shared_ptr<SceneNode> node);
 
   void SetCameraNode(std::shared_ptr<SceneNode> camera_node);
 

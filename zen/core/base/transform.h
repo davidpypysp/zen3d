@@ -22,7 +22,21 @@ public:
     is_dirty_ = false;
   }
 
+  const math::mat4 &ModelMatrix() {
+    if (is_dirty_) {
+      ComputeModelMatrix();
+    }
+    return model_matrix_;
+  }
+
   void SetLocalPosition(const math::vec3 &position) {
+    position_ = position;
+    is_dirty_ = true;
+  }
+
+  const math::vec3 &WorldPosition() const { return position_; }
+
+  void SetWorldPosition(const math::vec3 &position) {
     position_ = position;
     is_dirty_ = true;
   }

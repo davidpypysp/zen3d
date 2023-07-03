@@ -13,7 +13,6 @@ struct Material {
 
   virtual void PrepareRender(std::shared_ptr<RenderAPI> render_api,
                              std::shared_ptr<Camera> camera,
-                             const math::vec3 &camera_position,
                              const math::mat4 &world_transform) {}
 
   virtual ~Material() {}

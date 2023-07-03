@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "zen/core/base/scene_node.h"
 #include "zen/core/math/math.h"
 
 namespace zen {
@@ -15,7 +16,7 @@ const float default_zoom = 45.0;
 
 // An abstract camera class that processes input and calculates the
 // corresponding Euler Angles, Vectors and Matrices for use in OpenGL
-class Camera {
+class Camera : public SceneNode {
 public:
   // camera Attributes
   math::vec3 front_;
@@ -35,13 +36,14 @@ public:
   float zoom() const { return zoom_; }
 
   // constructor with vectors
-  Camera(const math::vec3 &up = math::vec3(0.0, 1.0, 0.0),
+  Camera(const math::vec3 &position = math::vec3(0.0, 0.0, 0.0),
+         const math::vec3 &up = math::vec3(0.0, 1.0, 0.0),
          const float yaw = default_yaw, const float pitch = default_pitch);
 
   math::mat4 GetPerspectiveMatrix(const float ratio);
 
   // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-  math::mat4 GetViewMatrix(const math::vec3 &position);
+  math::mat4 GetViewMatrix();
 
 private:
   // calculates the front vector from the Camera's (updated) Euler Angles

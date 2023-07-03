@@ -11,7 +11,7 @@ namespace zen {
 
 class RenderingPipeline {
 public:
-  RenderingPipeline();
+  RenderingPipeline(std::shared_ptr<RenderAPI> render_api);
 
   void Setup();
 
@@ -19,12 +19,17 @@ public:
 
   void InitMaterial(std::shared_ptr<Material> material);
 
+  void InitNode(std::shared_ptr<SceneNode> scene_node);
+
+  void DrawNodes(std::shared_ptr<SceneNode> scene_node,
+                 std::shared_ptr<Camera> camera);
+
   void PrepareDraw(std::shared_ptr<Material> material,
                    std::shared_ptr<Camera> camera,
-                   const math::vec3 &camera_position,
                    const math::mat4 &world_transform);
 
-  void DrawMesh(Geometry &geometry, Material &material);
+  void DrawMesh(std::shared_ptr<Geometry> geometry,
+                std::shared_ptr<Material> material);
 
 protected:
   std::shared_ptr<RenderAPI> render_api_;

@@ -14,6 +14,8 @@ namespace zen {
 class TestBody {
 public:
   TestBody() {
+    pipeline_ =
+        std::make_shared<RenderingPipeline>(std::make_shared<GLRenderAPI>());
     bool use_cube = true;
     if (use_cube) {
       material_ = std::make_shared<MeshFlatMaterial>();
@@ -24,21 +26,20 @@ public:
       geometry_ = std::make_shared<TriangleGeometry>();
     }
 
-    camera_ = std::make_shared<Camera>();
+    camera_ = std::make_shared<Camera>(math::vec3(0.0, 0.0, 0.0));
   }
 
   void InitFunc() {
-    pipeline_.InitGeometry(geometry_);
-    pipeline_.InitMaterial(material_);
+    pipeline_->InitGeometry(geometry_);
+    pipeline_->InitMaterial(material_);
   }
 
   void RenderFunc() {
-    math::vec3 camera_position(0, 0, 0);
     math::vec3 object_position(0, 0, -5);
     math::mat4 world_transform =
         math::translate(math::mat4(1.0), object_position);
-    pipeline_.PrepareDraw(material_, camera_, camera_position, world_transform);
-    pipeline_.DrawMesh(*geometry_, *material_);
+    pipeline_->PrepareDraw(material_, camera_, world_transform);
+    pipeline_->DrawMesh(geometry_, material_);
   }
 
 protected:
@@ -46,7 +47,7 @@ protected:
   std::shared_ptr<Geometry> geometry_;
   std::shared_ptr<Camera> camera_;
 
-  RenderingPipeline pipeline_;
+  std::shared_ptr<RenderingPipeline> pipeline_;
 };
 
 } // namespace zen

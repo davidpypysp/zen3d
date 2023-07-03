@@ -133,6 +133,27 @@ cc_test(
 	]
 )
 
+cc_library(
+	name = "mesh",
+	hdrs = ["mesh.h"],
+	srcs = ["mesh.cc"],
+	deps = [
+		":material",
+		":geometry",
+		"//zen/core/base:scene_node",
+	]
+)
+
+cc_test(
+	name = "mesh_test",
+	srcs = ["mesh_test.cc"],
+	deps = [
+		":mesh",
+		":simple_material",
+		":triangle_geometry",
+		"//zen/libs:gtest_main",
+	]
+)
 
 cc_library(
 	name = "camera",
@@ -140,6 +161,7 @@ cc_library(
 	srcs = ["camera.cc"],
 	deps = [
 		"//zen/core/math:math",
+		"//zen/core/base:scene_node",
 	]
 )
 
@@ -212,9 +234,7 @@ cc_library(
 	hdrs = ["rendering_pipeline.h"],
 	deps = [
 		":render_api",
-		":geometry",
-		":gl_render_api",
-		":material",
+		":mesh",
 	]
 )
 
@@ -223,33 +243,19 @@ cc_test(
 	srcs = ["rendering_pipeline_test.cc"],
 	deps = [
 		":rendering_pipeline",
+		":gl_render_api",
 		"//zen/libs:gtest_main",
 	]
 )
 
-
-zen_wasm_cc_binary(
-    name = "minimal_renderer_demo_wasm",
-    srcs = [
-		"minimal_renderer_demo_wasm.cc",
-	],
+cc_library(
+	name = "renderer",
+	srcs = ["renderer.cc"],
+	hdrs = ["renderer.h"],
 	deps = [
 		":rendering_pipeline",
-		":triangle_geometry",
-		":simple_material",
-		":mesh_flat_material",
-		":cube_geometry",
-		":wasm_api",
-	],
-	linkopts = [
-		"--preload-file data",
-	],
-	additional_linker_inputs = [
-		"//:data",
-	],
-	data = [
-		"//zen/core/shader:shader",
+		":gl_render_api",
+		":camera",
+		"//zen/core/base:scene",
 	]
 )
-
-
