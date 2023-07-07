@@ -1,28 +1,25 @@
 #pragma once
+
+#include <iostream>
 #include <stdio.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
-#include <GLFW/glfw3.h>
-
 // #include <glad/glad.h>
 #define GLFW_INCLUDE_ES3
 #include <GLES3/gl3.h>
 #include <GLFW/glfw3.h>
 
-#include <functional>
-#include <iostream>
+// Function used by c++ to get the size of the html canvas
+EM_JS(int, CanvasGetWidth, (), { return Module.canvas.width; });
 
 // Function used by c++ to get the size of the html canvas
-EM_JS(int, canvas_get_width, (), { return Module.canvas.width; });
-
-// Function used by c++ to get the size of the html canvas
-EM_JS(int, canvas_get_height, (), { return Module.canvas.height; });
+EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
 
 // Function called by javascript
-EM_JS(void, resizeCanvas, (), { js_resizeCanvas(); });
+EM_JS(void, CanvasResize, (), { js_CanvasResize(); });
 
 namespace zen {
 
@@ -35,26 +32,25 @@ struct GlobalWasmParams {
 
 class WasmManager {
 public:
-  WasmManager(std::function<void()> init_func,
-              std::function<void()> render_func) {
-    init_func_ = init_func;
-    render_func_ = render_func;
-  }
+  WasmManager() {}
+
+  virtual void Setup() {}
+
+  virtual void Render() {}
 
   int Init() {
-    params_.window_width = canvas_get_width();
-    params_.window_height = canvas_get_height();
+    params_.window_width = CanvasGetWidth();
+    params_.window_height = CanvasGetHeight();
 
     InitGL();
-
-    init_func_();
+    Setup();
 
     return 0;
   }
 
   void Loop() {
-    int width = canvas_get_width();
-    int height = canvas_get_height();
+    int width = CanvasGetWidth();
+    int height = CanvasGetHeight();
 
     if (width != params_.window_width || height != params_.window_height) {
       params_.window_width = width;
@@ -69,7 +65,7 @@ public:
 
     // render
     // function inject here
-    render_func_();
+    Render();
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
     // etc.)
@@ -102,8 +98,6 @@ protected:
     return 0;
   }
 
-  std::function<void()> init_func_;
-  std::function<void()> render_func_;
   GlobalWasmParams params_;
 };
 

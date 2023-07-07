@@ -13,9 +13,7 @@ void SceneNode::AddChild(std::shared_ptr<SceneNode> scene_node) {
   scene_node->parent_ = shared_from_this();
 }
 
-const math::vec3 &SceneNode::WorldPosition() const {
-  return transform_.WorldPosition();
-}
+math::vec3 &SceneNode::WorldPosition() { return transform_.WorldPosition(); }
 
 void SceneNode::SetWorldPosition(const math::vec3 &position) {
   transform_.SetWorldPosition(position);

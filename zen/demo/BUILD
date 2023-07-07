@@ -52,4 +52,25 @@ zen_wasm_cc_binary(
 	]
 )
 
+zen_wasm_cc_binary(
+    name = "imgui_demo_wasm",
+    srcs = [
+		"imgui_demo_wasm.cc",
+	],
+	deps = [
+		"//zen/core/renderer:renderer",
+		"//zen/core/renderer:triangle_geometry",
+		"//zen/core/renderer:simple_material",
+		"//zen/core/renderer:mesh_flat_material",
+		"//zen/core/renderer:cube_geometry",
+		"//zen/core/renderer:wasm_api",
+		"//zen/ui/imgui:gui",
+	],
+	linkopts = [
+		"--preload-file data",
+	],
+	additional_linker_inputs = [
+		"//:data",
+	],
+)
 

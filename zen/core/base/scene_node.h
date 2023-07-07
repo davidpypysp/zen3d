@@ -25,7 +25,7 @@ public:
 
   void AddChild(std::shared_ptr<SceneNode> node);
 
-  const math::vec3 &WorldPosition() const;
+  math::vec3 &WorldPosition();
 
   void SetWorldPosition(const math::vec3 &position);
 

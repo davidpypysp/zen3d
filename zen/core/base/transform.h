@@ -34,7 +34,7 @@ public:
     is_dirty_ = true;
   }
 
-  const math::vec3 &WorldPosition() const { return position_; }
+  math::vec3 &WorldPosition() { return position_; }
 
   void SetWorldPosition(const math::vec3 &position) {
     position_ = position;
