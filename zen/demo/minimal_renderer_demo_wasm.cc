@@ -1,4 +1,4 @@
-#include "zen/core/renderer/wasm_api.h"
+#include "zen/core/renderer/wasm_wrapper.h"
 
 #include "zen/core/base/scene.h"
 #include "zen/core/renderer/renderer.h"
@@ -40,7 +40,7 @@ protected:
 
 extern "C" int main(int argc, char **argv) {
   zen::TestBody test_body;
-  zen::WasmManager wasm_manager(
+  zen::WasmWrapper wasm_manager(
       std::bind(&zen::TestBody::InitFunc, &test_body),
       std::bind(&zen::TestBody::RenderFunc, &test_body));
   zen::WasmSpin(wasm_manager);

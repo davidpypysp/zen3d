@@ -13,13 +13,13 @@
 #include <GLFW/glfw3.h>
 
 // Function used by c++ to get the size of the html canvas
-EM_JS(int, CanvasGetWidth, (), { return Module.canvas.width; });
+EM_JS(int, GetCanvasWidth, (), { return Module.canvas.width; });
 
 // Function used by c++ to get the size of the html canvas
-EM_JS(int, CanvasGetHeight, (), { return Module.canvas.height; });
+EM_JS(int, GetCanvasHeight, (), { return Module.canvas.height; });
 
 // Function called by javascript
-EM_JS(void, CanvasResize, (), { js_CanvasResize(); });
+EM_JS(void, ResizeCanvas, (), { js_resizeCanvas(); });
 
 namespace zen {
 
@@ -30,17 +30,17 @@ struct GlobalWasmParams {
   int window_height;
 };
 
-class WasmManager {
+class WasmWrapper {
 public:
-  WasmManager() {}
+  WasmWrapper() {}
 
   virtual void Setup() {}
 
   virtual void Render() {}
 
   int Init() {
-    params_.window_width = CanvasGetWidth();
-    params_.window_height = CanvasGetHeight();
+    ResizeCanvas();
+    UpdateWindowSize();
 
     InitGL();
     Setup();
@@ -48,9 +48,9 @@ public:
     return 0;
   }
 
-  void Loop() {
-    int width = CanvasGetWidth();
-    int height = CanvasGetHeight();
+  void UpdateWindowSize() {
+    int width = GetCanvasWidth();
+    int height = GetCanvasHeight();
 
     if (width != params_.window_width || height != params_.window_height) {
       params_.window_width = width;
@@ -58,6 +58,10 @@ public:
       glfwSetWindowSize(params_.window, params_.window_width,
                         params_.window_height);
     }
+  }
+
+  void Loop() {
+    UpdateWindowSize();
 
     // ------
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -102,10 +106,10 @@ protected:
 };
 
 void WasmLoopImpl(void *manager) {
-  static_cast<WasmManager *>(manager)->Loop();
+  static_cast<WasmWrapper *>(manager)->Loop();
 }
 
-void WasmSpin(WasmManager &manager) {
+void WasmSpin(WasmWrapper &manager) {
   manager.Init();
 #ifdef __EMSCRIPTEN__
   emscripten_set_main_loop_arg(&WasmLoopImpl, &manager, 0, 1);

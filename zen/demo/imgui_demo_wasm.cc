@@ -1,4 +1,4 @@
-#include "zen/core/renderer/wasm_api.h"
+#include "zen/core/renderer/wasm_wrapper.h"
 
 #include "zen/core/base/scene.h"
 #include "zen/core/renderer/renderer.h"
@@ -13,7 +13,7 @@
 
 namespace zen {
 
-class ImguiDemo : public WasmManager {
+class ImguiDemo : public WasmWrapper {
 public:
   ImguiDemo() {
     renderer = std::make_shared<Renderer>();
@@ -27,6 +27,7 @@ public:
     scene->AddNode(mesh);
 
     camera = std::make_shared<Camera>(math::vec3(0.0, 0.0, 0.0));
+    scene->AddNode(camera);
   }
 
   void Setup() override {

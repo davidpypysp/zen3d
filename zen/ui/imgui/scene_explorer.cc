@@ -11,8 +11,8 @@ bool SceneExplorer::TreeNode(std::shared_ptr<SceneNode> scene_node,
   if (scene_node == gui_store->selected_scene_node) {
     node_flags |= ImGuiTreeNodeFlags_Selected;
   }
-  // const std::string name = scene_node->name();
-  bool node_open = ImGui::TreeNodeEx(scene_node.get(), node_flags, "abcd");
+
+  bool node_open = ImGui::TreeNodeEx(scene_node.get(), node_flags, "abcdefg");
   if (ImGui::IsItemClicked()) {
     gui_store->selected_scene_node = scene_node;
     std::cout << "node " << scene_node->name() << " clicked" << std::endl;

@@ -196,8 +196,8 @@ cc_library(
 )
 
 cc_library(
-	name = "wasm_api",
-	hdrs = ["wasm_api.h"],
+	name = "wasm_wrapper",
+	hdrs = ["wasm_wrapper.h"],
 )
 
 cc_test(

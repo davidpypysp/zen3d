@@ -23,9 +23,10 @@ public:
   }
 
   const math::mat4 &ModelMatrix() {
-    if (is_dirty_) {
-      ComputeModelMatrix();
-    }
+    // TODO: This is a hack to make sure the model matrix is computed
+    // if (is_dirty_) {
+    ComputeModelMatrix();
+    // }
     return model_matrix_;
   }
 

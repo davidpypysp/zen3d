@@ -14,7 +14,7 @@ zen_wasm_cc_binary(
 		"//zen/core/renderer:simple_material",
 		"//zen/core/renderer:mesh_flat_material",
 		"//zen/core/renderer:cube_geometry",
-		"//zen/core/renderer:wasm_api",
+		"//zen/core/renderer:wasm_wrapper",
 	],
 	linkopts = [
 		"--preload-file data",
@@ -39,7 +39,7 @@ zen_wasm_cc_binary(
 		"//zen/core/renderer:simple_material",
 		"//zen/core/renderer:mesh_flat_material",
 		"//zen/core/renderer:cube_geometry",
-		"//zen/core/renderer:wasm_api",
+		"//zen/core/renderer:wasm_wrapper",
 	],
 	linkopts = [
 		"--preload-file data",
@@ -63,7 +63,7 @@ zen_wasm_cc_binary(
 		"//zen/core/renderer:simple_material",
 		"//zen/core/renderer:mesh_flat_material",
 		"//zen/core/renderer:cube_geometry",
-		"//zen/core/renderer:wasm_api",
+		"//zen/core/renderer:wasm_wrapper",
 		"//zen/ui/imgui:gui",
 	],
 	linkopts = [

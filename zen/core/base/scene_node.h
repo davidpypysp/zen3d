@@ -17,7 +17,7 @@ public:
             const math::vec3 &eular_rotaion = math::vec3(0.0, 0.0, 0.0),
             const math::vec3 &scale = math::vec3(1.0, 1.0, 1.0));
 
-  std::string &name() { return name_; }
+  const std::string &name() const { return name_; }
 
   const std::vector<std::shared_ptr<SceneNode>> &children() const {
     return children_;
