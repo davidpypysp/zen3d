@@ -5,8 +5,10 @@
 namespace zen {
 
 MeshFlatMaterial::MeshFlatMaterial() {
+  constexpr auto mesh_vert_shader = "zen/core/shader/mesh.vert";
+  constexpr auto mesh_frag_shader = "zen/core/shader/mesh_flat.frag";
   shader_program = std::make_shared<ShaderProgram>(
-      "mesh_flat_shader", "data/mesh.vert", "data/mesh_flat.frag");
+      "mesh_flat_shader", mesh_vert_shader, mesh_frag_shader);
 }
 
 void MeshFlatMaterial::PrepareRender(std::shared_ptr<RenderAPI> render_api,

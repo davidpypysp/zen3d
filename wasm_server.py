@@ -3,8 +3,6 @@ import http.server
 import os
 import argparse
 
-PORT = 8010
-
 if __name__ == "__main__":
     # parse arguments
     parser = argparse.ArgumentParser(
@@ -19,7 +17,8 @@ if __name__ == "__main__":
     target_dir = os.path.abspath(args.dir)
     port = int(args.port)
 
-    # copy index.html
+
+    # copy index.html and redirect .js file
     if not os.path.exists(os.path.join(target_dir, 'index.html')) or args.overwrite:
         with open('data/index.html', 'r') as f:
             with open(os.path.join(target_dir, 'index.html'), 'w') as g:
@@ -31,13 +30,12 @@ if __name__ == "__main__":
         print('index.html copied to target directory')
 
 
-
     class Handler(http.server.SimpleHTTPRequestHandler):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, directory=target_dir, **kwargs)
 
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", port), Handler) as httpd:
-        print("serving at port", port)
         print("serving at directory", target_dir)
+        print("serving at url", f'http://localhost:{port}')
         httpd.serve_forever()

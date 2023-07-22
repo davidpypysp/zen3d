@@ -4,8 +4,10 @@ namespace kuro {
 namespace core {
 
 MeshBasicMaterial::MeshBasicMaterial() {
+  constexpr auto mesh_vert_shader = "zen/core/shader/mesh.vert";
+  constexpr auto mesh_frag_shader = "zen/core/shader/mesh_basic.frag";
   shader_program = std::make_shared<ShaderProgram>(
-      "mesh_basic_shader", "data/mesh.vert", "data/mesh_basic.frag");
+      "mesh_basic_shader", mesh_vert_shader, mesh_vert_shader);
 };
 
 void PrepareRender(std::shared_ptr<RenderAPI> render_api,

@@ -18,13 +18,12 @@ zen_wasm_cc_binary(
 	],
 	linkopts = [
 		"--preload-file data",
+		"--preload-file zen/core/shader",
 	],
 	additional_linker_inputs = [
 		"//:data",
-	],
-	data = [
 		"//zen/core/shader:shader",
-	]
+	],
 )
 
 
@@ -43,13 +42,12 @@ zen_wasm_cc_binary(
 	],
 	linkopts = [
 		"--preload-file data",
+		"--preload-file zen/core/shader",
 	],
 	additional_linker_inputs = [
 		"//:data",
-	],
-	data = [
 		"//zen/core/shader:shader",
-	]
+	],
 )
 
 zen_wasm_cc_binary(
@@ -68,9 +66,11 @@ zen_wasm_cc_binary(
 	],
 	linkopts = [
 		"--preload-file data",
+		"--preload-file zen/core/shader",
 	],
 	additional_linker_inputs = [
 		"//:data",
+		"//zen/core/shader:shader",
 	],
 )
 
