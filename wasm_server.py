@@ -23,8 +23,8 @@ if __name__ == "__main__":
         with open('data/index.html', 'r') as f:
             with open(os.path.join(target_dir, 'index.html'), 'w') as g:
                 # find file name with .html extension
-                wasm_file = [f for f in os.listdir(target_dir) if f.endswith('.wasm')][0]
-                js_script = wasm_file.replace('.wasm', '.js')
+                html_file = [f for f in os.listdir(target_dir) if f.endswith('.html') and not f.startswith("index.")][0]
+                js_script = html_file.replace('.html', '.js')
                 html_content = f.read().replace('{{js_script}}', js_script)
                 g.write(html_content)
         print('index.html copied to target directory')
