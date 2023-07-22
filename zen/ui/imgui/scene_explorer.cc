@@ -1,4 +1,5 @@
 #include "zen/ui/imgui/scene_explorer.h"
+#include "zen/core/base/logging.h"
 
 namespace zen {
 
@@ -12,10 +13,11 @@ bool SceneExplorer::TreeNode(std::shared_ptr<SceneNode> scene_node,
     node_flags |= ImGuiTreeNodeFlags_Selected;
   }
 
-  bool node_open = ImGui::TreeNodeEx(scene_node.get(), node_flags, "abcdefg");
+  bool node_open = ImGui::TreeNodeEx(scene_node.get(), node_flags, "%s",
+                                     scene_node->name().c_str());
   if (ImGui::IsItemClicked()) {
     gui_store->selected_scene_node = scene_node;
-    std::cout << "node " << scene_node->name() << " clicked" << std::endl;
+    Log() << "node " << scene_node->name() << " clicked";
   }
   return node_open;
 }

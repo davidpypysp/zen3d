@@ -23,7 +23,8 @@ cc_library(
 	hdrs = ["scene_explorer.h"],
 	srcs = ["scene_explorer.cc"],
 	deps = [
-		":window"
+		":window",
+		"//zen/core/base:logging",
 	]
 )
 
@@ -32,7 +33,7 @@ cc_library(
 	hdrs = ["object_inspector.h"],
 	srcs = ["object_inspector.cc"],
 	deps = [
-		":window"
+		":window",
 	]
 )
 
