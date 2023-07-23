@@ -1,7 +1,6 @@
 workspace(name = "zen")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 
 http_archive(
@@ -90,4 +89,12 @@ http_archive(
   name = "com_google_googletest",
   urls = ["https://github.com/google/googletest/archive/5ab508a01f9eb089207ee87fd547d290da39d015.zip"],
   strip_prefix = "googletest-5ab508a01f9eb089207ee87fd547d290da39d015",
+)
+
+http_archive(
+    name = "assimp",
+    build_file = "assimp.BUILD",
+    sha256 = "60080d8ab4daaab309f65b3cffd99f19eb1af8d05623fff469b9b652818e286e",
+    strip_prefix = "assimp-4.0.1",
+    urls = ["https://github.com/assimp/assimp/archive/v4.0.1.tar.gz"],
 )

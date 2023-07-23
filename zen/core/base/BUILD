@@ -66,3 +66,12 @@ cc_test(
 		"//zen/libs:gtest_main",
 	]
 )
+
+cc_binary(
+	name = "model_loader_test",
+	srcs = ["model_loader_test.cc"],
+	deps = [
+		"@assimp//:assimp",
+		# "//zen/libs:gtest_main",
+	],
+)
