@@ -1,7 +1,7 @@
 
 
 load("@rules_cc//cc:defs.bzl", "cc_library")
-load("//:wasm.bzl", "zen_wasm_cc_binary")
+load("//build_defs:wasm.bzl", "zen_wasm_cc_binary")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -58,3 +58,30 @@ cc_library(
 	],
 )
 
+
+cc_binary(
+	name = "stb_test",
+	srcs = [
+		"stb_test.cpp",
+	],
+    linkopts = [
+		"--std=c++11",
+		"-Wall",
+		"-Wextra",
+		"-s WASM=1",
+		"-O2",
+		"-sAssertion",
+		"--preload-file data",
+	],
+	additional_linker_inputs = [
+		"data",
+	],
+	deps = [
+		"@stb//:stb_image",
+	]
+)
+
+wasm_cc_binary(
+    name = "stb_test_wasm",
+    cc_target = ":stb_test",
+)

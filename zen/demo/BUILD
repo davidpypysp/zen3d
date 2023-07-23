@@ -1,4 +1,4 @@
-load("//:wasm.bzl", "zen_wasm_cc_binary")
+load("//build_defs:wasm.bzl", "zen_wasm_cc_binary")
 
 package(default_visibility = ["//visibility:public"])
 
