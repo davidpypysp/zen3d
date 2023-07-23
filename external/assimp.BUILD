@@ -125,13 +125,13 @@ cc_library(
 
 cc_library(
     name = "unzip",
-    hdrs = glob([
-        "contrib/unzip/*.h",
-        "contrib/zlib/*.h",
-    ]),
     srcs = glob([
         "contrib/unzip/*.c",
         "contrib/zlib/*.c",
+    ]),
+    hdrs = glob([
+        "contrib/unzip/*.h",
+        "contrib/zlib/*.h",
     ]),
     alwayslink = True,
 )
@@ -440,8 +440,8 @@ cc_library(
         "code/AssbinLoader.cpp",
         "code/AssbinLoader.h",
     ],
-    includes = ["."],
     hdrs = ALL_HDRS,
+    includes = ["."],
     deps = [
         ":code_includes",
         ":contrib_includes",
@@ -935,8 +935,8 @@ cc_library(
         "code/XGLLoader.cpp",
         "code/XGLLoader.h",
     ],
-    includes = ["."],
     hdrs = ALL_HDRS,
+    includes = ["."],
     deps = [
         ":code_includes",
         ":contrib_includes",

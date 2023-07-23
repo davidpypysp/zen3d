@@ -6,6 +6,8 @@ Use npm install bazelisk which contains bazel command
 
 ```
 npm install -g @bazel/bazelisk
+
+npm install -g @bazel/buildifier
 ```
 
 
