@@ -2,7 +2,7 @@
 
 #include "zen/core/renderer/rendering_pipeline.h"
 
-#include "zen/core/renderer/gl_render_api.h"
+#include "zen/core/graphic_api/opengl_api.h"
 
 #include "zen/core/renderer/cube_geometry.h"
 #include "zen/core/renderer/mesh_flat_material.h"

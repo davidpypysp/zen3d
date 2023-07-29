@@ -15,7 +15,7 @@ struct MeshBasicMaterial : public Material {
 
   MeshBasicMaterial();
 
-  void PrepareRender(std::shared_ptr<GraphicAPI> render_api,
+  void PrepareRender(std::shared_ptr<GraphicAPI> graphic_api,
                      std::shared_ptr<Camera> camera,
                      const math::mat4 &world_transform) override;
 };

@@ -66,7 +66,7 @@ extern "C" int main(int argc, char **argv) {
     return 1;
   }
 
-  zen::OpenGLAPI gl_render_api;
+  zen::OpenGLAPI opengl_api;
 
   quit();
 

@@ -11,7 +11,7 @@ namespace zen {
 
 class RenderingPipeline {
 public:
-  RenderingPipeline(std::shared_ptr<GraphicAPI> render_api);
+  RenderingPipeline(std::shared_ptr<GraphicAPI> graphic_api);
 
   void InitGeometry(std::shared_ptr<Geometry> geometry);
 

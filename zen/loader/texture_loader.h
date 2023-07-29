@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "src/core/renderer/render_api.h"
+#include "src/core/renderer/graphic_api.h"
 #include "src/core/renderer/texture.h"
 
 namespace zen {

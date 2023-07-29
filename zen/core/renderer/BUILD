@@ -6,8 +6,7 @@ cc_library(
     name = "geometry",
     hdrs = ["geometry.h"],
     deps = [
-        ":vertex",
-        "//zen/core/base:handle",
+        "//zen/core/graphic_api",
     ],
 )
 
@@ -167,8 +166,8 @@ cc_test(
     name = "rendering_pipeline_test",
     srcs = ["rendering_pipeline_test.cc"],
     deps = [
-        ":gl_render_api",
         ":rendering_pipeline",
+        "//zen/core/graphic_api:opengl_api",
         "//zen/libs:gtest_main",
     ],
 )
@@ -181,5 +180,6 @@ cc_library(
         ":camera",
         ":rendering_pipeline",
         "//zen/core/base:scene",
+        "//zen/core/graphic_api:opengl_api",
     ],
 )

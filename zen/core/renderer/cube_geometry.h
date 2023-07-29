@@ -99,9 +99,9 @@ struct CubeGeometry : public Geometry {
     }
   }
 
-  void Setup(std::shared_ptr<GraphicAPI> render_api) {
+  void Setup(std::shared_ptr<GraphicAPI> graphic_api) {
     this->handle =
-        render_api->CreateGeometryInstance(this->vertices, this->indices);
+        graphic_api->CreateGeometryInstance(this->vertices, this->indices);
     std::cout << "setup geometry handle: " << std::endl;
   }
 };

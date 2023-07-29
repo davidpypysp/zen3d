@@ -1,5 +1,7 @@
 #include "zen/core/renderer/renderer.h"
-#include "zen/core/renderer/gl_render_api.h"
+
+// TODO: abstract this
+#include "zen/core/graphic_api/opengl_api.h"
 
 namespace zen {
 
