@@ -47,9 +47,6 @@ cc_test(
 cc_library(
     name = "texture",
     hdrs = ["texture.h"],
-    deps = [
-        "//zen/core/base:handle",
-    ],
 )
 
 cc_test(
