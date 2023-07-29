@@ -11,7 +11,7 @@ namespace zen {
 /**
  * @brief Construct a new Rendering Pipeline:: Rendering Pipeline object
  */
-RenderingPipeline::RenderingPipeline(std::shared_ptr<RenderAPI> render_api)
+RenderingPipeline::RenderingPipeline(std::shared_ptr<GraphicAPI> render_api)
     : render_api_(render_api) {}
 
 void RenderingPipeline::InitGeometry(std::shared_ptr<Geometry> geometry) {

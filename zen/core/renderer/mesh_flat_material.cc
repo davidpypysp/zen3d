@@ -11,7 +11,7 @@ MeshFlatMaterial::MeshFlatMaterial() {
       "mesh_flat_shader", mesh_vert_shader, mesh_frag_shader);
 }
 
-void MeshFlatMaterial::PrepareRender(std::shared_ptr<RenderAPI> render_api,
+void MeshFlatMaterial::PrepareRender(std::shared_ptr<GraphicAPI> render_api,
                                      std::shared_ptr<Camera> camera,
                                      const math::mat4 &world_transform) {
   render_api->SetShaderMat4Param(shader_program, "model", world_transform);

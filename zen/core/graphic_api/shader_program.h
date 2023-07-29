@@ -1,9 +1,6 @@
 #pragma once
 
-#include <memory>
 #include <string>
-
-#include "zen/core/math/math.h"
 
 namespace zen {
 

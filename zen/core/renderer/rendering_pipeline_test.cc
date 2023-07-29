@@ -6,7 +6,7 @@
 namespace zen {
 
 TEST(RenderingPipelineTest, BasicAssertions) {
-  auto render_api = std::make_shared<GLRenderAPI>();
+  auto render_api = std::make_shared<OpenGLAPI>();
   RenderingPipeline rendering_pipeline(render_api);
 }
 

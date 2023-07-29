@@ -15,7 +15,7 @@ class TestBody {
 public:
   TestBody() {
     pipeline_ =
-        std::make_shared<RenderingPipeline>(std::make_shared<GLRenderAPI>());
+        std::make_shared<RenderingPipeline>(std::make_shared<OpenGLAPI>());
     bool use_cube = true;
     if (use_cube) {
       material_ = std::make_shared<MeshFlatMaterial>();

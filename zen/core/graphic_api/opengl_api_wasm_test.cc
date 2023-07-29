@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#include "zen/core/renderer/gl_render_api.h"
+#include "zen/core/graphic_api/opengl_api.h"
 
 GLFWwindow *g_window;
 bool show_demo_window = true;
@@ -66,7 +66,7 @@ extern "C" int main(int argc, char **argv) {
     return 1;
   }
 
-  zen::GLRenderAPI gl_render_api;
+  zen::OpenGLAPI gl_render_api;
 
   quit();
 

@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "zen/core/base/handle.h"
-#include "zen/core/renderer/render_api.h"
+#include "zen/core/graphic_api/graphic_api.h"
 #include "zen/core/renderer/vertex.h"
 
 namespace zen {
@@ -23,7 +23,7 @@ struct Geometry {
            const std::vector<unsigned int> &indices)
       : vertices(vertices), indices(indices) {}
 
-  virtual void Setup(std::shared_ptr<RenderAPI> render_api) = 0;
+  virtual void Setup(std::shared_ptr<GraphicAPI> render_api) = 0;
 };
 
 } //  namespace zen

@@ -12,7 +12,7 @@ struct TriangleGeometry : public Geometry {
     indices = {0, 1, 3};
   }
 
-  void Setup(std::shared_ptr<RenderAPI> render_api) {
+  void Setup(std::shared_ptr<GraphicAPI> render_api) {
     this->handle = render_api->CreateGeometryInstanceWithPositions(
         this->positions, this->indices);
   }

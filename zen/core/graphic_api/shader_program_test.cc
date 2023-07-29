@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "zen/core/renderer/shader_program.h"
+#include "zen/core/graphic_api/shader_program.h"
 
 namespace zen {
 

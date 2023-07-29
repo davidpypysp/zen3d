@@ -2,16 +2,16 @@
 
 #include <memory>
 
+#include "zen/core/graphic_api/graphic_api.h"
 #include "zen/core/renderer/camera.h"
 #include "zen/core/renderer/geometry.h"
 #include "zen/core/renderer/material.h"
-#include "zen/core/renderer/render_api.h"
 
 namespace zen {
 
 class RenderingPipeline {
 public:
-  RenderingPipeline(std::shared_ptr<RenderAPI> render_api);
+  RenderingPipeline(std::shared_ptr<GraphicAPI> render_api);
 
   void InitGeometry(std::shared_ptr<Geometry> geometry);
 
@@ -30,7 +30,7 @@ public:
                 std::shared_ptr<Material> material);
 
 protected:
-  std::shared_ptr<RenderAPI> render_api_;
+  std::shared_ptr<GraphicAPI> render_api_;
 };
 
 } //  namespace zen

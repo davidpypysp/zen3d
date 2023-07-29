@@ -7,9 +7,9 @@
 #include <GLES3/gl3.h>
 #include <GLFW/glfw3.h>
 
-#include "zen/core/renderer/render_api.h"
-#include "zen/core/renderer/shader_program.h"
-#include "zen/core/renderer/vertex.h"
+#include "zen/core/graphic_api/graphic_api.h"
+#include "zen/core/graphic_api/shader_program.h"
+#include "zen/core/graphic_api/vertex.h"
 
 namespace zen {
 
@@ -17,20 +17,20 @@ struct GLSLShaderProgram : public ShaderProgram {
   unsigned int id;
 };
 
-struct GLGeometryHandle : public Handle {
+struct GLGeometryHandle : public GeometryHandle {
   unsigned int vao;
   unsigned int vbo;
   unsigned int ebo;
   unsigned int size;
 };
 
-struct GLTextureHandle : public Handle {
+struct GLTextureHandle : public TextureHandle {
   unsigned int id;
 };
 
-class GLRenderAPI : public RenderAPI {
+class OpenGLAPI : public GraphicAPI {
 public:
-  GLRenderAPI();
+  OpenGLAPI();
 
   void Init();
   std::shared_ptr<ShaderProgram> CreateShaderProgram(const char *vertex_path,
@@ -42,22 +42,21 @@ public:
   void SetShaderMat4Param(std::shared_ptr<ShaderProgram> program,
                           const std::string &name, const math::mat4 &mat);
 
-  std::shared_ptr<Handle>
+  std::shared_ptr<GeometryHandle>
   CreateGeometryInstanceWithPositions(const std::vector<math::vec3> &positions,
                                       const std::vector<unsigned int> &indices);
-  std::shared_ptr<Handle>
+  std::shared_ptr<GeometryHandle>
   CreateGeometryInstance(const std::vector<Vertex> &vertices,
                          const std::vector<unsigned int> &indices);
 
-  void DrawMeshInstance(std::shared_ptr<Handle> handle);
+  void DrawMeshInstance(std::shared_ptr<GeometryHandle> handle);
 
-  std::shared_ptr<Handle> CreateTextureInstance(void *data,
-                                                const unsigned int width,
-                                                const unsigned int height,
-                                                const TextureFormat format);
+  std::shared_ptr<TextureHandle>
+  CreateTextureInstance(void *data, const unsigned int width,
+                        const unsigned int height, const TextureFormat format);
 
   void EnableTextureUnit(const unsigned int unit = 0,
-                         std::shared_ptr<Handle> handle = nullptr);
+                         std::shared_ptr<TextureHandle> handle = nullptr);
 
 protected:
   static constexpr GLint texture_map_[] = {GL_RED, GL_RGB, GL_RGBA};

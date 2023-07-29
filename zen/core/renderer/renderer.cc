@@ -3,7 +3,7 @@
 
 namespace zen {
 
-Renderer::Renderer() : rendering_pipeline_(std::make_shared<GLRenderAPI>()) {}
+Renderer::Renderer() : rendering_pipeline_(std::make_shared<OpenGLAPI>()) {}
 
 Renderer::~Renderer() {}
 

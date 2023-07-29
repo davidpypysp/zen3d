@@ -3,17 +3,17 @@
 #include <memory>
 #include <vector>
 
-#include "zen/core/renderer/shader_program.h"
-#include "zen/core/renderer/texture.h"
-#include "zen/core/renderer/vertex.h"
+#include "zen/core/graphic_api/handle.h"
+#include "zen/core/graphic_api/shader_program.h"
+#include "zen/core/graphic_api/vertex.h"
 
 namespace zen {
 
-class RenderAPI {
+class GraphicAPI {
 public:
-  RenderAPI(){};
+  GraphicAPI(){};
 
-  virtual ~RenderAPI() = default;
+  virtual ~GraphicAPI() = default;
 
   virtual void Init() = 0;
 
@@ -30,22 +30,23 @@ public:
                                   const std::string &name,
                                   const math::mat4 &mat) = 0;
 
-  virtual std::shared_ptr<Handle> CreateGeometryInstanceWithPositions(
+  virtual std::shared_ptr<GeometryHandle> CreateGeometryInstanceWithPositions(
       const std::vector<math::vec3> &positions,
       const std::vector<unsigned int> &indices) = 0;
 
-  virtual std::shared_ptr<Handle>
+  virtual std::shared_ptr<GeometryHandle>
   CreateGeometryInstance(const std::vector<Vertex> &vertices,
                          const std::vector<unsigned int> &indices) = 0;
 
-  virtual void DrawMeshInstance(std::shared_ptr<Handle> handle) = 0;
+  virtual void DrawMeshInstance(std::shared_ptr<GeometryHandle> handle) = 0;
 
-  virtual std::shared_ptr<Handle>
+  virtual std::shared_ptr<TextureHandle>
   CreateTextureInstance(void *data, const unsigned int width,
                         const unsigned int height,
                         const TextureFormat format) = 0;
-  virtual void EnableTextureUnit(const unsigned int unit = 0,
-                                 std::shared_ptr<Handle> handle = nullptr) = 0;
+  virtual void
+  EnableTextureUnit(const unsigned int unit = 0,
+                    std::shared_ptr<TextureHandle> handle = nullptr) = 0;
 };
 
 } //  namespace zen
