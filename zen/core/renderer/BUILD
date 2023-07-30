@@ -95,6 +95,16 @@ cc_test(
 )
 
 cc_library(
+    name = "mesh_basic_material",
+    srcs = ["mesh_basic_material.cc"],
+    hdrs = ["mesh_basic_material.h"],
+    deps = [
+        ":material",
+        ":texture",
+    ],
+)
+
+cc_library(
     name = "mesh",
     srcs = ["mesh.cc"],
     hdrs = ["mesh.h"],

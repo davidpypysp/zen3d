@@ -1,46 +1,41 @@
-#include "src/core/base/mesh_basic_material.h"
+#include "zen/core/renderer/mesh_basic_material.h"
 
-namespace kuro {
-namespace core {
+namespace zen {
 
 MeshBasicMaterial::MeshBasicMaterial() {
   constexpr auto mesh_vert_shader = "zen/core/shader/mesh.vert";
   constexpr auto mesh_frag_shader = "zen/core/shader/mesh_basic.frag";
+
   shader_program = std::make_shared<ShaderProgram>(
-      "mesh_basic_shader", mesh_vert_shader, mesh_vert_shader);
+      "mesh_basic_shader", mesh_vert_shader, mesh_frag_shader);
 };
 
-void PrepareRender(std::shared_ptr<GraphicAPI> graphic_api,
-                   std::shared_ptr<Camera> camera,
-                   const math::mat4 &world_transform) {
+void MeshBasicMaterial::PrepareRender(std::shared_ptr<GraphicAPI> graphic_api,
+                                      std::shared_ptr<Camera> camera,
+                                      const math::mat4 &world_transform) {
   graphic_api->SetShaderMat4Param(shader_program, "model", world_transform);
   // use material
   unsigned int texture_num = 0;
-  if (mesh_basic_material->diffuse_map) {
-    render_api_->SetShaderIntParam(shader_program, "texture_diffuse",
+  if (diffuse_map) {
+    graphic_api->SetShaderIntParam(shader_program, "texture_diffuse",
                                    texture_num);
-    render_api_->EnableTextureUnit(texture_num++,
-                                   mesh_basic_material->diffuse_map->handle);
+    graphic_api->EnableTextureUnit(texture_num++, diffuse_map->handle);
   }
-  if (mesh_basic_material->specular_map) {
-    render_api_->SetShaderIntParam(shader_program, "texture_specular",
+  if (specular_map) {
+    graphic_api->SetShaderIntParam(shader_program, "texture_specular",
                                    texture_num);
-    render_api_->EnableTextureUnit(texture_num++,
-                                   mesh_basic_material->specular_map->handle);
+    graphic_api->EnableTextureUnit(texture_num++, specular_map->handle);
   }
-  if (mesh_basic_material->normal_map) {
-    render_api_->SetShaderIntParam(shader_program, "texture_normal",
+  if (normal_map) {
+    graphic_api->SetShaderIntParam(shader_program, "texture_normal",
                                    texture_num);
-    render_api_->EnableTextureUnit(texture_num++,
-                                   mesh_basic_material->normal_map->handle);
+    graphic_api->EnableTextureUnit(texture_num++, normal_map->handle);
   }
-  if (mesh_basic_material->height_map) {
-    render_api_->SetShaderIntParam(shader_program, "texture_height",
+  if (height_map) {
+    graphic_api->SetShaderIntParam(shader_program, "texture_height",
                                    texture_num);
-    render_api_->EnableTextureUnit(texture_num++,
-                                   mesh_basic_material->height_map->handle);
+    graphic_api->EnableTextureUnit(texture_num++, height_map->handle);
   }
 }
 
-} // namespace core
-} //  namespace kuro
+} //  namespace zen

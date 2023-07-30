@@ -9,6 +9,9 @@ class Mesh : public SceneNode {
 public:
   Mesh(std::shared_ptr<Geometry> geometry, std::shared_ptr<Material> material);
 
+  Mesh(const std::string &name, std::shared_ptr<Geometry> geometry,
+       std::shared_ptr<Material> material);
+
   std::shared_ptr<Geometry> geometry() { return geometry_; }
 
   std::shared_ptr<Material> material() { return material_; }

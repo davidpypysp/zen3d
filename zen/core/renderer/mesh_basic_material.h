@@ -1,11 +1,9 @@
-#ifndef CORE_BASE_MESH_BASIC_MATERIAL_H_
-#define CORE_BASE_MESH_BASIC_MATERIAL_H_
+#pragma once
 
-#include "src/core/base/material.h"
-#include "src/core/base/texture.h"
+#include "zen/core/renderer/material.h"
+#include "zen/core/renderer/texture.h"
 
-namespace kuro {
-namespace core {
+namespace zen {
 
 struct MeshBasicMaterial : public Material {
   std::shared_ptr<Texture> diffuse_map;
@@ -20,7 +18,4 @@ struct MeshBasicMaterial : public Material {
                      const math::mat4 &world_transform) override;
 };
 
-} // namespace core
-} //  namespace kuro
-
-#endif
+} //  namespace zen

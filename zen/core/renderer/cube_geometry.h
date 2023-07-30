@@ -98,12 +98,6 @@ struct CubeGeometry : public Geometry {
       indices.push_back(i);
     }
   }
-
-  void Setup(std::shared_ptr<GraphicAPI> graphic_api) {
-    this->handle =
-        graphic_api->CreateGeometryInstance(this->vertices, this->indices);
-    std::cout << "setup geometry handle: " << std::endl;
-  }
 };
 
 } // namespace zen
