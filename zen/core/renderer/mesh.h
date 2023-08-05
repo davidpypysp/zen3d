@@ -7,10 +7,10 @@ namespace zen {
 
 class Mesh : public SceneNode {
 public:
-  Mesh(std::shared_ptr<Geometry> geometry, std::shared_ptr<Material> material);
-
   Mesh(const std::string &name, std::shared_ptr<Geometry> geometry,
        std::shared_ptr<Material> material);
+
+  virtual const std::string Type() const { return "Mesh"; }
 
   std::shared_ptr<Geometry> geometry() { return geometry_; }
 
