@@ -29,8 +29,10 @@ public:
   void DrawMesh(std::shared_ptr<Geometry> geometry,
                 std::shared_ptr<Material> material);
 
+  std::shared_ptr<GraphicAPI> graphic_api() { return graphic_api_; }
+
 protected:
-  std::shared_ptr<GraphicAPI> render_api_;
+  std::shared_ptr<GraphicAPI> graphic_api_;
 };
 
 } //  namespace zen

@@ -1,4 +1,4 @@
-#include "zen/core/renderer/wasm_wrapper.h"
+#include "zen/core/utils/wasm_wrapper.h"
 
 #include "zen/core/renderer/rendering_pipeline.h"
 

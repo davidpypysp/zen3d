@@ -29,7 +29,7 @@ std::shared_ptr<SceneNode>
 ModelLoader::ProcessNode(aiNode *ai_node, const aiScene *ai_scene,
                          const std::string &directory,
                          std::shared_ptr<GraphicAPI> graphic_api) {
-  auto scene_node = std::make_shared<SceneNode>("mode_node");
+  auto scene_node = std::make_shared<SceneNode>(ai_node->mName.C_Str());
   for (unsigned int i = 0; i < ai_node->mNumMeshes; i++) {
     aiMesh *ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[i]];
     auto mesh = ProcessMesh(ai_mesh, ai_scene, directory, graphic_api);
@@ -94,9 +94,11 @@ ModelLoader::ProcessMesh(aiMesh *ai_mesh, const aiScene *ai_scene,
 
   std::vector<std::shared_ptr<Texture>> textures;
   aiMaterial *material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
+
   auto diffuse_textures =
       LoadMaterialTextures(material, directory, aiTextureType_DIFFUSE,
                            TextureType::DIFFUSE, graphic_api);
+
   textures.insert(textures.end(), diffuse_textures.begin(),
                   diffuse_textures.end());
 
@@ -136,7 +138,8 @@ ModelLoader::ProcessMesh(aiMesh *ai_mesh, const aiScene *ai_scene,
     mesh_basic_material->height_map = height_textures[0];
   }
 
-  return std::make_shared<Mesh>(geometry, mesh_basic_material);
+  return std::make_shared<Mesh>(ai_mesh->mName.C_Str(), geometry,
+                                mesh_basic_material);
 }
 
 std::vector<std::shared_ptr<Texture>> ModelLoader::LoadMaterialTextures(
@@ -148,8 +151,7 @@ std::vector<std::shared_ptr<Texture>> ModelLoader::LoadMaterialTextures(
     aiString str;
     ai_mat->GetTexture(ai_texture_type, i, &str);
     std::string path = directory + "/" + std::string(str.C_Str());
-    auto texture =
-        texture_loader_->LoadTexture(path, texture_type, graphic_api);
+    auto texture = texture_loader_.LoadTexture(path, texture_type, graphic_api);
     textures.push_back(texture);
   }
   return textures;

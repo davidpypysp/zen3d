@@ -1,30 +1,25 @@
-#include "zen/core/utils/wasm_wrapper.h"
+#include "zen/core/utils/window_wrapper.h"
 
 #include "zen/core/base/scene.h"
 #include "zen/core/renderer/renderer.h"
 
+#include "zen/core/loader/model_loader.h"
 #include "zen/ui/imgui/gui.h"
-
-#include "zen/core/renderer/cube_geometry.h"
-#include "zen/core/renderer/mesh.h"
-#include "zen/core/renderer/mesh_flat_material.h"
-#include "zen/core/renderer/simple_material.h"
-#include "zen/core/renderer/triangle_geometry.h"
 
 namespace zen {
 
-class ImguiDemo : public WasmWrapper {
+class ModelLoaderDemo : public WindowWrapper {
 public:
-  ImguiDemo() {
+  ModelLoaderDemo() {
     renderer = std::make_shared<Renderer>();
     scene = std::make_shared<Scene>();
     gui = std::make_shared<Gui>();
+    model_loader = std::make_shared<ModelLoader>();
 
-    auto material = std::make_shared<MeshFlatMaterial>();
-    auto geometry = std::make_shared<CubeGeometry>();
-    auto mesh = std::make_shared<Mesh>(geometry, material);
-    mesh->SetWorldPosition(math::vec3(0, 0, -5));
-    scene->AddNode(mesh);
+    auto model_node =
+        model_loader->LoadModel("data/backpack/backpack.obj",
+                                renderer->rendering_pipeline_.graphic_api());
+    scene->AddNode(model_node);
 
     camera = std::make_shared<Camera>(math::vec3(0.0, 0.0, 0.0));
     scene->AddNode(camera);
@@ -47,15 +42,15 @@ public:
   std::shared_ptr<Camera> camera;
   std::shared_ptr<Renderer> renderer;
   std::shared_ptr<Scene> scene;
+  std::shared_ptr<ModelLoader> model_loader;
 };
 
 } // namespace zen
 
-extern "C" int main(int argc, char **argv) {
-  zen::ImguiDemo demo;
-
-  zen::WasmSpin(demo);
-
+int main(int argc, char **argv) {
+  zen::ModelLoaderDemo demo;
+  demo.Init();
+  demo.Loop();
   demo.Terminate();
   return 0;
 }

@@ -1,7 +1,6 @@
-#include "zen/core/utils/wasm_wrapper.h"
-
 #include "zen/core/base/scene.h"
 #include "zen/core/renderer/renderer.h"
+#include "zen/core/utils/window_wrapper.h"
 
 #include "zen/ui/imgui/gui.h"
 
@@ -13,7 +12,7 @@
 
 namespace zen {
 
-class ImguiDemo : public WasmWrapper {
+class ImguiDemo : public WindowWrapper {
 public:
   ImguiDemo() {
     renderer = std::make_shared<Renderer>();
@@ -43,6 +42,9 @@ public:
     gui->Draw();
   }
 
+  void Terminate() { glfwTerminate(); }
+
+protected:
   std::shared_ptr<Gui> gui;
   std::shared_ptr<Camera> camera;
   std::shared_ptr<Renderer> renderer;
@@ -51,11 +53,11 @@ public:
 
 } // namespace zen
 
-extern "C" int main(int argc, char **argv) {
+int main(int argc, char **argv) {
   zen::ImguiDemo demo;
 
-  zen::WasmSpin(demo);
-
+  demo.Init();
+  demo.Loop();
   demo.Terminate();
   return 0;
 }

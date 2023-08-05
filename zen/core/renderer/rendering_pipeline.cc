@@ -12,15 +12,15 @@ namespace zen {
  * @brief Construct a new Rendering Pipeline:: Rendering Pipeline object
  */
 RenderingPipeline::RenderingPipeline(std::shared_ptr<GraphicAPI> graphic_api)
-    : render_api_(graphic_api) {}
+    : graphic_api_(graphic_api) {}
 
 void RenderingPipeline::InitGeometry(std::shared_ptr<Geometry> geometry) {
-  geometry->Setup(render_api_);
+  geometry->Setup(graphic_api_);
 }
 
 void RenderingPipeline::InitMaterial(std::shared_ptr<Material> material) {
   auto shader_program = material->shader_program;
-  material->shader_program = render_api_->CreateShaderProgram(
+  material->shader_program = graphic_api_->CreateShaderProgram(
       shader_program->vertex_shader_path.c_str(),
       shader_program->fragment_shader_path.c_str(),
       shader_program->geometry_shader_path.c_str());
@@ -55,13 +55,13 @@ void RenderingPipeline::DrawNodes(std::shared_ptr<SceneNode> scene_node,
 void RenderingPipeline::PrepareDraw(std::shared_ptr<Material> material,
                                     std::shared_ptr<Camera> camera,
                                     const math::mat4 &world_transform) {
-  render_api_->EnableShaderProgram(material->shader_program);
-  material->PrepareRender(render_api_, camera, world_transform);
+  graphic_api_->EnableShaderProgram(material->shader_program);
+  material->PrepareRender(graphic_api_, camera, world_transform);
 }
 
 void RenderingPipeline::DrawMesh(std::shared_ptr<Geometry> geometry,
                                  std::shared_ptr<Material> material) {
-  render_api_->DrawMeshInstance(geometry->handle);
+  graphic_api_->DrawMeshInstance(geometry->handle);
 }
 
 } //  namespace zen

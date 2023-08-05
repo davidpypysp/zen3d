@@ -59,7 +59,7 @@ public:
                          std::shared_ptr<TextureHandle> handle = nullptr);
 
 protected:
-  static constexpr GLint texture_map_[] = {GL_RED, GL_RGB, GL_RGBA};
+  GLint texture_map_[3] = {GL_RED, GL_RGB, GL_RGBA};
 };
 
 } //  namespace zen

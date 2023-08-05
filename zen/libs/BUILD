@@ -21,7 +21,7 @@ zen_wasm_cc_binary(
 zen_wasm_cc_binary(
     name = "triangle_demo_wasm",
     srcs = [
-        "triangle_demo_wasm.cpp",
+        "triangle_demo_wasm.cc",
     ],
     copts = [
         # gltf compile success opts
@@ -67,5 +67,34 @@ zen_wasm_cc_binary(
     ],
     deps = [
         "@stb//:stb_image",
+    ],
+)
+
+cc_library(
+    name = "assimp",
+    deps = [
+        "@assimp",
+    ],
+)
+
+cc_binary(
+    name = "assimp_test",
+    srcs = ["assimp_test.cc"],
+    deps = [
+        "@assimp",
+    ],
+)
+
+zen_wasm_cc_binary(
+    name = "assimp_test_wasm",
+    srcs = ["assimp_test_wasm.cc"],
+    additional_linker_inputs = [
+        "//:data",
+    ],
+    linkopts = [
+        "--preload-file data",
+    ],
+    deps = [
+        "@assimp",
     ],
 )

@@ -1,4 +1,4 @@
-#include "zen/core/renderer/wasm_wrapper.h"
+#include "zen/core/utils/wasm_wrapper.h"
 
 #include "zen/core/base/scene.h"
 #include "zen/core/renderer/renderer.h"

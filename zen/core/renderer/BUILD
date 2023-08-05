@@ -145,11 +145,6 @@ cc_test(
     ],
 )
 
-cc_library(
-    name = "wasm_wrapper",
-    hdrs = ["wasm_wrapper.h"],
-)
-
 cc_test(
     name = "shader_manager_test",
     srcs = ["shader_manager_test.cc"],

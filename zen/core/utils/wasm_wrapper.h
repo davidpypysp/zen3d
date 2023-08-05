@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <stdio.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -105,14 +104,14 @@ protected:
   GlobalWasmParams params_;
 };
 
-void WasmLoopImpl(void *manager) {
-  static_cast<WasmWrapper *>(manager)->Loop();
+void WasmLoopImpl(void *wasm_wrapper) {
+  static_cast<WasmWrapper *>(wasm_wrapper)->Loop();
 }
 
-void WasmSpin(WasmWrapper &manager) {
-  manager.Init();
+void WasmSpin(WasmWrapper &wasm_wrapper) {
+  wasm_wrapper.Init();
 #ifdef __EMSCRIPTEN__
-  emscripten_set_main_loop_arg(&WasmLoopImpl, &manager, 0, 1);
+  emscripten_set_main_loop_arg(&WasmLoopImpl, &wasm_wrapper, 0, 1);
 #endif
 }
 

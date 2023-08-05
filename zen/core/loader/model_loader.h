@@ -38,7 +38,7 @@ protected:
                        std::shared_ptr<GraphicAPI> graphic_api);
 
   Assimp::Importer importer_;
-  std::shared_ptr<TextureLoader> texture_loader_;
+  TextureLoader texture_loader_;
 };
 
 } // namespace zen
