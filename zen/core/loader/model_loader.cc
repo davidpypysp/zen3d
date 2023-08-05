@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "zen/core/base/logging.h"
-#include "zen/core/renderer/geometry.h"
 #include "zen/core/renderer/mesh_basic_material.h"
 
 namespace zen {

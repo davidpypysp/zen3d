@@ -10,8 +10,6 @@
 #include <unordered_map>
 
 #include "zen/core/graphic_api/graphic_api.h"
-#include "zen/core/graphic_api/shader_program.h"
-#include "zen/core/graphic_api/vertex.h"
 
 namespace zen {
 

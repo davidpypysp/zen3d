@@ -93,7 +93,7 @@ protected:
 
     // Open a window and create its OpenGL context
     params_.window = glfwCreateWindow(
-        params_.window_width, params_.window_height, "wasm window", NULL, NULL);
+        params_.window_width, params_.window_height, "zen3d", NULL, NULL);
     if (params_.window == NULL) {
       fprintf(stderr, "Failed to open GLFW window.\n");
       glfwTerminate();

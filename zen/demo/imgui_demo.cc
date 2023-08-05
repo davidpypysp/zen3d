@@ -21,7 +21,7 @@ public:
 
     auto material = std::make_shared<MeshFlatMaterial>();
     auto geometry = std::make_shared<CubeGeometry>();
-    auto mesh = std::make_shared<Mesh>(geometry, material);
+    auto mesh = std::make_shared<Mesh>("simple_mesh", geometry, material);
     mesh->SetWorldPosition(math::vec3(0, 0, -5));
     scene->AddNode(mesh);
 
