@@ -45,20 +45,6 @@ cc_test(
 )
 
 cc_library(
-    name = "texture",
-    hdrs = ["texture.h"],
-)
-
-cc_test(
-    name = "texture_test",
-    srcs = ["texture_test.cc"],
-    deps = [
-        ":texture",
-        "//zen/libs:gtest_main",
-    ],
-)
-
-cc_library(
     name = "material",
     hdrs = ["material.h"],
     deps = [
@@ -100,7 +86,7 @@ cc_library(
     hdrs = ["mesh_basic_material.h"],
     deps = [
         ":material",
-        ":texture",
+        "//zen/core/graphic_api:texture",
     ],
 )
 

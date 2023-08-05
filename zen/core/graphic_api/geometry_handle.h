@@ -7,11 +7,4 @@ namespace zen {
  */
 struct GeometryHandle {};
 
-/**
- * handle contains graphic texture specific handles
- */
-struct TextureHandle {};
-
-enum TextureFormat { RED, RGB, RGBA };
-
 } // namespace zen

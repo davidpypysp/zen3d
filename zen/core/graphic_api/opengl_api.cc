@@ -1,9 +1,9 @@
 #include "zen/core/graphic_api/opengl_api.h"
+#include "zen/core/base/logging.h"
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <string.h>
 #include <string>
 
 namespace zen {
@@ -15,21 +15,19 @@ void CheckCompileErrors(GLuint shader, std::string type) {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
       glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-      std::cout
+      LOG(Error)
           << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
           << infoLog
-          << "\n -- --------------------------------------------------- -- "
-          << std::endl;
+          << "\n -- --------------------------------------------------- -- ";
     }
   } else {
     glGetProgramiv(shader, GL_LINK_STATUS, &success);
     if (!success) {
       glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-      std::cout
+      LOG(Error)
           << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
           << infoLog
-          << "\n -- --------------------------------------------------- -- "
-          << std::endl;
+          << "\n -- --------------------------------------------------- -- ";
     }
   }
 }

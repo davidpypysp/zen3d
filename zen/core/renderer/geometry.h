@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "zen/core/graphic_api/graphic_api.h"
 
 namespace zen {

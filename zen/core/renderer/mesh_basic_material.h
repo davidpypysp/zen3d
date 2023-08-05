@@ -1,7 +1,7 @@
 #pragma once
 
+#include "zen/core/graphic_api/texture.h"
 #include "zen/core/renderer/material.h"
-#include "zen/core/renderer/texture.h"
 
 namespace zen {
 

@@ -3,8 +3,13 @@ load("//build_defs:wasm.bzl", "zen_wasm_cc_binary")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "handle",
-    hdrs = ["handle.h"],
+    name = "geometry_handle",
+    hdrs = ["geometry_handle.h"],
+)
+
+cc_library(
+    name = "texture",
+    hdrs = ["texture.h"],
 )
 
 cc_library(
@@ -33,8 +38,9 @@ cc_library(
     name = "graphic_api",
     srcs = ["graphic_api.h"],
     deps = [
-        ":handle",
+        ":geometry_handle",
         ":shader_program",
+        ":texture",
         ":vertex",
     ],
 )
@@ -45,6 +51,7 @@ cc_library(
     hdrs = ["opengl_api.h"],
     deps = [
         ":graphic_api",
+        "//zen/core/base:logging",
     ],
 )
 

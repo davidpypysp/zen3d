@@ -7,7 +7,7 @@ cc_library(
     deps = [
         "//zen/core/base:logging",
         "//zen/core/graphic_api",
-        "//zen/core/renderer:texture",
+        "//zen/core/graphic_api:texture",
         "@stb//:stb_image",
     ],
 )

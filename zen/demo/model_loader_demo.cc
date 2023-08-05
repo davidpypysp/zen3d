@@ -33,9 +33,8 @@ public:
     scene->AddNode(mesh);
 
     // add backpack model
-    auto model_node =
-        model_loader->LoadModel("data/backpack/backpack.obj",
-                                renderer->rendering_pipeline_.graphic_api());
+    auto model_node = model_loader->LoadModel("data/backpack/backpack.obj",
+                                              renderer->GetGraphicAPI());
     scene->AddNode(model_node);
 
     // init scene

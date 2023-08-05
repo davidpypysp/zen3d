@@ -6,6 +6,10 @@
 
 namespace zen {
 
+/**
+ * TODO: This is a temporary solution. We should have a way to specify the
+ * graphic api
+ */
 Renderer::Renderer() : rendering_pipeline_(std::make_shared<OpenGLAPI>()) {}
 
 Renderer::~Renderer() {}

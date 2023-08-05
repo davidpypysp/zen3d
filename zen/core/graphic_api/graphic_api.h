@@ -3,8 +3,9 @@
 #include <memory>
 #include <vector>
 
-#include "zen/core/graphic_api/handle.h"
+#include "zen/core/graphic_api/geometry_handle.h"
 #include "zen/core/graphic_api/shader_program.h"
+#include "zen/core/graphic_api/texture.h"
 #include "zen/core/graphic_api/vertex.h"
 
 namespace zen {

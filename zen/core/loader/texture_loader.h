@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "zen/core/graphic_api/graphic_api.h"
-#include "zen/core/renderer/texture.h"
+#include "zen/core/graphic_api/texture.h"
 
 namespace zen {
 
