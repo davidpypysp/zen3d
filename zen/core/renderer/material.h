@@ -10,7 +10,10 @@ namespace zen {
 struct Material {
   std::shared_ptr<ShaderProgram> shader_program;
 
-  virtual void InitShaderProgram(std::shared_ptr<GraphicAPI> graphic_api) {}
+  /**
+   * Setup material and request gpu resource
+   */
+  virtual void Setup(std::shared_ptr<GraphicAPI> graphic_api) {}
 
   virtual void PrepareRender(std::shared_ptr<GraphicAPI> graphic_api,
                              std::shared_ptr<Camera> camera,

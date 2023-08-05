@@ -34,7 +34,8 @@ class OpenGLAPI : public GraphicAPI {
 public:
   OpenGLAPI();
 
-  void Init();
+  void Init() override;
+
   std::shared_ptr<ShaderProgram>
   CreateShaderProgram(const std::string &vertex_path,
                       const std::string &fragment_path,
@@ -61,10 +62,12 @@ public:
 
   std::shared_ptr<TextureHandle>
   CreateTextureInstance(void *data, const unsigned int width,
-                        const unsigned int height, const TextureFormat format);
+                        const unsigned int height,
+                        const TextureFormat format) override;
 
-  void EnableTextureUnit(const unsigned int unit = 0,
-                         std::shared_ptr<TextureHandle> handle = nullptr);
+  void
+  EnableTextureUnit(const unsigned int unit = 0,
+                    std::shared_ptr<TextureHandle> handle = nullptr) override;
 
 protected:
   GLint texture_map_[3] = {GL_RED, GL_RGB, GL_RGBA};

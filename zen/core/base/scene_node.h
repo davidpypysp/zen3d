@@ -17,6 +17,8 @@ public:
             const math::vec3 &eular_rotaion = math::vec3(0.0, 0.0, 0.0),
             const math::vec3 &scale = math::vec3(1.0, 1.0, 1.0));
 
+  virtual ~SceneNode() = default;
+
   const std::string &name() const { return name_; }
 
   virtual const std::string Type() const { return "SceneNode"; }

@@ -10,7 +10,7 @@ TEST(MeshTest, BasicAssertions) {
   auto geometry = std::make_shared<TriangleGeometry>();
   auto material = std::make_shared<SimpleMaterial>();
 
-  Mesh mesh(geometry, material);
+  Mesh mesh("test_mesh", geometry, material);
 }
 
 } //  namespace zen

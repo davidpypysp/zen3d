@@ -19,7 +19,7 @@ void RenderingPipeline::InitGeometry(std::shared_ptr<Geometry> geometry) {
 }
 
 void RenderingPipeline::InitMaterial(std::shared_ptr<Material> material) {
-  material->InitShaderProgram(graphic_api_);
+  material->Setup(graphic_api_);
 }
 
 void RenderingPipeline::InitNode(std::shared_ptr<SceneNode> scene_node) {

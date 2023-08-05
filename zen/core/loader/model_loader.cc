@@ -127,7 +127,6 @@ ModelLoader::ProcessMesh(aiMesh *ai_mesh, const aiScene *ai_scene,
 
   // TODO: Refactor geometry creation
   auto geometry = std::make_shared<Geometry>(vertices, indices);
-  geometry->handle = graphic_api->CreateGeometryInstance(vertices, indices);
 
   auto mesh_basic_material = std::make_shared<MeshBasicMaterial>();
   if (diffuse_textures.size() > 0) {

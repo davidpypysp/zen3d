@@ -86,7 +86,6 @@ cc_library(
     hdrs = ["mesh_basic_material.h"],
     deps = [
         ":material",
-        "//zen/core/graphic_api:texture",
     ],
 )
 
@@ -127,15 +126,6 @@ cc_test(
     srcs = ["camera_test.cc"],
     deps = [
         ":camera",
-        "//zen/libs:gtest_main",
-    ],
-)
-
-cc_test(
-    name = "shader_manager_test",
-    srcs = ["shader_manager_test.cc"],
-    deps = [
-        ":shader_manager",
         "//zen/libs:gtest_main",
     ],
 )

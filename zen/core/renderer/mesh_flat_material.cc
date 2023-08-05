@@ -6,8 +6,7 @@ namespace zen {
 
 MeshFlatMaterial::MeshFlatMaterial() {}
 
-void MeshFlatMaterial::InitShaderProgram(
-    std::shared_ptr<GraphicAPI> graphic_api) {
+void MeshFlatMaterial::Setup(std::shared_ptr<GraphicAPI> graphic_api) {
   constexpr auto mesh_vert_shader = "zen/core/shader/mesh.vert";
   constexpr auto mesh_frag_shader = "zen/core/shader/mesh_flat.frag";
   shader_program =

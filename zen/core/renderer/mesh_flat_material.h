@@ -7,7 +7,7 @@ namespace zen {
 struct MeshFlatMaterial : public Material {
   MeshFlatMaterial();
 
-  void InitShaderProgram(std::shared_ptr<GraphicAPI> graphic_api) override;
+  void Setup(std::shared_ptr<GraphicAPI> graphic_api) override;
 
   void PrepareRender(std::shared_ptr<GraphicAPI> graphic_api,
                      std::shared_ptr<Camera> camera,

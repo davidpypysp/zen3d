@@ -19,18 +19,17 @@ public:
     renderer = std::make_shared<Renderer>();
     scene = std::make_shared<Scene>();
     gui = std::make_shared<Gui>();
+  }
 
+  void Setup() override {
     auto material = std::make_shared<MeshFlatMaterial>();
     auto geometry = std::make_shared<CubeGeometry>();
-    auto mesh = std::make_shared<Mesh>(geometry, material);
+    auto mesh = std::make_shared<Mesh>("simpe_mesh", geometry, material);
     mesh->SetWorldPosition(math::vec3(0, 0, -5));
     scene->AddNode(mesh);
 
     camera = std::make_shared<Camera>(math::vec3(0.0, 0.0, 0.0));
     scene->AddNode(camera);
-  }
-
-  void Setup() override {
     renderer->Init(scene);
 
     auto gui_store = std::make_shared<GuiStore>();
