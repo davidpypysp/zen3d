@@ -19,6 +19,8 @@ public:
 
   const std::string &name() const { return name_; }
 
+  virtual const std::string Type() const { return "SceneNode"; }
+
   const std::vector<std::shared_ptr<SceneNode>> &children() const {
     return children_;
   }

@@ -6,7 +6,7 @@ SceneNode::SceneNode(const std::string &name) : name_(name) {}
 
 SceneNode::SceneNode(const std::string &name, const math::vec3 &position,
                      const math::vec3 &eular_rotation, const math::vec3 &scale)
-    : transform_(position, eular_rotation, scale) {}
+    : name_(name), transform_(position, eular_rotation, scale) {}
 
 void SceneNode::AddChild(std::shared_ptr<SceneNode> scene_node) {
   children_.push_back(scene_node);
