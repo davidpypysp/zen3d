@@ -1,5 +1,6 @@
 
 #include "zen/core/loader/texture_loader.h"
+#include "zen/core/base/logging.h"
 
 // Reference: https://github.com/nothings/stb/blob/master/stb_image.h#L4
 // To use stb_image, add this in *one* C++ source file.

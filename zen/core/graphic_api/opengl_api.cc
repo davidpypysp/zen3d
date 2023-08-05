@@ -45,12 +45,20 @@ OpenGLAPI::OpenGLAPI() : GraphicAPI() {}
 void OpenGLAPI::Init() { glEnable(GL_DEPTH_TEST); }
 
 std::shared_ptr<ShaderProgram>
-OpenGLAPI::CreateShaderProgram(const char *vertex_path,
-                               const char *fragment_path,
-                               const char *geometry_path) {
+OpenGLAPI::CreateShaderProgram(const std::string &vertex_path,
+                               const std::string &fragment_path,
+                               const std::string &geometry_path) {
+
+  const std::string &shader_hash =
+      vertex_path + ":" + fragment_path + ":" + geometry_path;
+  if (shader_programs_.find(shader_hash) != shader_programs_.end()) {
+    return shader_programs_[shader_hash];
+  }
+
   std::string vertex_code;
   std::string fragment_code;
   std::string geometry_code;
+
   std::ifstream vshader_file;
   std::ifstream fshader_file;
   std::ifstream gshader_file;
@@ -60,7 +68,6 @@ OpenGLAPI::CreateShaderProgram(const char *vertex_path,
   gshader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
   // TODO: exception special handling for wasm
-  //   try {
   vshader_file.open(vertex_path);
   fshader_file.open(fragment_path);
   std::stringstream vshader_stream, fshader_stream;
@@ -73,17 +80,13 @@ OpenGLAPI::CreateShaderProgram(const char *vertex_path,
 
   vertex_code = vshader_stream.str();
   fragment_code = fshader_stream.str();
-  if (geometry_path != nullptr && strlen(geometry_path) != 0) {
+  if (!geometry_path.empty()) {
     gshader_file.open(geometry_path);
     std::stringstream gshader_stream;
     gshader_stream << gshader_file.rdbuf();
     gshader_file.close();
     geometry_code = gshader_stream.str();
   }
-  //   } catch (std::ifstream::failure &e) {
-  //     std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " <<
-  //     std::endl;
-  //   }
 
   const char *vshader_code = vertex_code.c_str();
   const char *fshader_code = fragment_code.c_str();
@@ -101,7 +104,7 @@ OpenGLAPI::CreateShaderProgram(const char *vertex_path,
   CheckCompileErrors(fragment, "FRAGMENT");
   // if geometry shader is given, compile geometry shader
   unsigned int geometry;
-  if (geometry_path != nullptr && strlen(geometry_path) != 0) {
+  if (!geometry_path.empty()) {
     const char *gshader_code = geometry_code.c_str();
     geometry = glCreateShader(GL_GEOMETRY_SHADER);
     glShaderSource(geometry, 1, &gshader_code, NULL);
@@ -110,12 +113,13 @@ OpenGLAPI::CreateShaderProgram(const char *vertex_path,
   }
 
   auto shader_program = std::make_shared<GLSLShaderProgram>();
+  shader_program->name = shader_hash;
 
   // shader Program
   shader_program->id = glCreateProgram();
   glAttachShader(shader_program->id, vertex);
   glAttachShader(shader_program->id, fragment);
-  if (geometry_path != nullptr && strlen(geometry_path) != 0) {
+  if (!geometry_path.empty()) {
     glAttachShader(shader_program->id, geometry);
   }
   glLinkProgram(shader_program->id);
@@ -124,8 +128,11 @@ OpenGLAPI::CreateShaderProgram(const char *vertex_path,
   // necessery
   glDeleteShader(vertex);
   glDeleteShader(fragment);
-  if (geometry_path != nullptr)
+  if (!geometry_path.empty()) {
     glDeleteShader(geometry);
+  }
+
+  shader_programs_[shader_hash] = shader_program;
 
   return std::static_pointer_cast<ShaderProgram>(shader_program);
 }
@@ -227,7 +234,8 @@ OpenGLAPI::CreateTextureInstance(void *data, const unsigned int width,
                                  const unsigned int height,
                                  const TextureFormat format) {
   auto handle = std::make_shared<GLTextureHandle>();
-  glGenTextures(1, &handle->id);
+  glGenTextures(1, &(handle->id));
+
   glBindTexture(GL_TEXTURE_2D, handle->id);
 
   auto gl_format = texture_map_[format];

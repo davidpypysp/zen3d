@@ -8,11 +8,12 @@
 
 namespace zen {
 
-ModelLoader::ModelLoader() { LOG(Info) << "ModelLoader::ModelLoader()"; }
+ModelLoader::ModelLoader() {}
 
 std::shared_ptr<SceneNode>
 ModelLoader::LoadModel(const std::string &path,
                        std::shared_ptr<GraphicAPI> graphic_api) {
+  LOG(Info) << "Loading model: " << path << " ...";
   const aiScene *ai_scene = importer_.ReadFile(
       path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
                 aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -30,7 +31,10 @@ std::shared_ptr<SceneNode>
 ModelLoader::ProcessNode(aiNode *ai_node, const aiScene *ai_scene,
                          const std::string &directory,
                          std::shared_ptr<GraphicAPI> graphic_api) {
-  auto scene_node = std::make_shared<SceneNode>(ai_node->mName.C_Str());
+  const std::string &node_name = ai_node->mName.C_Str();
+  LOG(Info) << "Processing node: " << node_name;
+  auto scene_node = std::make_shared<SceneNode>(node_name);
+
   for (unsigned int i = 0; i < ai_node->mNumMeshes; i++) {
     aiMesh *ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[i]];
     auto mesh = ProcessMesh(ai_mesh, ai_scene, directory, graphic_api);

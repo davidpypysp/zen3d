@@ -1,4 +1,5 @@
 #include "zen/core/renderer/renderer.h"
+#include "zen/core/base/logging.h"
 
 // TODO: abstract this
 #include "zen/core/graphic_api/opengl_api.h"
@@ -10,6 +11,7 @@ Renderer::Renderer() : rendering_pipeline_(std::make_shared<OpenGLAPI>()) {}
 Renderer::~Renderer() {}
 
 void Renderer::Init(std::shared_ptr<Scene> scene) {
+  LOG(Info) << "Init Renderer";
   rendering_pipeline_.InitNode(scene->root_node());
 }
 

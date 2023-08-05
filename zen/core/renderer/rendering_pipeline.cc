@@ -19,15 +19,12 @@ void RenderingPipeline::InitGeometry(std::shared_ptr<Geometry> geometry) {
 }
 
 void RenderingPipeline::InitMaterial(std::shared_ptr<Material> material) {
-  auto shader_program = material->shader_program;
-  material->shader_program = graphic_api_->CreateShaderProgram(
-      shader_program->vertex_shader_path.c_str(),
-      shader_program->fragment_shader_path.c_str(),
-      shader_program->geometry_shader_path.c_str());
+  material->InitShaderProgram(graphic_api_);
 }
 
 void RenderingPipeline::InitNode(std::shared_ptr<SceneNode> scene_node) {
   if (scene_node->is_renderable()) {
+    // TODO: check if it is a mesh
     auto mesh = std::static_pointer_cast<Mesh>(scene_node);
     InitGeometry(mesh->geometry());
     InitMaterial(mesh->material());
@@ -41,6 +38,7 @@ void RenderingPipeline::InitNode(std::shared_ptr<SceneNode> scene_node) {
 void RenderingPipeline::DrawNodes(std::shared_ptr<SceneNode> scene_node,
                                   std::shared_ptr<Camera> camera) {
   if (scene_node->is_renderable()) {
+    // TODO: check if it is a mesh
     auto mesh = std::static_pointer_cast<Mesh>(scene_node);
     const auto &world_transform = mesh->transform().ModelMatrix();
     PrepareDraw(mesh->material(), camera, world_transform);

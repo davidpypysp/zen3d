@@ -5,6 +5,7 @@ cc_library(
     srcs = ["texture_loader.cc"],
     hdrs = ["texture_loader.h"],
     deps = [
+        "//zen/core/base:logging",
         "//zen/core/graphic_api",
         "//zen/core/renderer:texture",
         "@stb//:stb_image",

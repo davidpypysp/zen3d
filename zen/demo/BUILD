@@ -105,6 +105,8 @@ cc_binary(
     deps = [
         "//zen/core/loader:model_loader",
         "//zen/core/renderer",
+        "//zen/core/renderer:cube_geometry",
+        "//zen/core/renderer:mesh_flat_material",
         "//zen/core/utils:window_wrapper",
         "//zen/ui/imgui:gui",
     ],

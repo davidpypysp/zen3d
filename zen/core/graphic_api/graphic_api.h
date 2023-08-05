@@ -18,8 +18,9 @@ public:
   virtual void Init() = 0;
 
   virtual std::shared_ptr<ShaderProgram>
-  CreateShaderProgram(const char *vertex_path, const char *fragment_path,
-                      const char *geometry_path = nullptr) = 0;
+  CreateShaderProgram(const std::string &vertex_path,
+                      const std::string &fragment_path,
+                      const std::string &geometry_path = "") = 0;
 
   virtual void EnableShaderProgram(std::shared_ptr<ShaderProgram> program) = 0;
 

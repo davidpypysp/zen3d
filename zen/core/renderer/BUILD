@@ -181,6 +181,7 @@ cc_library(
     deps = [
         ":camera",
         ":rendering_pipeline",
+        "//zen/core/base:logging",
         "//zen/core/base:scene",
         "//zen/core/graphic_api:opengl_api",
     ],

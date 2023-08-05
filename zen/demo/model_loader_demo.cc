@@ -1,7 +1,11 @@
 #include "zen/core/utils/window_wrapper.h"
 
+#include "zen/core/base/logging.h"
 #include "zen/core/base/scene.h"
 #include "zen/core/renderer/renderer.h"
+
+#include "zen/core/renderer/cube_geometry.h"
+#include "zen/core/renderer/mesh_flat_material.h"
 
 #include "zen/core/loader/model_loader.h"
 #include "zen/ui/imgui/gui.h"
@@ -15,17 +19,26 @@ public:
     scene = std::make_shared<Scene>();
     gui = std::make_shared<Gui>();
     model_loader = std::make_shared<ModelLoader>();
+  }
 
+  void Setup() override {
+    camera = std::make_shared<Camera>(math::vec3(0.0, 0.0, 2.0));
+    scene->AddNode(camera);
+
+    // add flat cube
+    auto material = std::make_shared<MeshFlatMaterial>();
+    auto geometry = std::make_shared<CubeGeometry>();
+    auto mesh = std::make_shared<Mesh>("simple_cube", geometry, material);
+    mesh->SetWorldPosition(math::vec3(0, 0, -5));
+    scene->AddNode(mesh);
+
+    // add backpack model
     auto model_node =
         model_loader->LoadModel("data/backpack/backpack.obj",
                                 renderer->rendering_pipeline_.graphic_api());
     scene->AddNode(model_node);
 
-    camera = std::make_shared<Camera>(math::vec3(0.0, 0.0, 0.0));
-    scene->AddNode(camera);
-  }
-
-  void Setup() override {
+    // init scene
     renderer->Init(scene);
 
     auto gui_store = std::make_shared<GuiStore>();
@@ -50,7 +63,12 @@ public:
 int main(int argc, char **argv) {
   zen::ModelLoaderDemo demo;
   demo.Init();
-  demo.Loop();
+  try {
+    demo.Loop();
+
+  } catch (const std::exception &e) {
+    std::cout << "error: " << e.what() << std::endl;
+  }
   demo.Terminate();
   return 0;
 }
