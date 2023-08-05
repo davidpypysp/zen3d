@@ -17,7 +17,7 @@ bool SceneExplorer::TreeNode(std::shared_ptr<SceneNode> scene_node,
                                      scene_node->name().c_str());
   if (ImGui::IsItemClicked()) {
     gui_store->selected_scene_node = scene_node;
-    Log() << "node " << scene_node->name() << " clicked";
+    LOG(Info) << "SceneNode " << scene_node->name() << " clicked";
   }
   return node_open;
 }

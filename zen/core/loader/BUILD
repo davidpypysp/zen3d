@@ -17,6 +17,7 @@ cc_library(
     hdrs = ["model_loader.h"],
     deps = [
         ":texture_loader",
+        "//zen/core/base:logging",
         "//zen/core/graphic_api",
         "//zen/core/renderer:mesh",
         "//zen/core/renderer:mesh_basic_material",

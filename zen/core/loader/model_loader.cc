@@ -2,12 +2,13 @@
 
 #include <iostream>
 
+#include "zen/core/base/logging.h"
 #include "zen/core/renderer/geometry.h"
 #include "zen/core/renderer/mesh_basic_material.h"
 
 namespace zen {
 
-ModelLoader::ModelLoader() {}
+ModelLoader::ModelLoader() { LOG(Info) << "ModelLoader::ModelLoader()"; }
 
 std::shared_ptr<SceneNode>
 ModelLoader::LoadModel(const std::string &path,

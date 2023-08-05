@@ -55,9 +55,6 @@ OpenGLAPI::CreateShaderProgram(const char *vertex_path,
   std::ifstream fshader_file;
   std::ifstream gshader_file;
 
-  std::cout << vertex_path << std::endl;
-  std::cout << fragment_path << std::endl;
-
   vshader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   fshader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   gshader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);

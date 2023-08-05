@@ -11,28 +11,32 @@ enum LOG_LEVEL {
   Warning = 2,
   Error = 3,
 };
-const std::string LOG_LEVEL_STR[] = {"Debug", "Info", "Warning", "Error"};
+const std::string LOG_LEVEL_STR[] = {"DEBUG", "INFO", "WARNING", "ERROR"};
 
 // Usage: LOG(Info) << "hello world";
+#define LOG(level) zen::Logging(level, __FILE__, __LINE__)
 
-class Log {
+class Logging {
 public:
-  Log(const LOG_LEVEL log_level = LOG_LEVEL::Info)
-      : ss_(), log_level_(log_level) {}
+  Logging(const LOG_LEVEL log_level = LOG_LEVEL::Info,
+          const char *file = __FILE__, const int line = __LINE__)
+      : ss_(), log_level_(log_level), file_(file), line_(line) {}
 
-  ~Log() {
-    std::cout << "[" << LOG_LEVEL_STR[log_level_] << "]: " << ss_.str()
-              << std::endl;
+  ~Logging() {
+    std::cout << "[" << LOG_LEVEL_STR[log_level_] << "][" << file_ << ":"
+              << line_ << "] " << ss_.str() << std::endl;
   }
 
-  template <class T> Log &operator<<(const T &x) {
+  template <class T> Logging &operator<<(const T &x) {
     ss_ << x;
     return *this;
   }
 
 private:
   std::ostringstream ss_;
-  LOG_LEVEL log_level_;
+  const LOG_LEVEL log_level_;
+  const char *file_;
+  const int line_;
 };
 
 } // namespace zen
