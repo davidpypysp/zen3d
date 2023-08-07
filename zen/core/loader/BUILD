@@ -40,3 +40,26 @@ cc_binary(
         "//zen/core/graphic_api:opengl_api",
     ],
 )
+
+cc_library(
+    name = "gltf_model_loader",
+    srcs = ["gltf_model_loader.cc"],
+    hdrs = ["gltf_model_loader.h"],
+    deps = [
+        "//zen/core/base:logging",
+        "//zen/core/renderer:mesh",
+        "//zen/core/renderer:mesh_basic_material",
+        "@tinygltf",
+    ],
+)
+
+cc_binary(
+    name = "gltf_model_loader_test",
+    srcs = ["gltf_model_loader_test.cc"],
+    data = [
+        "//:data",
+    ],
+    deps = [
+        ":gltf_model_loader",
+    ],
+)
