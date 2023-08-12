@@ -14,8 +14,8 @@ void ObjectInspector::Render(std::shared_ptr<GuiStore> gui_store) {
   ImGui::InputText("Name", const_cast<char *>(scene_node->name().c_str()),
                    scene_node->name().size());
   ImGui::LabelText("Type", scene_node->Type().c_str());
-  ImGui::SliderFloat3("Translation", &scene_node->WorldPosition()[0], -10.0,
-                      10.0);
+  ImGui::SliderFloat3("Translation", &scene_node->WorldPosition()[0], -100.0,
+                      100.0);
   // ImGui::SliderFloat3("Rotation", scene_node->LocalRotationPtr(),
   // -10.0, 10.0); ImGui::SliderFloat3("Scale", scene_node->LocalScalePtr(),
   // 0.1, 2.0);

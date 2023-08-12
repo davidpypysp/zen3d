@@ -60,86 +60,43 @@ std::shared_ptr<Mesh>
 GLTFModelLoader::ProcessMeshPrimitive(tinygltf::Model &model,
                                       tinygltf::Primitive &primitive) {
 
+  const int vertices_count = model.accessors[primitive.indices].count;
+
   // indices
   std::vector<unsigned int> indices;
-  {
-    const tinygltf::Accessor &indicies_accessor =
-        model.accessors[primitive.indices];
-    const tinygltf::BufferView &bufferView =
-        model.bufferViews[indicies_accessor.bufferView];
-    // cast to float type read only. Use accessor and bufview byte offsets to
-    // determine where position data
-    // is located in the buffer.
-    const tinygltf::Buffer &buffer = model.buffers[bufferView.buffer];
-    // bufferView byteoffset + accessor byteoffset tells you where the actual
-    // position data is within the buffer. From there you should already know
-    // how the data needs to be interpreted.
-    const auto *indices_array = reinterpret_cast<const uint16_t *>(
-        &buffer.data[bufferView.byteOffset + indicies_accessor.byteOffset]);
-    // From here, you choose what you wish to do with this position data. In
-    // this case, we  will display it out.
-    for (size_t i = 0; i < indicies_accessor.count; ++i) {
-      indices.push_back(indices_array[i]);
-    }
+  const auto *indices_array =
+      getRawPrimitiveData<uint16_t>(model, primitive.indices);
+  for (size_t i = 0; i < vertices_count; ++i) {
+    indices.push_back(indices_array[i]);
   }
 
-  std::vector<Vertex> vertices(indices.size());
-  {
-    constexpr auto kPositionAttribute = "POSITION";
-    const tinygltf::Accessor &position_accessor =
-        model.accessors[primitive.attributes[kPositionAttribute]];
-    const tinygltf::BufferView &bufferView =
-        model.bufferViews[position_accessor.bufferView];
-    const tinygltf::Buffer &buffer = model.buffers[bufferView.buffer];
-    const float *position_array = reinterpret_cast<const float *>(
-        &buffer.data[bufferView.byteOffset + position_accessor.byteOffset]);
-    for (size_t i = 0; i < position_accessor.count; ++i) {
-      auto &position = vertices[i].position;
-      position.x = position_array[i * 3 + 0];
-      position.y = position_array[i * 3 + 1];
-      position.z = position_array[i * 3 + 2];
-    }
+  // vertices and all attributes
+  std::vector<Vertex> vertices(vertices_count);
+
+  const auto *position_array =
+      getRawPrimitiveData<float>(model, primitive.attributes["POSITION"]);
+  for (size_t i = 0; i < vertices_count; ++i) {
+    auto &position = vertices[i].position;
+    position.x = position_array[i * 3 + 0];
+    position.y = position_array[i * 3 + 1];
+    position.z = position_array[i * 3 + 2];
   }
 
-  {
-    constexpr auto kNormalAttribute = "NORMAL";
-    const tinygltf::Accessor &normal_accessor =
-        model.accessors[primitive.attributes[kNormalAttribute]];
-    const tinygltf::BufferView &bufferView =
-        model.bufferViews[normal_accessor.bufferView];
-    const tinygltf::Buffer &buffer = model.buffers[bufferView.buffer];
-    const float *normal_array = reinterpret_cast<const float *>(
-        &buffer.data[bufferView.byteOffset + normal_accessor.byteOffset]);
-    for (size_t i = 0; i < normal_accessor.count; ++i) {
-      auto &normal = vertices[i].normal;
-      normal.x = normal_array[i * 3 + 0];
-      normal.y = normal_array[i * 3 + 1];
-      normal.z = normal_array[i * 3 + 2];
-    }
+  const auto *normal_array =
+      getRawPrimitiveData<float>(model, primitive.attributes["NORMAL"]);
+  for (size_t i = 0; i < vertices_count; ++i) {
+    auto &normal = vertices[i].normal;
+    normal.x = normal_array[i * 3 + 0];
+    normal.y = normal_array[i * 3 + 1];
+    normal.z = normal_array[i * 3 + 2];
   }
 
-  {
-    constexpr auto kTextureCoordinateAttribute = "TEXCOORD_0";
-    const tinygltf::Accessor &tex_coord_accessor =
-        model.accessors[primitive.attributes[kTextureCoordinateAttribute]];
-    const tinygltf::BufferView &bufferView =
-        model.bufferViews[tex_coord_accessor.bufferView];
-    // cast to float type read only. Use accessor and bufview byte offsets to
-    // determine where position data
-    // is located in the buffer.
-    const tinygltf::Buffer &buffer = model.buffers[bufferView.buffer];
-    // bufferView byteoffset + accessor byteoffset tells you where the actual
-    // position data is within the buffer. From there you should already know
-    // how the data needs to be interpreted.
-    const float *texture_coords_array = reinterpret_cast<const float *>(
-        &buffer.data[bufferView.byteOffset + tex_coord_accessor.byteOffset]);
-    // From here, you choose what you wish to do with this position data. In
-    // this case, we  will display it out.
-    for (size_t i = 0; i < tex_coord_accessor.count; ++i) {
-      auto &tex_coords = vertices[i].tex_coords;
-      tex_coords.x = texture_coords_array[i * 2 + 0];
-      tex_coords.y = texture_coords_array[i * 2 + 1];
-    }
+  const auto *texture_coords_array =
+      getRawPrimitiveData<float>(model, primitive.attributes["TEXCOORD_0"]);
+  for (size_t i = 0; i < vertices_count; ++i) {
+    auto &tex_coords = vertices[i].tex_coords;
+    tex_coords.x = texture_coords_array[i * 2 + 0];
+    tex_coords.y = texture_coords_array[i * 2 + 1];
   }
 
   auto geometry = std::make_shared<Geometry>(vertices, indices);
