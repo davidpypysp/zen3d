@@ -48,7 +48,7 @@ cc_library(
     deps = [
         "//zen/core/base:logging",
         "//zen/core/renderer:mesh",
-        "//zen/core/renderer:mesh_basic_material",
+        "//zen/core/renderer:mesh_flat_material",
         "@tinygltf",
     ],
 )

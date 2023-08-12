@@ -6,15 +6,13 @@
 #include "zen/core/loader/gltf_model_loader.h"
 
 #include "zen/core/base/logging.h"
-#include "zen/core/renderer/mesh_basic_material.h"
+#include "zen/core/renderer/mesh_flat_material.h"
 
 namespace zen {
 
 GLTFModelLoader::GLTFModelLoader() {}
 
-std::shared_ptr<SceneNode>
-GLTFModelLoader::LoadModel(const std::string &path,
-                           std::shared_ptr<GraphicAPI> graphic_api) {
+std::shared_ptr<SceneNode> GLTFModelLoader::LoadModel(const std::string &path) {
   tinygltf::Model model;
   std::string err;
   std::string warn;
@@ -34,27 +32,25 @@ GLTFModelLoader::LoadModel(const std::string &path,
 
   const tinygltf::Scene &scene = model.scenes[model.defaultScene];
   std::shared_ptr<SceneNode> root_node =
-      std::make_shared<SceneNode>(scene.name);
+      std::make_shared<SceneNode>("scene:" + scene.name);
   for (size_t i = 0; i < scene.nodes.size(); ++i) {
     auto &node = model.nodes[scene.nodes[i]];
-    auto scene_node = ProcessNode(model, node, graphic_api);
+    auto scene_node = ProcessNode(model, node);
     root_node->AddChild(scene_node);
   }
   return root_node;
 }
 
-std::shared_ptr<SceneNode>
-GLTFModelLoader::ProcessNode(tinygltf::Model &model, tinygltf::Node &node,
-                             std::shared_ptr<GraphicAPI> graphic_api) {
+std::shared_ptr<SceneNode> GLTFModelLoader::ProcessNode(tinygltf::Model &model,
+                                                        tinygltf::Node &node) {
   auto scene_node = std::make_shared<SceneNode>(node.name);
   if ((node.mesh >= 0) && (node.mesh < model.meshes.size())) {
     auto &mesh = model.meshes[node.mesh];
-    auto mesh_node = ProcessMesh(model, mesh, graphic_api);
+    auto mesh_node = ProcessMesh(model, mesh);
     scene_node->AddChild(mesh_node);
   }
   for (size_t i = 0; i < node.children.size(); i++) {
-    auto child_node =
-        ProcessNode(model, model.nodes[node.children[i]], graphic_api);
+    auto child_node = ProcessNode(model, model.nodes[node.children[i]]);
     scene_node->AddChild(child_node);
   }
   return scene_node;
@@ -62,8 +58,8 @@ GLTFModelLoader::ProcessNode(tinygltf::Model &model, tinygltf::Node &node,
 
 std::shared_ptr<Mesh>
 GLTFModelLoader::ProcessMeshPrimitive(tinygltf::Model &model,
-                                      tinygltf::Primitive &primitive,
-                                      std::shared_ptr<GraphicAPI> graphic_api) {
+                                      tinygltf::Primitive &primitive) {
+
   // indices
   std::vector<unsigned int> indices;
   {
@@ -78,7 +74,7 @@ GLTFModelLoader::ProcessMeshPrimitive(tinygltf::Model &model,
     // bufferView byteoffset + accessor byteoffset tells you where the actual
     // position data is within the buffer. From there you should already know
     // how the data needs to be interpreted.
-    const unsigned int *indices_array = reinterpret_cast<const unsigned int *>(
+    const auto *indices_array = reinterpret_cast<const uint16_t *>(
         &buffer.data[bufferView.byteOffset + indicies_accessor.byteOffset]);
     // From here, you choose what you wish to do with this position data. In
     // this case, we  will display it out.
@@ -135,7 +131,7 @@ GLTFModelLoader::ProcessMeshPrimitive(tinygltf::Model &model,
     // bufferView byteoffset + accessor byteoffset tells you where the actual
     // position data is within the buffer. From there you should already know
     // how the data needs to be interpreted.
-    const int *texture_coords_array = reinterpret_cast<const int *>(
+    const float *texture_coords_array = reinterpret_cast<const float *>(
         &buffer.data[bufferView.byteOffset + tex_coord_accessor.byteOffset]);
     // From here, you choose what you wish to do with this position data. In
     // this case, we  will display it out.
@@ -145,20 +141,19 @@ GLTFModelLoader::ProcessMeshPrimitive(tinygltf::Model &model,
       tex_coords.y = texture_coords_array[i * 2 + 1];
     }
   }
+
   auto geometry = std::make_shared<Geometry>(vertices, indices);
 
   //   const auto &material = model.materials[primitive.material];
-  auto mesh_basic_material = std::make_shared<MeshBasicMaterial>();
-  return std::make_shared<Mesh>("primitive", geometry, mesh_basic_material);
+  auto material = std::make_shared<MeshFlatMaterial>();
+  return std::make_shared<Mesh>("primitive", geometry, material);
 }
 
-std::shared_ptr<SceneNode>
-GLTFModelLoader::ProcessMesh(tinygltf::Model &model, tinygltf::Mesh &mesh,
-                             std::shared_ptr<GraphicAPI> graphic_api) {
+std::shared_ptr<SceneNode> GLTFModelLoader::ProcessMesh(tinygltf::Model &model,
+                                                        tinygltf::Mesh &mesh) {
   auto scene_node = std::make_shared<SceneNode>(mesh.name);
   for (size_t i = 0; i < mesh.primitives.size(); ++i) {
-    auto primitive_mesh_node =
-        ProcessMeshPrimitive(model, mesh.primitives[i], graphic_api);
+    auto primitive_mesh_node = ProcessMeshPrimitive(model, mesh.primitives[i]);
     scene_node->AddChild(primitive_mesh_node);
   }
   return scene_node;

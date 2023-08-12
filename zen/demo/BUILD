@@ -111,3 +111,43 @@ cc_binary(
         "//zen/ui/imgui:gui",
     ],
 )
+
+cc_binary(
+    name = "gltf_model_loader_demo",
+    srcs = [
+        "gltf_model_loader_demo.cc",
+    ],
+    data = [
+        "//:data",
+        "//zen/core/shader",
+    ],
+    deps = [
+        "//zen/core/loader:gltf_model_loader",
+        "//zen/core/renderer",
+        "//zen/core/renderer:cube_geometry",
+        "//zen/core/renderer:mesh_flat_material",
+        "//zen/core/utils:window_wrapper",
+        "//zen/ui/imgui:gui",
+    ],
+)
+
+zen_wasm_cc_binary(
+    name = "gltf_model_loader_demo_wasm",
+    srcs = [
+        "gltf_model_loader_demo_wasm.cc",
+    ],
+    additional_linker_inputs = [
+        "//:data",
+        "//zen/core/shader:shader",
+    ],
+    linkopts = [
+        "--preload-file data",
+        "--preload-file zen/core/shader",
+    ],
+    deps = [
+        "//zen/core/loader:gltf_model_loader",
+        "//zen/core/renderer",
+        "//zen/core/utils:wasm_wrapper",
+        "//zen/ui/imgui:gui",
+    ],
+)

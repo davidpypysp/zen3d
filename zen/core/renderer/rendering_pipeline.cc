@@ -1,4 +1,5 @@
 #include "zen/core/renderer/rendering_pipeline.h"
+#include "zen/core/base/logging.h"
 
 // TODO: refactor initialization of this
 #include "zen/core/renderer/mesh.h"

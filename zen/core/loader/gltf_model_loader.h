@@ -11,20 +11,16 @@ class GLTFModelLoader {
 public:
   GLTFModelLoader();
 
-  std::shared_ptr<SceneNode> LoadModel(const std::string &path,
-                                       std::shared_ptr<GraphicAPI> graphic_api);
+  std::shared_ptr<SceneNode> LoadModel(const std::string &path);
 
-  std::shared_ptr<SceneNode>
-  ProcessNode(tinygltf::Model &model, tinygltf::Node &node,
-              std::shared_ptr<GraphicAPI> graphic_api);
+  std::shared_ptr<SceneNode> ProcessNode(tinygltf::Model &model,
+                                         tinygltf::Node &node);
 
-  std::shared_ptr<SceneNode>
-  ProcessMesh(tinygltf::Model &model, tinygltf::Mesh &mesh,
-              std::shared_ptr<GraphicAPI> graphic_api);
+  std::shared_ptr<SceneNode> ProcessMesh(tinygltf::Model &model,
+                                         tinygltf::Mesh &mesh);
 
-  std::shared_ptr<Mesh>
-  ProcessMeshPrimitive(tinygltf::Model &model, tinygltf::Primitive &primitive,
-                       std::shared_ptr<GraphicAPI> graphic_api);
+  std::shared_ptr<Mesh> ProcessMeshPrimitive(tinygltf::Model &model,
+                                             tinygltf::Primitive &primitive);
 
 protected:
   tinygltf::TinyGLTF loader_;

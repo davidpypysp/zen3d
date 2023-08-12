@@ -136,6 +136,7 @@ cc_library(
     hdrs = ["rendering_pipeline.h"],
     deps = [
         ":mesh",
+        "//zen/core/base:logging",
         "//zen/core/graphic_api",
     ],
 )
