@@ -141,6 +141,7 @@ zen_wasm_cc_binary(
         "//zen/core/shader:shader",
     ],
     linkopts = [
+        "-sALLOW_MEMORY_GROWTH",
         "--preload-file data",
         "--preload-file zen/core/shader",
     ],

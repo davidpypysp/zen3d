@@ -26,7 +26,8 @@ public:
     scene->AddNode(camera);
 
     // add backpack model
-    auto model_node = gltf_model_loader->LoadModel("data/cube_gltf/Cube.gltf");
+    auto model_node =
+        gltf_model_loader->LoadModel("data/sponza_gltf/Sponza.gltf");
     scene->AddNode(model_node);
 
     // init scene

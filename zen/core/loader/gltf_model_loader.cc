@@ -17,7 +17,14 @@ std::shared_ptr<SceneNode> GLTFModelLoader::LoadModel(const std::string &path) {
   std::string err;
   std::string warn;
 
-  bool ret = loader_.LoadASCIIFromFile(&model, &err, &warn, path);
+  bool ret = false;
+  if (path.find(".gltf") != std::string::npos) {
+    ret = loader_.LoadASCIIFromFile(&model, &err, &warn, path);
+  } else if (path.find(".glb") != std::string::npos) {
+    ret = loader_.LoadBinaryFromFile(&model, &err, &warn, path);
+  } else {
+    LOG(Error) << "Unknown file format: " << path;
+  }
   if (!warn.empty()) {
     printf("Warn: %s\n", warn.c_str());
   }
