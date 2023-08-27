@@ -2,7 +2,6 @@ workspace(name = "zen")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-
 http_archive(
     name = "aspect_rules_js",
     sha256 = "ad666b12324bab8bc151772bb2eff9aadace7bfd4d624157c2ac3931860d1c95",
@@ -86,9 +85,9 @@ http_archive(
 )
 
 http_archive(
-  name = "com_google_googletest",
-  urls = ["https://github.com/google/googletest/archive/5ab508a01f9eb089207ee87fd547d290da39d015.zip"],
-  strip_prefix = "googletest-5ab508a01f9eb089207ee87fd547d290da39d015",
+    name = "com_google_googletest",
+    strip_prefix = "googletest-5ab508a01f9eb089207ee87fd547d290da39d015",
+    urls = ["https://github.com/google/googletest/archive/5ab508a01f9eb089207ee87fd547d290da39d015.zip"],
 )
 
 http_archive(
@@ -97,4 +96,11 @@ http_archive(
     sha256 = "60080d8ab4daaab309f65b3cffd99f19eb1af8d05623fff469b9b652818e286e",
     strip_prefix = "assimp-4.0.1",
     urls = ["https://github.com/assimp/assimp/archive/v4.0.1.tar.gz"],
+)
+
+http_archive(
+    name = "entt",
+    sha256 = "0ac010f232d3089200c5e545bcbd6480cf68b705de6930d8ff7cdb0a29f5b47b",
+    strip_prefix = "entt-3.11.1",
+    url = "https://github.com/skypjack/entt/archive/refs/tags/v3.11.1.tar.gz",
 )

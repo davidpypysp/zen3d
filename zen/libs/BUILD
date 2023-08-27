@@ -98,3 +98,18 @@ zen_wasm_cc_binary(
         "@assimp",
     ],
 )
+
+cc_library(
+    name = "entt",
+    deps = [
+        "@entt",
+    ],
+)
+
+zen_wasm_cc_binary(
+    name = "entt_test_wasm",
+    srcs = ["entt_test_wasm.cc"],
+    deps = [
+        "@entt",
+    ],
+)
