@@ -8,9 +8,12 @@ SceneNode::SceneNode(const std::string &name, const math::vec3 &position,
                      const math::vec3 &eular_rotation, const math::vec3 &scale)
     : name_(name), transform_(position, eular_rotation, scale) {}
 
-void SceneNode::AddChild(std::shared_ptr<SceneNode> scene_node) {
-  children_.push_back(scene_node);
-  scene_node->parent_ = shared_from_this();
+void SceneNode::AddChild(const NodeHandle child_handle) {
+  children_handles_.push_back(child_handle);
+}
+
+void SceneNode::SetParent(const NodeHandle parent_handle) {
+  parent_handle_ = parent_handle;
 }
 
 math::vec3 &SceneNode::WorldPosition() { return transform_.WorldPosition(); }

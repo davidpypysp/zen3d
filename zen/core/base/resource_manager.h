@@ -4,34 +4,34 @@
 #include <memory>
 #include <unordered_map>
 
+#include "zen/core/base/handle.h"
+
 namespace zen {
 
-typedef uint32_t ResourceHandle;
-
-template <typename T> class ResourceManager {
+template <typename T, typename Handle = ResourceHandle> class ResourceManager {
 public:
   ResourceManager() {}
 
-  template <typename... Args> inline ResourceHandle Create(Args... args) {
-    ResourceHandle handle = GenerateHandle();
+  template <typename... Args> inline Handle Create(Args... args) {
+    Handle handle = GenerateHandle();
     resources_[handle] = std::make_unique<T>(args...);
     return handle;
   }
 
-  inline T *Get(const ResourceHandle handle) const {
+  inline T *Get(const Handle handle) const {
     if (resources_.find(handle) == resources_.end()) {
       return nullptr;
     }
     return resources_.at(handle).get();
   }
 
-  inline void Remove(const ResourceHandle handle) { resources_.erase(handle); }
+  inline void Remove(const Handle handle) { resources_.erase(handle); }
 
 protected:
-  inline ResourceHandle GenerateHandle() { return created_resource_count_++; }
+  inline Handle GenerateHandle() { return ++created_resource_count_; }
 
   uint32_t created_resource_count_ = 0;
-  std::unordered_map<ResourceHandle, std::unique_ptr<T>> resources_;
+  std::unordered_map<Handle, std::unique_ptr<T>> resources_;
 };
 
 } // namespace zen

@@ -2,14 +2,18 @@
 
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
+#include "zen/core/base/handle.h"
 #include "zen/core/base/transform.h"
 
 namespace zen {
 
-class SceneNode : public std::enable_shared_from_this<SceneNode> {
+typedef ResourceHandle NodeHandle;
+
+class SceneNode {
 public:
   SceneNode(const std::string &name);
 
@@ -19,15 +23,11 @@ public:
 
   virtual ~SceneNode() = default;
 
+  void AddChild(const NodeHandle child_handle);
+
+  void SetParent(const NodeHandle parent_handle);
+
   const std::string &name() const { return name_; }
-
-  virtual const std::string Type() const { return "SceneNode"; }
-
-  const std::vector<std::shared_ptr<SceneNode>> &children() const {
-    return children_;
-  }
-
-  void AddChild(std::shared_ptr<SceneNode> node);
 
   math::vec3 &WorldPosition();
 
@@ -41,8 +41,8 @@ protected:
   std::string name_;
   Transform transform_;
 
-  std::vector<std::shared_ptr<SceneNode>> children_;
-  std::shared_ptr<SceneNode> parent_;
+  std::vector<NodeHandle> children_handles_;
+  NodeHandle parent_handle_ = 0;
 
   bool is_renderable_ = false;
 };

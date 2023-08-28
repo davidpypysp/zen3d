@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "zen/core/base/resource_manager.h"
 #include "zen/core/base/scene_node.h"
 
 namespace zen {
@@ -12,17 +13,20 @@ class Scene {
 public:
   Scene();
 
-  std::shared_ptr<SceneNode> root_node() { return root_node_; }
+  SceneNode &root_node() { return *scene_node_manager_.Get(root_handle_); }
 
-  std::shared_ptr<SceneNode> camera_node() { return camera_node_; }
+  SceneNode &camera_node() { return *scene_node_manager_.Get(camera_handle_); }
 
-  void AddNode(std::shared_ptr<SceneNode> node);
+  SceneNode &CreateNode(const std::string &name,
+                        const NodeHandle parent_handle = 0);
 
-  void SetCameraNode(std::shared_ptr<SceneNode> camera_node);
+  void SetCameraNode(NodeHandle camera_handle);
 
 protected:
-  std::shared_ptr<SceneNode> root_node_;
-  std::shared_ptr<SceneNode> camera_node_;
+  ResourceManager<SceneNode, NodeHandle> scene_node_manager_;
+
+  NodeHandle root_handle_;
+  NodeHandle camera_handle_;
 };
 
 } // namespace zen

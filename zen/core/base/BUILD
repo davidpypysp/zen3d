@@ -27,6 +27,7 @@ cc_library(
     srcs = ["scene_node.cc"],
     hdrs = ["scene_node.h"],
     deps = [
+        ":handle",
         ":transform",
     ],
 )
@@ -45,6 +46,7 @@ cc_library(
     srcs = ["scene.cc"],
     hdrs = ["scene.h"],
     deps = [
+        ":resource_manager",
         ":scene_node",
     ],
 )
@@ -59,8 +61,16 @@ cc_test(
 )
 
 cc_library(
+    name = "handle",
+    hdrs = ["handle.h"],
+)
+
+cc_library(
     name = "resource_manager",
     hdrs = ["resource_manager.h"],
+    deps = [
+        ":handle",
+    ],
 )
 
 cc_test(
