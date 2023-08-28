@@ -23,9 +23,6 @@ void update(entt::registry &registry) {
   // use a callback
   view.each([](const auto &pos, auto &vel) { /* ... */ });
 
-  // use an extended callback
-  view.each([](const auto entity, const auto &pos, auto &vel) { /* ... */ });
-
   // use a range-for
   for (auto [entity, pos, vel] : view.each()) {
     std::cout << "pos: " << pos.x << ", " << pos.y << std::endl;
@@ -54,6 +51,18 @@ void update(entt::registry &registry) {
   }
 }
 
+void iterate_entities(entt::registry &registry) {
+  registry.each([&registry](entt::entity entity) {
+    // Check if the entity has a component
+    if (registry.all_of<velocity>(entity)) {
+      auto &vel = registry.get<velocity>(entity);
+      std::cout << "velocity: " << vel.dx << ", " << vel.dy << std::endl;
+    } else {
+      std::cout << "no entity velocity" << std::endl;
+    }
+  });
+}
+
 void loop() {}
 
 extern "C" int main(int argc, char **argv) {
@@ -69,7 +78,9 @@ extern "C" int main(int argc, char **argv) {
     }
   }
 
-  update(registry);
+  iterate_entities(registry);
+
+  //   update(registry);
 
 #ifdef __EMSCRIPTEN__
   emscripten_set_main_loop(loop, 0, 1);

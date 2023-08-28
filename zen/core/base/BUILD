@@ -58,11 +58,17 @@ cc_test(
     ],
 )
 
-cc_binary(
-    name = "model_loader_test",
-    srcs = ["model_loader_test.cc"],
+cc_library(
+    name = "resource_manager",
+    hdrs = ["resource_manager.h"],
+)
+
+cc_test(
+    name = "resource_manager_test",
+    srcs = ["resource_manager_test.cc"],
+    copts = ["--std=c++14"],
     deps = [
-        "@assimp",
-        # "//zen/libs:gtest_main",
+        ":resource_manager",
+        "@com_google_googletest//:gtest_main",
     ],
 )
