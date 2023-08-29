@@ -1,5 +1,6 @@
 #pragma once
 
+#include <entt/entt.hpp>
 #include <iostream>
 #include <memory>
 #include <optional>
@@ -15,11 +16,7 @@ typedef ResourceHandle NodeHandle;
 
 class SceneNode {
 public:
-  SceneNode(const std::string &name);
-
-  SceneNode(const std::string &name, const math::vec3 &position,
-            const math::vec3 &eular_rotaion = math::vec3(0.0, 0.0, 0.0),
-            const math::vec3 &scale = math::vec3(1.0, 1.0, 1.0));
+  SceneNode(const std::string &name, entt::entity entity);
 
   virtual ~SceneNode() = default;
 
@@ -38,6 +35,8 @@ public:
   bool is_renderable() { return is_renderable_; }
 
 protected:
+  entt::entity entity_;
+
   std::string name_;
   Transform transform_;
 

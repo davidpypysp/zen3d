@@ -2,11 +2,8 @@
 
 namespace zen {
 
-SceneNode::SceneNode(const std::string &name) : name_(name) {}
-
-SceneNode::SceneNode(const std::string &name, const math::vec3 &position,
-                     const math::vec3 &eular_rotation, const math::vec3 &scale)
-    : name_(name), transform_(position, eular_rotation, scale) {}
+SceneNode::SceneNode(const std::string &name, entt::entity entity)
+    : name_(name), entity_(entity) {}
 
 void SceneNode::AddChild(const NodeHandle child_handle) {
   children_handles_.push_back(child_handle);

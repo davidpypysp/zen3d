@@ -23,6 +23,8 @@ public:
   void SetCameraNode(NodeHandle camera_handle);
 
 protected:
+  entt::registry registry_;
+
   ResourceManager<SceneNode, NodeHandle> scene_node_manager_;
 
   NodeHandle root_handle_;
