@@ -8,18 +8,9 @@
 namespace zen {
 
 struct Material {
+  std::string vertex_shader_path;
+  std::string fragment_shader_path;
   std::shared_ptr<ShaderProgram> shader_program;
-
-  /**
-   * Setup material and request gpu resource
-   */
-  virtual void Setup(std::shared_ptr<GraphicAPI> graphic_api) {}
-
-  virtual void PrepareRender(std::shared_ptr<GraphicAPI> graphic_api,
-                             std::shared_ptr<Camera> camera,
-                             const math::mat4 &world_transform) {}
-
-  virtual ~Material() {}
 };
 
 } //  namespace zen

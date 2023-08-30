@@ -5,9 +5,6 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "geometry",
     hdrs = ["geometry.h"],
-    deps = [
-        "//zen/core/graphic_api",
-    ],
 )
 
 cc_test(
@@ -47,10 +44,6 @@ cc_test(
 cc_library(
     name = "material",
     hdrs = ["material.h"],
-    deps = [
-        ":camera",
-        "//zen/core/graphic_api",
-    ],
 )
 
 cc_library(
@@ -91,12 +84,10 @@ cc_library(
 
 cc_library(
     name = "mesh",
-    srcs = ["mesh.cc"],
     hdrs = ["mesh.h"],
     deps = [
         ":geometry",
         ":material",
-        "//zen/core/base:scene_node",
     ],
 )
 
@@ -116,7 +107,6 @@ cc_library(
     srcs = ["camera.cc"],
     hdrs = ["camera.h"],
     deps = [
-        "//zen/core/base:scene_node",
         "//zen/core/math",
     ],
 )
@@ -135,8 +125,11 @@ cc_library(
     srcs = ["rendering_pipeline.cc"],
     hdrs = ["rendering_pipeline.h"],
     deps = [
+        ":camera",
         ":mesh",
         "//zen/core/base:logging",
+        "//zen/core/base:scene_graph",
+        "//zen/core/base:transform",
         "//zen/core/graphic_api",
     ],
 )
@@ -144,6 +137,9 @@ cc_library(
 cc_test(
     name = "rendering_pipeline_test",
     srcs = ["rendering_pipeline_test.cc"],
+    linkopts = [
+        "-lGL",
+    ],
     deps = [
         ":rendering_pipeline",
         "//zen/core/graphic_api:opengl_api",

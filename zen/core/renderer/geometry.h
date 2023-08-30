@@ -9,19 +9,6 @@ struct Geometry {
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
   std::shared_ptr<GeometryHandle> handle;
-
-  Geometry() {}
-
-  virtual ~Geometry() = default;
-
-  Geometry(const std::vector<Vertex> &vertices,
-           const std::vector<unsigned int> &indices)
-      : vertices(vertices), indices(indices) {}
-
-  virtual void Setup(std::shared_ptr<GraphicAPI> graphic_api) {
-    this->handle =
-        graphic_api->CreateGeometryInstance(this->vertices, this->indices);
-  }
 };
 
 } //  namespace zen

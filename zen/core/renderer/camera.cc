@@ -3,23 +3,20 @@
 namespace zen {
 
 // constructor with vectors
-Camera::Camera(const math::vec3 &position, const math::vec3 &up,
-               const float yaw, const float pitch)
-    : SceneNode("camera", position), front_(math::vec3(0.0, 0.0, -1.0)),
-      movement_speed_(default_speed), mouse_sensitivity_(default_sensitivity),
-      zoom_(default_zoom) {
+Camera::Camera(const math::vec3& up, const float yaw, const float pitch)
+    : front_(math::vec3(0.0, 0.0, -1.0)), movement_speed_(default_speed),
+      mouse_sensitivity_(default_sensitivity), zoom_(default_zoom) {
   world_up_ = up;
   yaw_ = yaw;
   pitch_ = pitch;
   UpdateCameraVectors();
 }
 
-math::mat4 Camera::GetPerspectiveMatrix(const float ratio) {
+const math::mat4 Camera::GetPerspectiveMatrix(const float ratio) const {
   return math::perspective(math::radians(zoom_), ratio, 0.1f, 100.0f);
 }
 
-math::mat4 Camera::GetViewMatrix() {
-  const auto &position = WorldPosition();
+const math::mat4 Camera::GetViewMatrix(const math::vec3& position) const {
   return math::lookAt(position, position + front_, up_);
 }
 

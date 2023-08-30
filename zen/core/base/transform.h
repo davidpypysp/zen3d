@@ -6,9 +6,9 @@ namespace zen {
 
 class Transform {
 public:
-  Transform(const math::vec3 &position = {0.0, 0.0, 0.0},
-            const math::vec3 &eular_rotation = {0.0, 0.0, 0.0},
-            const math::vec3 &scale = {1.0, 1.0, 1.0})
+  Transform(const math::vec3& position = {0.0, 0.0, 0.0},
+            const math::vec3& eular_rotation = {0.0, 0.0, 0.0},
+            const math::vec3& scale = {1.0, 1.0, 1.0})
       : position_(position), eular_rotation_(eular_rotation), scale_(scale),
         is_dirty_(true) {}
 
@@ -17,12 +17,12 @@ public:
     is_dirty_ = false;
   }
 
-  void ComputeModelMatrix(const math::mat4 &parent_global_model_matrix) {
+  void ComputeModelMatrix(const math::mat4& parent_global_model_matrix) {
     model_matrix_ = parent_global_model_matrix * GetLocalModelMatrix();
     is_dirty_ = false;
   }
 
-  const math::mat4 &ModelMatrix() {
+  const math::mat4& ModelMatrix() {
     // TODO: This is a hack to make sure the model matrix is computed
     // if (is_dirty_) {
     ComputeModelMatrix();
@@ -30,14 +30,14 @@ public:
     return model_matrix_;
   }
 
-  void SetLocalPosition(const math::vec3 &position) {
+  void SetLocalPosition(const math::vec3& position) {
     position_ = position;
     is_dirty_ = true;
   }
 
-  math::vec3 &WorldPosition() { return position_; }
+  math::vec3& WorldPosition() { return position_; }
 
-  void SetWorldPosition(const math::vec3 &position) {
+  void SetWorldPosition(const math::vec3& position) {
     position_ = position;
     is_dirty_ = true;
   }
