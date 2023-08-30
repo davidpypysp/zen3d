@@ -77,9 +77,45 @@ cc_library(
 cc_test(
     name = "resource_manager_test",
     srcs = ["resource_manager_test.cc"],
-    copts = ["--std=c++14"],
     deps = [
         ":resource_manager",
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "entity",
+    hdrs = ["entity.h"],
+    srcs = ["entity.cc"],
+    deps = [
+        "@entt",
+    ],
+)
+
+cc_test(
+    name = "entity_test",
+    srcs = ["entity_test.cc"],
+    deps = [
+        ":entity",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "scene_graph",
+    hdrs = ["scene_graph.h"],
+    srcs = ["scene_graph.cc"],
+    deps = [
+        ":entity",
+    ],
+)
+
+cc_test(
+    name = "scene_graph_test",
+    srcs = ["scene_graph_test.cc"],
+    deps = [
+        ":scene_graph",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
