@@ -1,11 +1,9 @@
 #pragma once
 
-#include <memory>
-#include <string>
 #include <vector>
 
+#include "zen/core/base/entity.h"
 #include "zen/core/base/resource_manager.h"
-#include "zen/core/base/scene_node.h"
 
 namespace zen {
 
@@ -13,22 +11,19 @@ class Scene {
 public:
   Scene();
 
-  SceneNode &root_node() { return *scene_node_manager_.Get(root_handle_); }
+  Entity& CreateEntity();
 
-  SceneNode &camera_node() { return *scene_node_manager_.Get(camera_handle_); }
+  SceneRegistry& registry() { return scene_context_.registry; }
 
-  SceneNode &CreateNode(const std::string &name,
-                        const NodeHandle parent_handle = 0);
+  template <typename... Components>
+  inline auto View() {
+    return scene_context_.registry.view<Components...>();
+  }
 
-  void SetCameraNode(NodeHandle camera_handle);
+private:
+  SceneContext scene_context_;
 
-protected:
-  entt::registry registry_;
-
-  ResourceManager<SceneNode, NodeHandle> scene_node_manager_;
-
-  NodeHandle root_handle_;
-  NodeHandle camera_handle_;
+  std::unordered_map<uint32_t, Entity> entity_map_;
 };
 
 } // namespace zen

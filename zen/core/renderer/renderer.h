@@ -1,7 +1,5 @@
 #pragma once
 
-#include "zen/core/base/scene.h"
-#include "zen/core/renderer/camera.h"
 #include "zen/core/renderer/rendering_pipeline.h"
 
 namespace zen {
@@ -15,9 +13,9 @@ public:
   /**
    * Call after the scene is loaded.
    */
-  void Init(std::shared_ptr<Scene> scene);
+  void Init(Scene& scene);
 
-  void Render(std::shared_ptr<Scene> scene, std::shared_ptr<Camera> camera);
+  void Render(Scene& scene, Entity& camera_entity);
 
   /**
    * Util function to grab the graphic api from the rendering pipeline.

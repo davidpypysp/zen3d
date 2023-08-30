@@ -128,7 +128,7 @@ cc_library(
         ":camera",
         ":mesh",
         "//zen/core/base:logging",
-        "//zen/core/base:scene_graph",
+        "//zen/core/base:scene",
         "//zen/core/base:transform",
         "//zen/core/graphic_api",
     ],
@@ -152,10 +152,8 @@ cc_library(
     srcs = ["renderer.cc"],
     hdrs = ["renderer.h"],
     deps = [
-        ":camera",
         ":rendering_pipeline",
         "//zen/core/base:logging",
-        "//zen/core/base:scene",
         "//zen/core/graphic_api:opengl_api",
     ],
 )

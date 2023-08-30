@@ -2,6 +2,4 @@
 
 #include "zen/core/base/entity.h"
 
-TEST(EntityTest, BasicAssertions) { 
-    zen::SceneGraph scene;
-}
+TEST(EntityTest, BasicAssertions) { zen::Scene scene; }

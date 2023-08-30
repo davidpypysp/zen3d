@@ -23,45 +23,6 @@ cc_test(
 )
 
 cc_library(
-    name = "scene_node",
-    srcs = ["scene_node.cc"],
-    hdrs = ["scene_node.h"],
-    deps = [
-        ":handle",
-        ":transform",
-        "@entt",
-    ],
-)
-
-cc_test(
-    name = "scene_node_test",
-    srcs = ["scene_node_test.cc"],
-    deps = [
-        ":scene_node",
-        "//zen/libs:gtest_main",
-    ],
-)
-
-cc_library(
-    name = "scene",
-    srcs = ["scene.cc"],
-    hdrs = ["scene.h"],
-    deps = [
-        ":resource_manager",
-        ":scene_node",
-    ],
-)
-
-cc_test(
-    name = "scene_test",
-    srcs = ["scene_test.cc"],
-    deps = [
-        ":scene",
-        "//zen/libs:gtest_main",
-    ],
-)
-
-cc_library(
     name = "handle",
     hdrs = ["handle.h"],
 )
@@ -102,9 +63,9 @@ cc_test(
 )
 
 cc_library(
-    name = "scene_graph",
-    srcs = ["scene_graph.cc"],
-    hdrs = ["scene_graph.h"],
+    name = "scene",
+    srcs = ["scene.cc"],
+    hdrs = ["scene.h"],
     deps = [
         ":entity",
         ":resource_manager",
@@ -115,7 +76,7 @@ cc_test(
     name = "scene_graph_test",
     srcs = ["scene_graph_test.cc"],
     deps = [
-        ":scene_graph",
+        ":scene",
         "@com_google_googletest//:gtest_main",
     ],
 )

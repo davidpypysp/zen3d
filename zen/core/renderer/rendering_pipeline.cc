@@ -15,8 +15,8 @@ namespace zen {
 RenderingPipeline::RenderingPipeline(std::shared_ptr<GraphicAPI> graphic_api)
     : graphic_api_(graphic_api) {}
 
-void RenderingPipeline::InitMeshes(SceneGraph& scene_graph) {
-  auto view = scene_graph.View<Mesh>();
+void RenderingPipeline::InitMeshes(Scene& scene) {
+  auto view = scene.View<Mesh>();
   for (auto [entity, mesh] : view.each()) {
     auto& geometry = mesh.geometry;
     geometry.handle = graphic_api_->CreateGeometryInstance(geometry.vertices,
@@ -28,10 +28,11 @@ void RenderingPipeline::InitMeshes(SceneGraph& scene_graph) {
   }
 }
 
-void RenderingPipeline::RenderMeshes(SceneGraph& scene_graph) {
+void RenderingPipeline::RenderMeshes(Scene& scene) {
   Camera camera;
   Transform camera_transform;
-  auto view = scene_graph.View<Mesh, Transform>();
+  auto camera_view = scene.View<Camera, Transform>();
+  auto view = scene.View<Mesh, Transform>();
   for (const auto& [entity, mesh, transform] : view.each()) {
     const auto& world_transform = transform.ModelMatrix();
     PrepareDraw(mesh.material, camera, world_transform, camera_transform);
