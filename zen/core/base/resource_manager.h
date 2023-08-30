@@ -14,7 +14,7 @@ public:
 
   template <typename... Args> inline Handle Create(Args... args) {
     Handle handle = GenerateHandle();
-    resources_[handle] = std::make_unique<T>(args...);
+    resources_.insert({handle, Entity(args...)});
     return handle;
   }
 
@@ -31,7 +31,7 @@ protected:
   inline Handle GenerateHandle() { return ++created_resource_count_; }
 
   uint32_t created_resource_count_ = 0;
-  std::unordered_map<Handle, std::unique_ptr<T>> resources_;
+  std::unordered_map<Handle, T> resources_;
 };
 
 } // namespace zen

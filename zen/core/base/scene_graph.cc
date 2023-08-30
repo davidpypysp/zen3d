@@ -4,10 +4,10 @@ namespace zen {
 
 SceneGraph::SceneGraph() {}
 
-void SceneGraph::CreateEntity() {
-    Entity *entity = new Entity(&scene_context_);
-    entities_.push_back(entity);
-
+Entity &SceneGraph::CreateEntity() {
+  Entity entity(scene_context_);
+  entity_map_.insert({entity.Id(), std::move(entity)});
+  return entity_map_.at(entity.Id());
 }
 
-}
+} // namespace zen

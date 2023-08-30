@@ -85,8 +85,8 @@ cc_test(
 
 cc_library(
     name = "entity",
-    hdrs = ["entity.h"],
     srcs = ["entity.cc"],
+    hdrs = ["entity.h"],
     deps = [
         "@entt",
     ],
@@ -103,10 +103,11 @@ cc_test(
 
 cc_library(
     name = "scene_graph",
-    hdrs = ["scene_graph.h"],
     srcs = ["scene_graph.cc"],
+    hdrs = ["scene_graph.h"],
     deps = [
         ":entity",
+        ":resource_manager",
     ],
 )
 
@@ -118,4 +119,3 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
-

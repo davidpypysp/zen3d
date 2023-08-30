@@ -17,11 +17,11 @@ struct velocity {
   float dy;
 };
 
-void update(entt::registry &registry) {
+void update(entt::registry& registry) {
   auto view = registry.view<const position, velocity>();
 
   // use a callback
-  view.each([](const auto &pos, auto &vel) { /* ... */ });
+  view.each([](const auto& pos, auto& vel) { /* ... */ });
 
   // use a range-for
   for (auto [entity, pos, vel] : view.each()) {
@@ -32,13 +32,13 @@ void update(entt::registry &registry) {
 
   // use forward iterators and get only the components of interest
   for (auto entity : view) {
-    auto &vel = view.get<velocity>(entity);
+    auto& vel = view.get<velocity>(entity);
     std::cout << "single vel: " << vel.dx << ", " << vel.dy << std::endl;
     // ...
   }
 
   for (auto entity : view) {
-    const auto &position = view.get<const struct position>(entity);
+    const auto& position = view.get<const struct position>(entity);
     std::cout << "single position: " << position.x << ", " << position.y
               << std::endl;
     // ...
@@ -51,11 +51,11 @@ void update(entt::registry &registry) {
   }
 }
 
-void iterate_entities(entt::registry &registry) {
+void iterate_entities(entt::registry& registry) {
   registry.each([&registry](entt::entity entity) {
     // Check if the entity has a component
     if (registry.all_of<velocity>(entity)) {
-      auto &vel = registry.get<velocity>(entity);
+      auto& vel = registry.get<velocity>(entity);
       std::cout << "velocity: " << vel.dx << ", " << vel.dy << std::endl;
     } else {
       std::cout << "no entity velocity" << std::endl;
@@ -65,13 +65,13 @@ void iterate_entities(entt::registry &registry) {
 
 void loop() {}
 
-extern "C" int main(int argc, char **argv) {
+extern "C" int main(int argc, char** argv) {
   std::cout << "entt test!" << std::endl;
 
   entt::registry registry;
 
   for (auto i = 0u; i < 10u; ++i) {
-    const entt::entity &entity = registry.create();
+    const entt::entity& entity = registry.create();
     registry.emplace<position>(entity, i * 1.f, i * 1.f);
     if (i % 2 == 0) {
       registry.emplace<velocity>(entity, i * .1f, i * .1f);
