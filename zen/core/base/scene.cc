@@ -2,14 +2,11 @@
 
 namespace zen {
 
-Scene::Scene() {
-  root_handle_ = scene_node_manager_.Create("root_node", registry_.create());
-}
+Scene::Scene() { root_handle_ = scene_node_manager_.Create(registry_); }
 
 SceneNode &Scene::CreateNode(const std::string &name,
                              const NodeHandle parent_handle) {
-  entt::entity entity = registry_.create();
-  const auto handle = scene_node_manager_.Create(name, entity);
+  const auto handle = scene_node_manager_.Create(registry_);
   auto *node = scene_node_manager_.Get(handle);
   if (parent_handle != 0) {
     auto *parent_node = scene_node_manager_.Get(parent_handle);

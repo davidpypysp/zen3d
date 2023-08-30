@@ -16,9 +16,13 @@ typedef ResourceHandle NodeHandle;
 
 class SceneNode {
 public:
-  SceneNode(const std::string &name, entt::entity entity);
+  SceneNode(entt::registry &registry);
 
   virtual ~SceneNode() = default;
+
+  template <typename T> void AddComponent(T component) {
+    registry_.emplace<T>(entity_, component);
+  }
 
   void AddChild(const NodeHandle child_handle);
 
@@ -35,6 +39,7 @@ public:
   bool is_renderable() { return is_renderable_; }
 
 protected:
+  entt::registry &registry_;
   entt::entity entity_;
 
   std::string name_;

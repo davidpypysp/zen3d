@@ -2,8 +2,8 @@
 
 namespace zen {
 
-SceneNode::SceneNode(const std::string &name, entt::entity entity)
-    : name_(name), entity_(entity) {}
+SceneNode::SceneNode(entt::registry &registry)
+    : registry_(registry), entity_(registry.create()) {}
 
 void SceneNode::AddChild(const NodeHandle child_handle) {
   children_handles_.push_back(child_handle);
