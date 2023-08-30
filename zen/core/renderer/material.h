@@ -2,8 +2,7 @@
 
 #include <memory>
 
-#include "zen/core/graphic_api/graphic_api.h"
-#include "zen/core/renderer/camera.h"
+#include "zen/core/graphic_api/shader_program.h"
 
 namespace zen {
 

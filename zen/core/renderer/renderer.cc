@@ -14,13 +14,10 @@ Renderer::Renderer() : rendering_pipeline_(std::make_shared<OpenGLAPI>()) {}
 
 Renderer::~Renderer() {}
 
-void Renderer::Init(Scene& scene) {
-  LOG(Info) << "Init Renderer";
-  rendering_pipeline_.InitMeshes(scene);
-}
+void Renderer::Init(Scene& scene) { rendering_pipeline_.InitMeshes(scene); }
 
 void Renderer::Render(Scene& scene, Entity& camera_entity) {
-  rendering_pipeline_.RenderMeshes(scene);
+  rendering_pipeline_.RenderMeshes(scene, camera_entity);
 }
 
 } // namespace zen

@@ -24,7 +24,7 @@ namespace zen {
 
 struct GlobalWasmParams {
   bool success = false;
-  GLFWwindow *window;
+  GLFWwindow* window;
   int window_width;
   int window_height;
 };
@@ -104,11 +104,11 @@ protected:
   GlobalWasmParams params_;
 };
 
-void WasmLoopImpl(void *wasm_wrapper) {
-  static_cast<WasmWrapper *>(wasm_wrapper)->Loop();
+void WasmLoopImpl(void* wasm_wrapper) {
+  static_cast<WasmWrapper*>(wasm_wrapper)->Loop();
 }
 
-void WasmSpin(WasmWrapper &wasm_wrapper) {
+void WasmSpin(WasmWrapper& wasm_wrapper) {
   wasm_wrapper.Init();
 #ifdef __EMSCRIPTEN__
   emscripten_set_main_loop_arg(&WasmLoopImpl, &wasm_wrapper, 0, 1);

@@ -16,7 +16,7 @@ public:
 
   void InitMeshes(Scene& scene);
 
-  void RenderMeshes(Scene& scene);
+  void RenderMeshes(Scene& scene, Entity& camera_entity);
 
   void PrepareDraw(const Material& material, const Camera& camera,
                    const math::mat4& world_transform,

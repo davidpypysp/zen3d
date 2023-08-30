@@ -42,8 +42,19 @@ cc_test(
 )
 
 cc_library(
+    name = "geometry_builder",
+    hdrs = ["geometry_builder.h"],
+    deps = [
+        ":geometry",
+    ],
+)
+
+cc_library(
     name = "material",
     hdrs = ["material.h"],
+    deps = [
+        "//zen/core/graphic_api:shader_program",
+    ],
 )
 
 cc_library(
@@ -75,9 +86,18 @@ cc_test(
 
 cc_library(
     name = "mesh_basic_material",
-    srcs = ["mesh_basic_material.cc"],
     hdrs = ["mesh_basic_material.h"],
     deps = [
+        ":material",
+        "//zen/core/graphic_api:texture",
+    ],
+)
+
+cc_library(
+    name = "material_builder",
+    hdrs = ["material_builder.h"],
+    deps = [
+        "mesh_basic_material",
         ":material",
     ],
 )

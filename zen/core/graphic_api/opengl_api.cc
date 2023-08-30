@@ -32,7 +32,7 @@ void CheckCompileErrors(GLuint shader, std::string type) {
 }
 
 GLint GetShaderParam(std::shared_ptr<ShaderProgram> program,
-                     const std::string &param) {
+                     const std::string& param) {
   auto glsl_program = std::static_pointer_cast<GLSLShaderProgram>(program);
   return glGetUniformLocation(glsl_program->id, param.c_str());
 }
@@ -42,11 +42,11 @@ OpenGLAPI::OpenGLAPI() : GraphicAPI() {}
 void OpenGLAPI::Init() { glEnable(GL_DEPTH_TEST); }
 
 std::shared_ptr<ShaderProgram>
-OpenGLAPI::CreateShaderProgram(const std::string &vertex_path,
-                               const std::string &fragment_path,
-                               const std::string &geometry_path) {
+OpenGLAPI::CreateShaderProgram(const std::string& vertex_path,
+                               const std::string& fragment_path,
+                               const std::string& geometry_path) {
 
-  const std::string &shader_hash =
+  const std::string& shader_hash =
       vertex_path + ":" + fragment_path + ":" + geometry_path;
   if (shader_programs_.find(shader_hash) != shader_programs_.end()) {
     return shader_programs_[shader_hash];
@@ -85,8 +85,8 @@ OpenGLAPI::CreateShaderProgram(const std::string &vertex_path,
     geometry_code = gshader_stream.str();
   }
 
-  const char *vshader_code = vertex_code.c_str();
-  const char *fshader_code = fragment_code.c_str();
+  const char* vshader_code = vertex_code.c_str();
+  const char* fshader_code = fragment_code.c_str();
   // 2. compile shaders
   unsigned int vertex, fragment;
   // vertex shader
@@ -102,7 +102,7 @@ OpenGLAPI::CreateShaderProgram(const std::string &vertex_path,
   // if geometry shader is given, compile geometry shader
   unsigned int geometry;
   if (!geometry_path.empty()) {
-    const char *gshader_code = geometry_code.c_str();
+    const char* gshader_code = geometry_code.c_str();
     geometry = glCreateShader(GL_GEOMETRY_SHADER);
     glShaderSource(geometry, 1, &gshader_code, NULL);
     glCompileShader(geometry);
@@ -140,19 +140,19 @@ void OpenGLAPI::EnableShaderProgram(std::shared_ptr<ShaderProgram> program) {
 }
 
 void OpenGLAPI::SetShaderIntParam(std::shared_ptr<ShaderProgram> program,
-                                  const std::string &name, const int value) {
+                                  const std::string& name, const int value) {
   glUniform1i(GetShaderParam(program, name), value);
 }
 
 void OpenGLAPI::SetShaderMat4Param(std::shared_ptr<ShaderProgram> program,
-                                   const std::string &name,
-                                   const math::mat4 &mat) {
+                                   const std::string& name,
+                                   const math::mat4& mat) {
   glUniformMatrix4fv(GetShaderParam(program, name), 1, GL_FALSE, &mat[0][0]);
 }
 
 std::shared_ptr<GeometryHandle> OpenGLAPI::CreateGeometryInstanceWithPositions(
-    const std::vector<math::vec3> &positions,
-    const std::vector<unsigned int> &indices) {
+    const std::vector<math::vec3>& positions,
+    const std::vector<unsigned int>& indices) {
   auto handle = std::make_shared<GLGeometryHandle>();
   handle->size = indices.size();
 
@@ -170,16 +170,15 @@ std::shared_ptr<GeometryHandle> OpenGLAPI::CreateGeometryInstanceWithPositions(
                &indices[0], GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(math::vec3),
-                        (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(math::vec3), (void*)0);
 
   glBindVertexArray(0);
   return std::static_pointer_cast<GeometryHandle>(handle);
 }
 
 std::shared_ptr<GeometryHandle>
-OpenGLAPI::CreateGeometryInstance(const std::vector<Vertex> &vertices,
-                                  const std::vector<unsigned int> &indices) {
+OpenGLAPI::CreateGeometryInstance(const std::vector<Vertex>& vertices,
+                                  const std::vector<unsigned int>& indices) {
   auto handle = std::make_shared<GLGeometryHandle>();
   handle->size = indices.size();
 
@@ -197,23 +196,23 @@ OpenGLAPI::CreateGeometryInstance(const std::vector<Vertex> &vertices,
                &indices[0], GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (void *)offsetof(Vertex, normal));
+                        (void*)offsetof(Vertex, normal));
 
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (void *)offsetof(Vertex, tex_coords));
+                        (void*)offsetof(Vertex, tex_coords));
 
   glEnableVertexAttribArray(3);
   glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (void *)offsetof(Vertex, tangent));
+                        (void*)offsetof(Vertex, tangent));
 
   glEnableVertexAttribArray(4);
   glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (void *)offsetof(Vertex, bitangent));
+                        (void*)offsetof(Vertex, bitangent));
 
   glBindVertexArray(0);
   return std::static_pointer_cast<GeometryHandle>(handle);
@@ -227,7 +226,7 @@ void OpenGLAPI::DrawMeshInstance(std::shared_ptr<GeometryHandle> handle) {
 }
 
 std::shared_ptr<TextureHandle>
-OpenGLAPI::CreateTextureInstance(void *data, const unsigned int width,
+OpenGLAPI::CreateTextureInstance(void* data, const unsigned int width,
                                  const unsigned int height,
                                  const TextureFormat format) {
   auto handle = std::make_shared<GLTextureHandle>();

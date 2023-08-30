@@ -28,9 +28,9 @@ void RenderingPipeline::InitMeshes(Scene& scene) {
   }
 }
 
-void RenderingPipeline::RenderMeshes(Scene& scene) {
-  Camera camera;
-  Transform camera_transform;
+void RenderingPipeline::RenderMeshes(Scene& scene, Entity& camera_entity) {
+  Camera& camera = camera_entity.GetComponent<Camera>();
+  Transform& camera_transform = camera_entity.GetComponent<Transform>();
   auto camera_view = scene.View<Camera, Transform>();
   auto view = scene.View<Mesh, Transform>();
   for (const auto& [entity, mesh, transform] : view.each()) {
