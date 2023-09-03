@@ -19,19 +19,16 @@ void ObjectInspector::Render(GuiStore& gui_store) {
   auto* metadata = scene.try_get<EntityMetadata>(selected_entity);
   if (metadata) {
     InputTextComponent("Name", metadata->name);
+    // ImGui::LabelText("Type", scene_node->Type().c_str());
   }
-
-  // ImGui::LabelText("Type", scene_node->Type().c_str());
 
   auto* transform = scene.try_get<Transform>(selected_entity);
   if (transform) {
-    ImGui::SliderFloat3("Translation", &transform->WorldPosition()[0], -100.0,
-                        100.0);
+    Vector3Component("Translation", transform->WorldPosition(), -100.0, 100.0);
+    // ImGui::SliderFloat3("Rotation", scene_node->LocalRotationPtr(),
+    // -10.0, 10.0); ImGui::SliderFloat3("Scale", scene_node->LocalScalePtr(),
+    // 0.1, 2.0);
   }
-
-  // ImGui::SliderFloat3("Rotation", scene_node->LocalRotationPtr(),
-  // -10.0, 10.0); ImGui::SliderFloat3("Scale", scene_node->LocalScalePtr(),
-  // 0.1, 2.0);
 
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
               1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

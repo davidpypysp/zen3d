@@ -14,6 +14,7 @@ cc_library(
     hdrs = ["utils.h"],
     deps = [
         "@imgui",
+        "//zen/core/math:math",
     ],
 )
 
