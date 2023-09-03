@@ -33,11 +33,16 @@ public:
     return scene_context_.registry.get<T>(entity_handle_);
   }
 
-  const uint32_t Id() const { return (uint32_t)entity_handle_; }
+  const uint32_t id() const { return (uint32_t)entity_handle_; }
+
+  const std::string& name() const { return name_; }
+
+  void set_name(const std::string& name) { name_ = name; }
 
 private:
   SceneContext& scene_context_;
   const EntityHandle entity_handle_;
+  std::string name_;
 };
 
 } // namespace zen

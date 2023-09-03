@@ -35,6 +35,7 @@ cc_library(
     deps = [
         ":window",
         "//zen/core/base:logging",
+        "//zen/core/base:transform",
     ],
 )
 
@@ -51,6 +52,11 @@ cc_library(
 cc_test(
     name = "gui_test",
     srcs = ["gui_test.cc"],
+    linkopts = [
+        "-lGL",
+        "-ldl",
+        "-lglfw",
+    ],
     deps = [
         ":gui",
         "//zen/libs:gtest_main",

@@ -20,6 +20,8 @@ public:
     return scene_context_.registry.view<Components...>();
   }
 
+  auto& entity_map() { return entity_map_; }
+
 private:
   SceneContext scene_context_;
 

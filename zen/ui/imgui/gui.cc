@@ -6,7 +6,7 @@ namespace zen {
 
 Gui::Gui() {}
 
-void Gui::Init(std::shared_ptr<GuiStore> gui_store, GLFWwindow *gl_window) {
+void Gui::Init(std::shared_ptr<GuiStore> gui_store, GLFWwindow* gl_window) {
   gui_store_ = gui_store;
   InitImgui(gl_window);
   InitWindows();
@@ -25,7 +25,7 @@ void Gui::Draw() {
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Gui::InitImgui(GLFWwindow *gl_window) {
+void Gui::InitImgui(GLFWwindow* gl_window) {
   // Setup Dear ImGui binding
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -35,7 +35,7 @@ void Gui::InitImgui(GLFWwindow *gl_window) {
   // Setup style
   ImGui::StyleColorsDark();
 
-  ImGuiIO &io = ImGui::GetIO();
+  ImGuiIO& io = ImGui::GetIO();
 
   // Load Fonts
   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 23.0f);

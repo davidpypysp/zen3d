@@ -2,3 +2,4 @@
 
 # cxx
 build --cxxopt='-std=c++17'
+build --copt=-fdiagnostics-color=always

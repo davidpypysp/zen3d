@@ -6,7 +6,7 @@ namespace zen {
 
 class ObjectInspector : public Window {
 public:
-  explicit ObjectInspector(const std::string &name);
+  explicit ObjectInspector(const std::string& name);
 
   void Render(std::shared_ptr<GuiStore> gui_store) override;
 };

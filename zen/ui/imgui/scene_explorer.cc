@@ -3,44 +3,29 @@
 
 namespace zen {
 
-SceneExplorer::SceneExplorer(const std::string &name) : Window(name) {}
+SceneExplorer::SceneExplorer(const std::string& name) : Window(name) {}
 
-bool SceneExplorer::TreeNode(std::shared_ptr<SceneNode> scene_node,
-                             std::shared_ptr<GuiStore> gui_store,
-                             ImGuiTreeNodeFlags flags) {
+bool SceneExplorer::RenderEntity(Entity& entity,
+                                 std::shared_ptr<GuiStore> gui_store,
+                                 ImGuiTreeNodeFlags flags) {
   auto node_flags = base_flags_ | flags;
-  if (scene_node == gui_store->selected_scene_node) {
+  if (entity.id() == gui_store->selected_entity->id()) {
     node_flags |= ImGuiTreeNodeFlags_Selected;
   }
 
-  bool node_open = ImGui::TreeNodeEx(scene_node.get(), node_flags, "%s",
-                                     scene_node->name().c_str());
+  bool node_open =
+      ImGui::TreeNodeEx(&entity, node_flags, "%s", entity.name().c_str());
   if (ImGui::IsItemClicked()) {
-    gui_store->selected_scene_node = scene_node;
-    LOG(Info) << "SceneNode " << scene_node->name() << " clicked";
+    gui_store->selected_entity = &entity;
+    LOG(Info) << "Entity" << entity.name() << " clicked";
   }
   return node_open;
 }
 
-void SceneExplorer::RenderNodes(std::shared_ptr<SceneNode> scene_node,
-                                std::shared_ptr<GuiStore> gui_store) {
-  if (scene_node->children().size() == 0) {
-    TreeNode(scene_node, gui_store,
-             ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen);
-    return;
-  }
-
-  bool node_open = TreeNode(scene_node, gui_store);
-  if (node_open) {
-    for (auto child_node : scene_node->children()) {
-      RenderNodes(child_node, gui_store);
-    }
-    ImGui::TreePop();
-  }
-}
-
 void SceneExplorer::Render(std::shared_ptr<GuiStore> gui_store) {
-  RenderNodes(gui_store->scene->root_node(), gui_store);
+  for (auto& [id, entity] : gui_store->scene.entity_map()) {
+    RenderEntity(entity, gui_store, base_flags_);
+  }
 }
 
 } // namespace zen

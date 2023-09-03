@@ -8,17 +8,13 @@ namespace zen {
 
 class SceneExplorer : public Window {
 public:
-  explicit SceneExplorer(const std::string &name);
+  explicit SceneExplorer(const std::string& name);
 
   void Render(std::shared_ptr<GuiStore> gui_store) override;
 
 protected:
-  bool TreeNode(std::shared_ptr<SceneNode> scene_node,
-                std::shared_ptr<GuiStore> gui_store,
-                ImGuiTreeNodeFlags flags = 0);
-
-  void RenderNodes(std::shared_ptr<SceneNode> scene_node,
-                   std::shared_ptr<GuiStore> gui_store);
+  bool RenderEntity(Entity& entity, std::shared_ptr<GuiStore> gui_store,
+                    ImGuiTreeNodeFlags flags = 0);
 
   const ImGuiTreeNodeFlags base_flags_ =
       ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;

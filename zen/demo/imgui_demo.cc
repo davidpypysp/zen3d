@@ -45,15 +45,15 @@ public:
   void Terminate() { glfwTerminate(); }
 
 protected:
-  std::shared_ptr<Gui> gui;
-  std::shared_ptr<Camera> camera;
-  std::shared_ptr<Renderer> renderer;
-  std::shared_ptr<Scene> scene;
+  Gui gui;
+  Camera camera;
+  Renderer renderer;
+  Scene scene;
 };
 
 } // namespace zen
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   zen::ImguiDemo demo;
 
   demo.Init();
