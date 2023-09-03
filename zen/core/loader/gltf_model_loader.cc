@@ -64,7 +64,7 @@ void GLTFModelLoader::ProcessMesh(tinygltf::Model& model, tinygltf::Mesh& mesh,
     Geometry geometry = ProcessMeshPrimitive(model, mesh.primitives[i]);
     //   const auto &material = model.materials[primitive.material];
     // flat material
-    Material material{"zen/core/shader/simple.vert",
+    Material material{"zen/core/shader/mesh.vert",
                       "zen/core/shader/mesh_flat.frag"};
     scene.emplace<Mesh>(entity, mesh.name, geometry, material);
 

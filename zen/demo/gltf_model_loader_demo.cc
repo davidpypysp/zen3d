@@ -15,8 +15,8 @@ public:
 
   void Setup() override {
     camera_entity = scene.AddEntity("camera_entity");
-    scene.emplace<Transform>(camera_entity, math::vec3(0, 0, -5));
-    scene.emplace<Camera>(camera_entity, math::vec3(0, 0, 0));
+    scene.emplace<Transform>(camera_entity, math::vec3(0, 0, 5));
+    scene.emplace<Camera>(camera_entity);
 
     // add backpack model
 
