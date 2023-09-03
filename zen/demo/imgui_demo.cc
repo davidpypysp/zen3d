@@ -17,13 +17,13 @@ public:
     GeometryBuilder geometry_builder;
     MaterialBuilder material_builder;
 
-    auto entity = scene.create();
+    auto entity = scene.AddEntity("mesh_entity");
     scene.emplace<Transform>(entity, math::vec3(0, 0, -5));
     Material material = material_builder.BuildSimpleMaterial();
     Geometry geometry = geometry_builder.BuildCubeGeometry();
     scene.emplace<Mesh>(entity, "mesh", geometry, material);
 
-    camera_entity = scene.create();
+    camera_entity = scene.AddEntity("camera_entity");
     scene.emplace<Transform>(camera_entity, math::vec3(0, 0, 0));
     scene.emplace<Camera>(camera_entity, math::vec3(0, 0, 0));
   }

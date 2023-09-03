@@ -9,6 +9,15 @@ cc_library(
 )
 
 cc_library(
+    name = "utils",
+    srcs = ["utils.cc"],
+    hdrs = ["utils.h"],
+    deps = [
+        "@imgui",
+    ],
+)
+
+cc_library(
     name = "window",
     srcs = ["window.cc"],
     hdrs = ["window.h"],
@@ -23,6 +32,7 @@ cc_library(
     srcs = ["scene_explorer.cc"],
     hdrs = ["scene_explorer.h"],
     deps = [
+        ":utils",
         ":window",
         "//zen/core/base:logging",
     ],
@@ -33,6 +43,7 @@ cc_library(
     srcs = ["object_inspector.cc"],
     hdrs = ["object_inspector.h"],
     deps = [
+        ":utils",
         ":window",
         "//zen/core/base:logging",
         "//zen/core/base:transform",

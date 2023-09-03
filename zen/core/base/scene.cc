@@ -8,4 +8,10 @@ std::string EntityToStr(EntityHandle entity) {
 
 Scene::Scene() {}
 
+EntityHandle Scene::AddEntity(const std::string& name) {
+  EntityHandle entity = create();
+  emplace<EntityMetadata>(entity, name);
+  return entity;
+}
+
 } // namespace zen
