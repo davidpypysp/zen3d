@@ -17,31 +17,6 @@ cc_test(
 )
 
 cc_library(
-    name = "triangle_geometry",
-    hdrs = ["triangle_geometry.h"],
-    deps = [
-        ":geometry",
-    ],
-)
-
-cc_library(
-    name = "cube_geometry",
-    hdrs = ["cube_geometry.h"],
-    deps = [
-        ":geometry",
-    ],
-)
-
-cc_test(
-    name = "cube_geometry_test",
-    srcs = ["cube_geometry_test.cc"],
-    deps = [
-        ":cube_geometry",
-        "//zen/libs:gtest_main",
-    ],
-)
-
-cc_library(
     name = "geometry_builder",
     hdrs = ["geometry_builder.h"],
     deps = [
@@ -54,33 +29,6 @@ cc_library(
     hdrs = ["material.h"],
     deps = [
         "//zen/core/graphic_api:shader_program",
-    ],
-)
-
-cc_library(
-    name = "simple_material",
-    srcs = ["simple_material.cc"],
-    hdrs = ["simple_material.h"],
-    deps = [
-        ":material",
-    ],
-)
-
-cc_library(
-    name = "mesh_flat_material",
-    srcs = ["mesh_flat_material.cc"],
-    hdrs = ["mesh_flat_material.h"],
-    deps = [
-        ":material",
-    ],
-)
-
-cc_test(
-    name = "mesh_flat_material_test",
-    srcs = ["mesh_flat_material_test.cc"],
-    deps = [
-        ":mesh_flat_material",
-        "//zen/libs:gtest_main",
     ],
 )
 
@@ -116,8 +64,6 @@ cc_test(
     srcs = ["mesh_test.cc"],
     deps = [
         ":mesh",
-        ":simple_material",
-        ":triangle_geometry",
         "//zen/libs:gtest_main",
     ],
 )
