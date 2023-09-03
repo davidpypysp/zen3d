@@ -5,7 +5,7 @@
 
 namespace zen {
 
-TEST(GuiManagerTest, BasicAssertions) {
+TEST(GuiTest, BasicAssertions) {
   LOG(Info) << "Gui Test";
   Gui gui;
 }

@@ -9,12 +9,13 @@ bool SceneExplorer::RenderEntity(Entity& entity,
                                  std::shared_ptr<GuiStore> gui_store,
                                  ImGuiTreeNodeFlags flags) {
   auto node_flags = base_flags_ | flags;
-  if (entity.id() == gui_store->selected_entity->id()) {
+  if (gui_store->selected_entity &&
+      entity.id() == gui_store->selected_entity->id()) {
     node_flags |= ImGuiTreeNodeFlags_Selected;
   }
 
-  bool node_open =
-      ImGui::TreeNodeEx(&entity, node_flags, "%s", entity.name().c_str());
+  bool node_open = ImGui::TreeNodeEx(&entity, node_flags, "%s",
+                                     std::to_string(entity.id()).c_str());
   if (ImGui::IsItemClicked()) {
     gui_store->selected_entity = &entity;
     LOG(Info) << "Entity" << entity.name() << " clicked";
@@ -24,7 +25,8 @@ bool SceneExplorer::RenderEntity(Entity& entity,
 
 void SceneExplorer::Render(std::shared_ptr<GuiStore> gui_store) {
   for (auto& [id, entity] : gui_store->scene.entity_map()) {
-    RenderEntity(entity, gui_store, base_flags_);
+    RenderEntity(entity, gui_store,
+                 ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen);
   }
 }
 

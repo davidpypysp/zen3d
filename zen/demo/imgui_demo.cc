@@ -1,52 +1,50 @@
+#include "zen/core/base/logging.h"
 #include "zen/core/base/scene.h"
+#include "zen/core/renderer/geometry_builder.h"
+#include "zen/core/renderer/material_builder.h"
 #include "zen/core/renderer/renderer.h"
 #include "zen/core/utils/window_wrapper.h"
 
 #include "zen/ui/imgui/gui.h"
 
-#include "zen/core/renderer/cube_geometry.h"
 #include "zen/core/renderer/mesh.h"
-#include "zen/core/renderer/mesh_flat_material.h"
-#include "zen/core/renderer/simple_material.h"
-#include "zen/core/renderer/triangle_geometry.h"
 
 namespace zen {
 
 class ImguiDemo : public WindowWrapper {
 public:
   ImguiDemo() {
-    renderer = std::make_shared<Renderer>();
-    scene = std::make_shared<Scene>();
-    gui = std::make_shared<Gui>();
+    GeometryBuilder geometry_builder;
+    MaterialBuilder material_builder;
 
-    auto material = std::make_shared<MeshFlatMaterial>();
-    auto geometry = std::make_shared<CubeGeometry>();
-    auto mesh = std::make_shared<Mesh>("simple_mesh", geometry, material);
-    mesh->SetWorldPosition(math::vec3(0, 0, -5));
-    scene->AddNode(mesh);
+    auto entity = scene.CreateEntity();
+    entity.AddComponent<Transform>(math::vec3(0, 0, -5));
+    Material material = material_builder.BuildSimpleMaterial();
+    Geometry geometry = geometry_builder.BuildCubeGeometry();
+    entity.AddComponent<Mesh>({"mesh", geometry, material});
 
-    camera = std::make_shared<Camera>(math::vec3(0.0, 0.0, 0.0));
-    scene->AddNode(camera);
+    camera_entity = &scene.CreateEntity();
+    camera_entity->AddComponent<Transform>(math::vec3(0, 0, 0));
+    camera_entity->AddComponent<Camera>(math::vec3(0, 0, 0));
   }
 
   void Setup() override {
-    renderer->Init(scene);
+    renderer.Init(scene);
 
-    auto gui_store = std::make_shared<GuiStore>();
-    gui_store->scene = scene;
-    gui->Init(gui_store, params_.window);
+    auto gui_store = std::make_shared<GuiStore>(scene);
+    gui.Init(gui_store, params_.window);
   }
 
   void Render() override {
-    renderer->Render(scene, camera);
-    gui->Draw();
+    renderer.Render(scene, *camera_entity);
+    gui.Draw();
   }
 
   void Terminate() { glfwTerminate(); }
 
 protected:
   Gui gui;
-  Camera camera;
+  Entity* camera_entity;
   Renderer renderer;
   Scene scene;
 };
