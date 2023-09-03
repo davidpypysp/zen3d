@@ -17,15 +17,15 @@ public:
     GeometryBuilder geometry_builder;
     MaterialBuilder material_builder;
 
-    auto entity = scene.CreateEntity();
-    entity.AddComponent<Transform>(math::vec3(0, 0, -5));
+    auto entity = scene.create();
+    scene.emplace<Transform>(entity, math::vec3(0, 0, -5));
     Material material = material_builder.BuildSimpleMaterial();
     Geometry geometry = geometry_builder.BuildCubeGeometry();
-    entity.AddComponent<Mesh>({"mesh", geometry, material});
+    scene.emplace<Mesh>(entity, "mesh", geometry, material);
 
-    camera_entity = &scene.CreateEntity();
-    camera_entity->AddComponent<Transform>(math::vec3(0, 0, 0));
-    camera_entity->AddComponent<Camera>(math::vec3(0, 0, 0));
+    camera_entity = scene.create();
+    scene.emplace<Transform>(camera_entity, math::vec3(0, 0, 0));
+    scene.emplace<Camera>(camera_entity, math::vec3(0, 0, 0));
   }
 
   void Setup() override {
@@ -36,7 +36,7 @@ public:
   }
 
   void Render() override {
-    renderer.Render(scene, *camera_entity);
+    renderer.Render(scene, camera_entity);
     gui.Draw();
   }
 
@@ -44,7 +44,7 @@ public:
 
 protected:
   Gui gui;
-  Entity* camera_entity;
+  EntityHandle camera_entity = kNullEntity;
   Renderer renderer;
   Scene scene;
 };

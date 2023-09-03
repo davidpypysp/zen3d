@@ -7,7 +7,7 @@ namespace zen {
 struct GuiStore {
   GuiStore(Scene& scene) : scene(scene) {}
   Scene& scene;
-  EntityHandle* selected_entity = nullptr;
+  EntityHandle selected_entity = kNullEntity;
 };
 
 } // namespace zen

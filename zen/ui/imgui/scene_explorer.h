@@ -13,7 +13,7 @@ public:
   void Render(std::shared_ptr<GuiStore> gui_store) override;
 
 protected:
-  bool RenderEntity(Entity& entity, std::shared_ptr<GuiStore> gui_store,
+  bool RenderEntity(std::shared_ptr<GuiStore> gui_store, EntityHandle& entity,
                     ImGuiTreeNodeFlags flags = 0);
 
   const ImGuiTreeNodeFlags base_flags_ =

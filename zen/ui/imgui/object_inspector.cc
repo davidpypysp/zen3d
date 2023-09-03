@@ -7,15 +7,16 @@ namespace zen {
 ObjectInspector::ObjectInspector(const std::string& name) : Window(name) {}
 
 void ObjectInspector::Render(std::shared_ptr<GuiStore> gui_store) {
-  auto* selected_entity = gui_store->selected_entity;
-  if (!selected_entity) {
+  auto selected_entity = gui_store->selected_entity;
+  if (selected_entity == kNullEntity) {
     return;
   }
 
-  auto& transform = selected_entity->GetComponent<Transform>();
-
-  ImGui::InputText("Name", const_cast<char*>(selected_entity->name().c_str()),
-                   selected_entity->name().size());
+  auto& transform = gui_store->scene.get<Transform>(selected_entity);
+  const auto entity_id = EntityToStr(selected_entity);
+  ;
+  ImGui::InputText("EntityId", const_cast<char*>(entity_id.c_str()),
+                   entity_id.size());
   // ImGui::LabelText("Type", scene_node->Type().c_str());
   ImGui::SliderFloat3("Translation", &transform.WorldPosition()[0], -100.0,
                       100.0);
