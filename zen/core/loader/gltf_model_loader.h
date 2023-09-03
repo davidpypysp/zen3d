@@ -2,7 +2,7 @@
 
 #include "tiny_gltf.h"
 
-#include "zen/core/base/scene_node.h"
+#include "zen/core/base/scene.h"
 #include "zen/core/renderer/mesh.h"
 
 namespace zen {
@@ -11,30 +11,30 @@ class GLTFModelLoader {
 public:
   GLTFModelLoader();
 
-  std::shared_ptr<SceneNode> LoadModel(const std::string &path);
+  void LoadModel(const std::string& path, Scene& scene);
 
-  std::shared_ptr<SceneNode> ProcessNode(tinygltf::Model &model,
-                                         tinygltf::Node &node);
+  void ProcessNode(tinygltf::Model& model, tinygltf::Node& node, Scene& scene,
+                   EntityHandle parent);
 
-  std::shared_ptr<SceneNode> ProcessMesh(tinygltf::Model &model,
-                                         tinygltf::Mesh &mesh);
+  EntityHandle ProcessMesh(tinygltf::Model& model, tinygltf::Mesh& mesh,
+                           Scene& scene, EntityHandle parent);
 
-  std::shared_ptr<Mesh> ProcessMeshPrimitive(tinygltf::Model &model,
-                                             tinygltf::Primitive &primitive);
+  Geometry ProcessMeshPrimitive(tinygltf::Model& model,
+                                tinygltf::Primitive& primitive);
 
   template <typename T>
-  const T *getRawPrimitiveData(tinygltf::Model &model,
-                               const int &accessor_index) {
-    tinygltf::Accessor &accessor = model.accessors[accessor_index];
-    tinygltf::BufferView &bufferView = model.bufferViews[accessor.bufferView];
+  const T* getRawPrimitiveData(tinygltf::Model& model,
+                               const int& accessor_index) {
+    tinygltf::Accessor& accessor = model.accessors[accessor_index];
+    tinygltf::BufferView& bufferView = model.bufferViews[accessor.bufferView];
     // cast to float type read only. Use accessor and bufview byte offsets to
     // determine where position data
     // is located in the buffer.
-    tinygltf::Buffer &buffer = model.buffers[bufferView.buffer];
+    tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
     // bufferView byteoffset + accessor byteoffset tells you where the actual
     // position data is within the buffer. From there you should already know
     // how the data needs to be interpreted.
-    const auto *data_array = reinterpret_cast<const T *>(
+    const auto* data_array = reinterpret_cast<const T*>(
         &buffer.data[bufferView.byteOffset + accessor.byteOffset]);
     return data_array;
   }

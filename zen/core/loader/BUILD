@@ -47,8 +47,8 @@ cc_library(
     hdrs = ["gltf_model_loader.h"],
     deps = [
         "//zen/core/base:logging",
+        "//zen/core/base:scene",
         "//zen/core/renderer:mesh",
-        "//zen/core/renderer:mesh_flat_material",
         "@tinygltf",
     ],
 )
