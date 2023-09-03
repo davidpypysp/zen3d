@@ -6,6 +6,7 @@
 #include "zen/core/loader/gltf_model_loader.h"
 
 #include "zen/core/base/logging.h"
+#include "zen/core/base/transform.h"
 
 namespace zen {
 
@@ -59,10 +60,12 @@ void GLTFModelLoader::ProcessNode(tinygltf::Model& model, tinygltf::Node& node,
 void GLTFModelLoader::ProcessMesh(tinygltf::Model& model, tinygltf::Mesh& mesh,
                                   Scene& scene, EntityHandle entity) {
   for (size_t i = 0; i < mesh.primitives.size(); ++i) {
-
+    scene.emplace<Transform>(entity, math::vec3(0, 0, 0));
     Geometry geometry = ProcessMeshPrimitive(model, mesh.primitives[i]);
     //   const auto &material = model.materials[primitive.material];
-    Material material;
+    // flat material
+    Material material{"zen/core/shader/simple.vert",
+                      "zen/core/shader/mesh_flat.frag"};
     scene.emplace<Mesh>(entity, mesh.name, geometry, material);
 
     // TODO: add material

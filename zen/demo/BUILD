@@ -121,8 +121,7 @@ cc_binary(
     deps = [
         "//zen/core/loader:gltf_model_loader",
         "//zen/core/renderer",
-        "//zen/core/renderer:cube_geometry",
-        "//zen/core/renderer:mesh_flat_material",
+        "//zen/core/renderer:mesh",
         "//zen/core/utils:window_wrapper",
         "//zen/ui/imgui:gui",
     ],
