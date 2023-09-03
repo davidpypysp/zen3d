@@ -6,7 +6,7 @@ namespace zen {
 
 Gui::Gui() {}
 
-void Gui::Init(std::shared_ptr<GuiStore> gui_store, GLFWwindow* gl_window) {
+void Gui::Init(GuiStore* gui_store, GLFWwindow* gl_window) {
   gui_store_ = gui_store;
   InitImgui(gl_window);
   InitWindows();
@@ -18,7 +18,7 @@ void Gui::Draw() {
   ImGui::NewFrame();
 
   for (auto window : windows_) {
-    window->RenderFrame(gui_store_);
+    window->RenderFrame(*gui_store_);
   }
 
   ImGui::Render();

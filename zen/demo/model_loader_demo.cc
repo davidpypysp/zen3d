@@ -41,7 +41,7 @@ public:
     renderer->Init(scene);
 
     auto gui_store = std::make_shared<GuiStore>();
-    gui_store->scene = scene;
+    gui_store.scene = scene;
     gui->Init(gui_store, params_.window);
   }
 
@@ -59,13 +59,13 @@ public:
 
 } // namespace zen
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   zen::ModelLoaderDemo demo;
   demo.Init();
   try {
     demo.Loop();
 
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cout << "error: " << e.what() << std::endl;
   }
   demo.Terminate();

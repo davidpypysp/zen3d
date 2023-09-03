@@ -2,9 +2,9 @@
 
 namespace zen {
 
-Window::Window(const std::string &name) : name_(name) {}
+Window::Window(const std::string& name) : name_(name) {}
 
-void Window::RenderFrame(std::shared_ptr<GuiStore> gui_store) {
+void Window::RenderFrame(GuiStore& gui_store) {
   ImGui::Begin(name_.c_str()); // Create a window called "Hello, world!"
                                // and append into it.
 

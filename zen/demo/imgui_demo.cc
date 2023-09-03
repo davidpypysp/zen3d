@@ -13,7 +13,7 @@ namespace zen {
 
 class ImguiDemo : public WindowWrapper {
 public:
-  ImguiDemo() {
+  ImguiDemo() : gui_store(scene) {
     GeometryBuilder geometry_builder;
     MaterialBuilder material_builder;
 
@@ -31,8 +31,7 @@ public:
   void Setup() override {
     renderer.Init(scene);
 
-    auto gui_store = std::make_shared<GuiStore>(scene);
-    gui.Init(gui_store, params_.window);
+    gui.Init(&gui_store, params_.window);
   }
 
   void Render() override {
@@ -44,9 +43,12 @@ public:
 
 protected:
   Gui gui;
-  EntityHandle camera_entity = kNullEntity;
+  GuiStore gui_store;
+
   Renderer renderer;
+
   Scene scene;
+  EntityHandle camera_entity = kNullEntity;
 };
 
 } // namespace zen

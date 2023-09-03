@@ -33,7 +33,7 @@ public:
     renderer->Init(scene);
 
     auto gui_store = std::make_shared<GuiStore>();
-    gui_store->scene = scene;
+    gui_store.scene = scene;
     gui->Init(gui_store, params_.window);
   }
 
@@ -50,7 +50,7 @@ public:
 
 } // namespace zen
 
-extern "C" int main(int argc, char **argv) {
+extern "C" int main(int argc, char** argv) {
   zen::ImguiDemo demo;
 
   zen::WasmSpin(demo);

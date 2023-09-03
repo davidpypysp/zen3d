@@ -10,15 +10,15 @@ namespace zen {
 
 class Window {
 public:
-  explicit Window(const std::string &name);
+  explicit Window(const std::string& name);
 
-  void RenderFrame(std::shared_ptr<GuiStore> gui_store);
+  void RenderFrame(GuiStore& gui_store);
 
-  virtual void Render(std::shared_ptr<GuiStore> gui_store) = 0;
+  virtual void Render(GuiStore& gui_store) = 0;
 
   virtual ~Window() = default;
 
-  const std::string &name() const { return name_; }
+  const std::string& name() const { return name_; }
 
 protected:
   std::string name_;

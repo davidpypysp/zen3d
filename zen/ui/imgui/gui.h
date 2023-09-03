@@ -16,18 +16,19 @@ class Gui {
 public:
   Gui();
 
-  void Init(std::shared_ptr<GuiStore> gui_store, GLFWwindow *window);
+  void Init(GuiStore* gui_store, GLFWwindow* window);
 
   void Draw();
 
-  std::shared_ptr<GuiStore> gui_store_;
-
 protected:
-  void InitImgui(GLFWwindow *window);
+  GuiStore* gui_store_;
+
+  void InitImgui(GLFWwindow* window);
 
   void InitWindows();
 
-  template <class T> std::shared_ptr<T> AddWindow(const std::string &name) {
+  template <class T>
+  std::shared_ptr<T> AddWindow(const std::string& name) {
     std::shared_ptr<Window> window = std::make_shared<T>(name);
     windows_.push_back(window);
     return std::static_pointer_cast<T>(window);

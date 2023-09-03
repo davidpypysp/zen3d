@@ -10,10 +10,10 @@ class SceneExplorer : public Window {
 public:
   explicit SceneExplorer(const std::string& name);
 
-  void Render(std::shared_ptr<GuiStore> gui_store) override;
+  void Render(GuiStore& gui_store) override;
 
 protected:
-  bool RenderEntity(std::shared_ptr<GuiStore> gui_store, EntityHandle& entity,
+  bool RenderEntity(GuiStore& gui_store, EntityHandle& entity,
                     ImGuiTreeNodeFlags flags = 0);
 
   const ImGuiTreeNodeFlags base_flags_ =

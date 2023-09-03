@@ -6,13 +6,13 @@ namespace zen {
 
 ObjectInspector::ObjectInspector(const std::string& name) : Window(name) {}
 
-void ObjectInspector::Render(std::shared_ptr<GuiStore> gui_store) {
-  auto selected_entity = gui_store->selected_entity;
+void ObjectInspector::Render(GuiStore& gui_store) {
+  auto selected_entity = gui_store.selected_entity;
   if (selected_entity == kNullEntity) {
     return;
   }
 
-  auto& transform = gui_store->scene.get<Transform>(selected_entity);
+  auto& transform = gui_store.scene.get<Transform>(selected_entity);
   const auto entity_id = EntityToStr(selected_entity);
   ;
   ImGui::InputText("EntityId", const_cast<char*>(entity_id.c_str()),
