@@ -18,19 +18,13 @@ RenderingPipeline::RenderingPipeline(std::shared_ptr<GraphicAPI> graphic_api)
 void RenderingPipeline::InitMeshes(Scene& scene) {
   auto view = scene.view<Mesh>();
   for (auto [entity, mesh] : view.each()) {
-    std::cout << "debug init mesh" << EntityToStr(entity) << std::endl;
     auto& geometry = mesh.geometry;
     geometry.handle = graphic_api_->CreateGeometryInstance(geometry.vertices,
                                                            geometry.indices);
-    std::cout << "debug init mesh" << EntityToStr(entity) << "handle"
-              << std::endl;
 
     auto& material = mesh.material;
     material.shader_program = graphic_api_->CreateShaderProgram(
         material.vertex_shader_path, material.fragment_shader_path);
-
-    std::cout << "debug init mesh" << EntityToStr(entity) << "material"
-              << std::endl;
   }
 }
 
