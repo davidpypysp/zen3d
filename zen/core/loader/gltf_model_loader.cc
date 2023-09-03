@@ -36,33 +36,28 @@ void GLTFModelLoader::LoadModel(const std::string& path, Scene& scene) {
     printf("Failed to parse glTF\n");
   }
 
-  const tinygltf::Scene& scene = model.scenes[model.defaultScene];
-  std::shared_ptr<SceneNode> root_node =
-      std::make_shared<SceneNode>("scene:" + scene.name);
+  const tinygltf::Scene& gltf_scene = model.scenes[model.defaultScene];
   auto root_entity = scene.AddEntity("root");
-  for (size_t i = 0; i < scene.nodes.size(); ++i) {
-    auto& node = model.nodes[scene.nodes[i]];
+  for (size_t i = 0; i < gltf_scene.nodes.size(); ++i) {
+    auto& node = model.nodes[gltf_scene.nodes[i]];
     ProcessNode(model, node, scene, root_entity);
   }
-  return root_node;
 }
 
-void GLTFModelLoader::ProcessNode(tinygltf::Model& model,
-                                          tinygltf::Node& node, Scene& scene, EntityHandle parent)) {
+void GLTFModelLoader::ProcessNode(tinygltf::Model& model, tinygltf::Node& node,
+                                  Scene& scene, EntityHandle parent) {
   auto entity = scene.AddEntity(node.name);
   if ((node.mesh >= 0) && (node.mesh < model.meshes.size())) {
     auto& mesh = model.meshes[node.mesh];
-    ProcessMesh(model, mesh, entity);
+    ProcessMesh(model, mesh, scene, entity);
   }
   for (size_t i = 0; i < node.children.size(); i++) {
     ProcessNode(model, model.nodes[node.children[i]], scene, entity);
-    scene_node->AddChild(child_node);
   }
 }
 
 void GLTFModelLoader::ProcessMesh(tinygltf::Model& model, tinygltf::Mesh& mesh,
                                   Scene& scene, EntityHandle entity) {
-  auto scene_node = std::make_shared<SceneNode>(mesh.name);
   for (size_t i = 0; i < mesh.primitives.size(); ++i) {
 
     Geometry geometry = ProcessMeshPrimitive(model, mesh.primitives[i]);
@@ -116,7 +111,7 @@ Geometry GLTFModelLoader::ProcessMeshPrimitive(tinygltf::Model& model,
     tex_coords.x = texture_coords_array[i * 2 + 0];
     tex_coords.y = texture_coords_array[i * 2 + 1];
   }
-  return Geometry(vertices, indices);
+  return Geometry{vertices, indices};
 }
 
 } // namespace zen

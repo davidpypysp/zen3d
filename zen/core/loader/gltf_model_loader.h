@@ -16,8 +16,8 @@ public:
   void ProcessNode(tinygltf::Model& model, tinygltf::Node& node, Scene& scene,
                    EntityHandle parent);
 
-  EntityHandle ProcessMesh(tinygltf::Model& model, tinygltf::Mesh& mesh,
-                           Scene& scene, EntityHandle parent);
+  void ProcessMesh(tinygltf::Model& model, tinygltf::Mesh& mesh, Scene& scene,
+                   EntityHandle entity);
 
   Geometry ProcessMeshPrimitive(tinygltf::Model& model,
                                 tinygltf::Primitive& primitive);

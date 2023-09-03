@@ -2,4 +2,5 @@
 
 # cxx
 build --cxxopt='-std=c++17'
+build --repo_env=CC=gcc-11
 build --copt=-fdiagnostics-color=always
