@@ -16,7 +16,7 @@ RenderingPipeline::RenderingPipeline(std::shared_ptr<GraphicAPI> graphic_api)
     : graphic_api_(graphic_api) {}
 
 void RenderingPipeline::InitMeshes(Scene& scene) {
-  auto view = scene.View<Mesh>();
+  auto view = scene.view<Mesh>();
   for (auto [entity, mesh] : view.each()) {
     auto& geometry = mesh.geometry;
     geometry.handle = graphic_api_->CreateGeometryInstance(geometry.vertices,
@@ -28,11 +28,12 @@ void RenderingPipeline::InitMeshes(Scene& scene) {
   }
 }
 
-void RenderingPipeline::RenderMeshes(Scene& scene, Entity& camera_entity) {
-  Camera& camera = camera_entity.GetComponent<Camera>();
-  Transform& camera_transform = camera_entity.GetComponent<Transform>();
-  auto camera_view = scene.View<Camera, Transform>();
-  auto view = scene.View<Mesh, Transform>();
+void RenderingPipeline::RenderMeshes(Scene& scene,
+                                     EntityHandle& camera_entity) {
+  Camera& camera = scene.get<Camera>(camera_entity);
+  Transform& camera_transform = scene.get<Transform>(camera_entity);
+  auto camera_view = scene.view<Camera, Transform>();
+  auto view = scene.view<Mesh, Transform>();
   for (const auto& [entity, mesh, transform] : view.each()) {
     const auto& world_transform = transform.ModelMatrix();
     PrepareDraw(mesh.material, camera, world_transform, camera_transform);

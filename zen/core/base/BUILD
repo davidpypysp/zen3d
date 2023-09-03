@@ -45,30 +45,11 @@ cc_test(
 )
 
 cc_library(
-    name = "entity",
-    srcs = ["entity.cc"],
-    hdrs = ["entity.h"],
-    deps = [
-        "@entt",
-    ],
-)
-
-cc_test(
-    name = "entity_test",
-    srcs = ["entity_test.cc"],
-    deps = [
-        ":entity",
-        "@com_google_googletest//:gtest_main",
-    ],
-)
-
-cc_library(
     name = "scene",
     srcs = ["scene.cc"],
     hdrs = ["scene.h"],
     deps = [
-        ":entity",
-        ":resource_manager",
+        "@entt",
     ],
 )
 

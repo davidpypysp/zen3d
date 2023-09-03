@@ -15,7 +15,7 @@ public:
    */
   void Init(Scene& scene);
 
-  void Render(Scene& scene, Entity& camera_entity);
+  void Render(Scene& scene, EntityHandle& camera_entity);
 
   /**
    * Util function to grab the graphic api from the rendering pipeline.
