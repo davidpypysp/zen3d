@@ -32,7 +32,6 @@ void RenderingPipeline::RenderMeshes(Scene& scene,
                                      EntityHandle& camera_entity) {
   Camera& camera = scene.get<Camera>(camera_entity);
   Transform& camera_transform = scene.get<Transform>(camera_entity);
-  auto camera_view = scene.view<Camera, Transform>();
   auto view = scene.view<Mesh, Transform>();
   for (const auto& [entity, mesh, transform] : view.each()) {
     const auto& world_transform = transform.ModelMatrix();

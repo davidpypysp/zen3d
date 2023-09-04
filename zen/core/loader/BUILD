@@ -45,6 +45,11 @@ cc_library(
     name = "gltf_model_loader",
     srcs = ["gltf_model_loader.cc"],
     hdrs = ["gltf_model_loader.h"],
+    copts = [
+        # gltf compile success opts
+        "-Wno-error=unused-variable",
+        "-Wno-error=tautological-constant-out-of-range-compare",
+    ],
     deps = [
         "//zen/core/base:logging",
         "//zen/core/base:scene",
