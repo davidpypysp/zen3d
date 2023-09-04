@@ -6,7 +6,6 @@ def zen_wasm_cc_binary(name, linkopts = [], **kwargs):
     native.cc_binary(
         name = "zen_cc_" + name,
         linkopts = [
-            "--std=c++11",
             "-lGL",
             "-s USE_WEBGL2=1",
             "-s USE_GLFW=3",
