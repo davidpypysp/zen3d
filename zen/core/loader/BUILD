@@ -41,6 +41,7 @@ cc_binary(
     ],
 )
 
+
 cc_library(
     name = "gltf_model_loader",
     srcs = ["gltf_model_loader.cc"],
@@ -50,7 +51,7 @@ cc_library(
         "-Wno-error=unused-variable",
         "-Wno-error=tautological-constant-out-of-range-compare",
     ],
-    deps = [
+   deps = [
         "//zen/core/base:logging",
         "//zen/core/base:scene",
         "//zen/core/base:transform",
