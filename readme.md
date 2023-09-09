@@ -12,7 +12,7 @@ npm install -g @bazel/buildifier
 
 
 ### Local Requirement
-* install gcc11 g++11
+* local build use clang
 * c++17
 
 ### Debug target

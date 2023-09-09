@@ -139,6 +139,9 @@ void OpenGLAPI::EnableShaderProgram(std::shared_ptr<ShaderProgram> program) {
   glUseProgram(glsl_program->id);
 }
 
+/**
+ *
+ */
 void OpenGLAPI::SetShaderIntParam(std::shared_ptr<ShaderProgram> program,
                                   const std::string& name, const int value) {
   glUniform1i(GetShaderParam(program, name), value);
