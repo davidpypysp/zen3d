@@ -11,14 +11,13 @@ class TextureLoader {
 public:
   TextureLoader();
 
-  std::shared_ptr<Texture> LoadTexture(const std::string &path,
-                                       const TextureType &type,
+  std::shared_ptr<Texture> LoadTexture(const std::string& path,
+                                       const TextureType& type,
                                        std::shared_ptr<GraphicAPI> graphic_api);
 
 private:
-  std::shared_ptr<TextureHandle>
-  LoadTextureFromFile(const char *path,
-                      std::shared_ptr<GraphicAPI> graphic_api);
+  TextureHandle LoadTextureFromFile(const char* path,
+                                    std::shared_ptr<GraphicAPI> graphic_api);
 
   std::vector<std::shared_ptr<Texture>> texture_instances_;
 };

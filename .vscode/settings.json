@@ -91,6 +91,12 @@
 		"future": "cpp",
 		"shared_mutex": "cpp",
 		"valarray": "cpp",
-		"execution": "cpp"
+		"execution": "cpp",
+		"bit": "cpp",
+		"compare": "cpp",
+		"concepts": "cpp",
+		"numbers": "cpp",
+		"semaphore": "cpp",
+		"stop_token": "cpp"
 	}
 }

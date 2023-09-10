@@ -31,26 +31,17 @@ void CheckCompileErrors(GLuint shader, std::string type) {
   }
 }
 
-GLint GetShaderParam(std::shared_ptr<ShaderProgram> program,
-                     const std::string& param) {
-  auto glsl_program = std::static_pointer_cast<GLSLShaderProgram>(program);
-  return glGetUniformLocation(glsl_program->id, param.c_str());
+GLint GetShaderParam(ShaderHandle handle, const std::string& param) {
+  return glGetUniformLocation(handle.id, param.c_str());
 }
 
 OpenGLAPI::OpenGLAPI() : GraphicAPI() {}
 
 void OpenGLAPI::Init() { glEnable(GL_DEPTH_TEST); }
 
-std::shared_ptr<ShaderProgram>
-OpenGLAPI::CreateShaderProgram(const std::string& vertex_path,
-                               const std::string& fragment_path,
-                               const std::string& geometry_path) {
-
-  const std::string& shader_hash =
-      vertex_path + ":" + fragment_path + ":" + geometry_path;
-  if (shader_programs_.find(shader_hash) != shader_programs_.end()) {
-    return shader_programs_[shader_hash];
-  }
+ShaderHandle OpenGLAPI::CreateShaderProgram(const std::string& vertex_path,
+                                            const std::string& fragment_path,
+                                            const std::string& geometry_path) {
 
   std::string vertex_code;
   std::string fragment_code;
@@ -109,18 +100,21 @@ OpenGLAPI::CreateShaderProgram(const std::string& vertex_path,
     CheckCompileErrors(geometry, "GEOMETRY");
   }
 
-  auto shader_program = std::make_shared<GLSLShaderProgram>();
-  shader_program->name = shader_hash;
+  // TODO: clean this
+  // auto shader = std::make_shared<GLSLShaderProgram>();
+  // shader->name = shader_hash;
+
+  ShaderHandle handle;
 
   // shader Program
-  shader_program->id = glCreateProgram();
-  glAttachShader(shader_program->id, vertex);
-  glAttachShader(shader_program->id, fragment);
+  handle.id = glCreateProgram();
+  glAttachShader(handle.id, vertex);
+  glAttachShader(handle.id, fragment);
   if (!geometry_path.empty()) {
-    glAttachShader(shader_program->id, geometry);
+    glAttachShader(handle.id, geometry);
   }
-  glLinkProgram(shader_program->id);
-  CheckCompileErrors(shader_program->id, "PROGRAM");
+  glLinkProgram(handle.id);
+  CheckCompileErrors(handle.id, "PROGRAM");
   // delete the shaders as they're linked into our program now and no longer
   // necessery
   glDeleteShader(vertex);
@@ -129,46 +123,40 @@ OpenGLAPI::CreateShaderProgram(const std::string& vertex_path,
     glDeleteShader(geometry);
   }
 
-  shader_programs_[shader_hash] = shader_program;
-
-  return std::static_pointer_cast<ShaderProgram>(shader_program);
+  return handle;
 }
 
-void OpenGLAPI::EnableShaderProgram(std::shared_ptr<ShaderProgram> program) {
-  auto glsl_program = std::static_pointer_cast<GLSLShaderProgram>(program);
-  glUseProgram(glsl_program->id);
-}
+void OpenGLAPI::EnableShader(ShaderHandle handle) { glUseProgram(handle.id); }
 
 /**
  *
  */
-void OpenGLAPI::SetShaderIntParam(std::shared_ptr<ShaderProgram> program,
-                                  const std::string& name, const int value) {
-  glUniform1i(GetShaderParam(program, name), value);
+void OpenGLAPI::SetShaderIntParam(ShaderHandle handle, const std::string& name,
+                                  const int value) {
+  glUniform1i(GetShaderParam(handle, name), value);
 }
 
-void OpenGLAPI::SetShaderMat4Param(std::shared_ptr<ShaderProgram> program,
-                                   const std::string& name,
+void OpenGLAPI::SetShaderMat4Param(ShaderHandle handle, const std::string& name,
                                    const math::mat4& mat) {
-  glUniformMatrix4fv(GetShaderParam(program, name), 1, GL_FALSE, &mat[0][0]);
+  glUniformMatrix4fv(GetShaderParam(handle, name), 1, GL_FALSE, &mat[0][0]);
 }
 
-std::shared_ptr<GeometryHandle> OpenGLAPI::CreateGeometryInstanceWithPositions(
+GeometryHandle OpenGLAPI::CreateGeometryInstanceWithPositions(
     const std::vector<math::vec3>& positions,
     const std::vector<unsigned int>& indices) {
-  auto handle = std::make_shared<GLGeometryHandle>();
-  handle->size = indices.size();
+  GeometryHandle handle;
+  handle.vertex_size = indices.size();
 
-  glGenVertexArrays(1, &handle->vao);
-  glGenBuffers(1, &handle->vbo);
-  glGenBuffers(1, &handle->ebo);
+  glGenVertexArrays(1, &handle.vao);
+  glGenBuffers(1, &handle.vbo);
+  glGenBuffers(1, &handle.ebo);
 
-  glBindVertexArray(handle->vao);
-  glBindBuffer(GL_ARRAY_BUFFER, handle->vbo);
+  glBindVertexArray(handle.vao);
+  glBindBuffer(GL_ARRAY_BUFFER, handle.vbo);
   glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(math::vec3),
                &positions[0], GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle->ebo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle.ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
                &indices[0], GL_STATIC_DRAW);
 
@@ -176,25 +164,25 @@ std::shared_ptr<GeometryHandle> OpenGLAPI::CreateGeometryInstanceWithPositions(
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(math::vec3), (void*)0);
 
   glBindVertexArray(0);
-  return std::static_pointer_cast<GeometryHandle>(handle);
+  return handle;
 }
 
-std::shared_ptr<GeometryHandle>
+GeometryHandle
 OpenGLAPI::CreateGeometryInstance(const std::vector<Vertex>& vertices,
                                   const std::vector<unsigned int>& indices) {
-  auto handle = std::make_shared<GLGeometryHandle>();
-  handle->size = indices.size();
+  GeometryHandle handle;
+  handle.vertex_size = indices.size();
 
-  glGenVertexArrays(1, &handle->vao);
-  glGenBuffers(1, &handle->vbo);
-  glGenBuffers(1, &handle->ebo);
+  glGenVertexArrays(1, &handle.vao);
+  glGenBuffers(1, &handle.vbo);
+  glGenBuffers(1, &handle.ebo);
 
-  glBindVertexArray(handle->vao);
-  glBindBuffer(GL_ARRAY_BUFFER, handle->vbo);
+  glBindVertexArray(handle.vao);
+  glBindBuffer(GL_ARRAY_BUFFER, handle.vbo);
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0],
                GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle->ebo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle.ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
                &indices[0], GL_STATIC_DRAW);
 
@@ -216,26 +204,24 @@ OpenGLAPI::CreateGeometryInstance(const std::vector<Vertex>& vertices,
   glEnableVertexAttribArray(4);
   glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                         (void*)offsetof(Vertex, bitangent));
-
   glBindVertexArray(0);
-  return std::static_pointer_cast<GeometryHandle>(handle);
+  return handle;
 }
 
-void OpenGLAPI::DrawMeshInstance(std::shared_ptr<GeometryHandle> handle) {
-  auto gl_vertex_handle = std::static_pointer_cast<GLGeometryHandle>(handle);
-  glBindVertexArray(gl_vertex_handle->vao);
-  glDrawElements(GL_TRIANGLES, gl_vertex_handle->size, GL_UNSIGNED_INT, 0);
+void OpenGLAPI::DrawMeshInstance(GeometryHandle handle) {
+  glBindVertexArray(handle.vao);
+  glDrawElements(GL_TRIANGLES, handle.vertex_size, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
 
-std::shared_ptr<TextureHandle>
-OpenGLAPI::CreateTextureInstance(void* data, const unsigned int width,
-                                 const unsigned int height,
-                                 const TextureFormat format) {
-  auto handle = std::make_shared<GLTextureHandle>();
-  glGenTextures(1, &(handle->id));
+TextureHandle OpenGLAPI::CreateTextureInstance(void* data,
+                                               const unsigned int width,
+                                               const unsigned int height,
+                                               const TextureFormat format) {
+  TextureHandle handle;
+  glGenTextures(1, &(handle.id));
 
-  glBindTexture(GL_TEXTURE_2D, handle->id);
+  glBindTexture(GL_TEXTURE_2D, handle.id);
 
   auto gl_format = texture_map_[format];
 
@@ -252,12 +238,9 @@ OpenGLAPI::CreateTextureInstance(void* data, const unsigned int width,
 }
 
 void OpenGLAPI::EnableTextureUnit(const unsigned int unit,
-                                  std::shared_ptr<TextureHandle> handle) {
+                                  TextureHandle handle) {
   glActiveTexture(GL_TEXTURE0 + unit);
-  if (handle) {
-    auto gl_handle = std::static_pointer_cast<GLTextureHandle>(handle);
-    glBindTexture(GL_TEXTURE_2D, gl_handle->id);
-  }
+  glBindTexture(GL_TEXTURE_2D, handle.id);
 }
 
 } //  namespace zen

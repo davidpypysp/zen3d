@@ -7,7 +7,10 @@ namespace zen {
 /**
  * handle contains graphic texture specific handles
  */
-struct TextureHandle {};
+struct TextureHandle {
+  // TODO: #if on vulkan
+  unsigned int id;
+};
 
 enum TextureFormat { RED, RGB, RGBA };
 
@@ -17,7 +20,7 @@ enum TextureType { DIFFUSE, SPECULAR, NORMAL, HEIGHT };
  * Texture info for constructing rendering data
  */
 struct Texture {
-  std::shared_ptr<TextureHandle> handle;
+  TextureHandle handle;
   TextureType type;
   std::string path;
 };
