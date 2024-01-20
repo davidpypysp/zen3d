@@ -81,10 +81,8 @@ zen_wasm_cc_binary(
     ],
     deps = [
         "//zen/core/renderer",
-        "//zen/core/renderer:cube_geometry",
-        "//zen/core/renderer:mesh_flat_material",
-        "//zen/core/renderer:simple_material",
-        "//zen/core/renderer:triangle_geometry",
+        "//zen/core/renderer:geometry_builder",
+        "//zen/core/renderer:material_builder",
         "//zen/core/utils:wasm_wrapper",
         "//zen/ui/imgui:gui",
     ],

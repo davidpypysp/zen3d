@@ -4,29 +4,30 @@
 
 #include "zen/core/graphic_api/opengl_api.h"
 
-#include "zen/core/renderer/cube_geometry.h"
-#include "zen/core/renderer/mesh_flat_material.h"
-#include "zen/core/renderer/simple_material.h"
-#include "zen/core/renderer/triangle_geometry.h"
+#include "zen/core/renderer/geometry_builder.h"
+#include "zen/core/renderer/material_builder.h"
 
 namespace zen {
 
 class TestBody {
 public:
   TestBody() {
+
+    GeometryBuilder geometry_builder;
+    MaterialBuilder material_builder;
+
+    auto entity = scene.create();
+    scene.emplace<Transform>(entity, math::vec3(0, 0, -5));
+    Material material = material_builder.BuildSimpleMaterial();
+    Geometry geometry = geometry_builder.BuildCubeGeometry();
+    scene.emplace<Mesh>(entity, "mesh", geometry, material);
+
+    camera_entity = scene.create();
+    scene.emplace<Transform>(camera_entity, math::vec3(0, 0, 0));
+    scene.emplace<Camera>(camera_entity, math::vec3(0, 0, 0));
+
     pipeline_ =
         std::make_shared<RenderingPipeline>(std::make_shared<OpenGLAPI>());
-    bool use_cube = true;
-    if (use_cube) {
-      material_ = std::make_shared<MeshFlatMaterial>();
-      geometry_ = std::make_shared<CubeGeometry>();
-    } else {
-      // use triangle and render in 2d without camera
-      material_ = std::make_shared<SimpleMaterial>();
-      geometry_ = std::make_shared<TriangleGeometry>();
-    }
-
-    camera_ = std::make_shared<Camera>(math::vec3(0.0, 0.0, 0.0));
   }
 
   void InitFunc() {
@@ -52,7 +53,7 @@ protected:
 
 } // namespace zen
 
-extern "C" int main(int argc, char **argv) {
+extern "C" int main(int argc, char** argv) {
   zen::TestBody test_body;
   zen::WasmWrapper wasm_manager(
       std::bind(&zen::TestBody::InitFunc, &test_body),
