@@ -29,8 +29,9 @@ struct MeshBasicMaterial : public Material {
     constexpr float kRatio = 3600.0 / 1800.0;
     graphic_api.SetShaderMat4Param(shader->handle, "projection",
                                    camera->GetPerspectiveMatrix(kRatio));
-    graphic_api.SetShaderMat4Param(shader->handle, "view",
-                                   camera->GetViewMatrix());
+    graphic_api.SetShaderMat4Param(
+        shader->handle, "view",
+        camera->GetViewMatrix(camera_transform->WorldPosition()));
 
     // use material
     graphic_api.SetShaderIntParam(shader->handle, "texture_diffuse", 0);
