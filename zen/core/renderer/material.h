@@ -11,7 +11,7 @@ struct Material {
   Shader* shader;
 
   void Enable(GraphicAPI& graphic_api) {
-    graphic_api.EnableShader(shader);
+    graphic_api.EnableShader(shader->handle);
     SetupShaderParams(graphic_api);
   }
 

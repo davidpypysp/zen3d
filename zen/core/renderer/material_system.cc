@@ -2,6 +2,6 @@
 
 namespace zen {
 
-class MaterialSystem {}
+class MaterialSystem {};
 
 } // namespace zen
