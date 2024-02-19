@@ -56,6 +56,7 @@ cc_library(
         "//zen/core/base:scene",
         "//zen/core/base:transform",
         "//zen/core/renderer:mesh",
+        "//zen/core/renderer:material_builder",
         "@tinygltf",
     ],
 )

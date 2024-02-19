@@ -3,30 +3,6 @@ load("//build_defs:wasm.bzl", "zen_wasm_cc_binary")
 package(default_visibility = ["//visibility:public"])
 
 zen_wasm_cc_binary(
-    name = "minimal_rendering_pipeline_demo_wasm",
-    srcs = [
-        "minimal_rendering_pipeline_demo_wasm.cc",
-    ],
-    additional_linker_inputs = [
-        "//:data",
-        "//zen/core/shader:shader",
-    ],
-    linkopts = [
-        "--preload-file data",
-        "--preload-file zen/core/shader",
-    ],
-    deps = [
-        "//zen/core/graphic_api:opengl_api",
-        "//zen/core/renderer:cube_geometry",
-        "//zen/core/renderer:mesh_flat_material",
-        "//zen/core/renderer:rendering_pipeline",
-        "//zen/core/renderer:simple_material",
-        "//zen/core/renderer:triangle_geometry",
-        "//zen/core/utils:wasm_wrapper",
-    ],
-)
-
-zen_wasm_cc_binary(
     name = "minimal_renderer_demo_wasm",
     srcs = [
         "minimal_renderer_demo_wasm.cc",

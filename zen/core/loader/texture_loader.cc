@@ -33,7 +33,7 @@ TextureLoader::LoadTexture(const std::string& path, const TextureType& type,
 TextureHandle
 TextureLoader::LoadTextureFromFile(const char* path,
                                    std::shared_ptr<GraphicAPI> graphic_api) {
-  TextureHandle texture_handle = nullptr;
+  TextureHandle texture_handle;
 
   int width, height, component_num;
   unsigned char* data = stbi_load(path, &width, &height, &component_num, 0);
