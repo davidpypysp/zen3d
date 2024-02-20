@@ -9,7 +9,7 @@ namespace zen {
 struct Geometry {
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
-  std::shared_ptr<GeometryHandle> handle;
+  GeometryHandle handle;
 };
 
 } //  namespace zen

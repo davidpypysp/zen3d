@@ -13,10 +13,10 @@ namespace zen {
 TextureLoader::TextureLoader() { stbi_set_flip_vertically_on_load(true); }
 
 std::shared_ptr<Texture>
-TextureLoader::LoadTexture(const std::string &path, const TextureType &type,
+TextureLoader::LoadTexture(const std::string& path, const TextureType& type,
                            std::shared_ptr<GraphicAPI> graphic_api) {
 
-  for (auto &instance : texture_instances_) {
+  for (auto& instance : texture_instances_) {
     if (path.compare(instance->path) == 0) {
       return instance;
     }
@@ -30,13 +30,13 @@ TextureLoader::LoadTexture(const std::string &path, const TextureType &type,
   return texture;
 };
 
-std::shared_ptr<TextureHandle>
-TextureLoader::LoadTextureFromFile(const char *path,
+TextureHandle
+TextureLoader::LoadTextureFromFile(const char* path,
                                    std::shared_ptr<GraphicAPI> graphic_api) {
-  std::shared_ptr<TextureHandle> texture_handle = nullptr;
+  TextureHandle texture_handle;
 
   int width, height, component_num;
-  unsigned char *data = stbi_load(path, &width, &height, &component_num, 0);
+  unsigned char* data = stbi_load(path, &width, &height, &component_num, 0);
   if (data) {
     TextureFormat format = TextureFormat::RGB;
     if (component_num == 1) {

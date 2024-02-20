@@ -39,6 +39,7 @@ protected:
 
   Assimp::Importer importer_;
   TextureLoader texture_loader_;
+
 };
 
 } // namespace zen

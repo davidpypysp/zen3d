@@ -5,47 +5,46 @@
 
 #include "zen/ui/imgui/gui.h"
 
-#include "zen/core/renderer/cube_geometry.h"
 #include "zen/core/renderer/mesh.h"
-#include "zen/core/renderer/mesh_flat_material.h"
-#include "zen/core/renderer/simple_material.h"
-#include "zen/core/renderer/triangle_geometry.h"
+
+#include "zen/core/renderer/geometry_builder.h"
+#include "zen/core/renderer/material_builder.h"
 
 namespace zen {
 
 class ImguiDemo : public WasmWrapper {
 public:
-  ImguiDemo() {
-    renderer = std::make_shared<Renderer>();
-    scene = std::make_shared<Scene>();
-    gui = std::make_shared<Gui>();
-  }
+  ImguiDemo() {}
 
   void Setup() override {
-    auto material = std::make_shared<MeshFlatMaterial>();
-    auto geometry = std::make_shared<CubeGeometry>();
-    auto mesh = std::make_shared<Mesh>("simpe_mesh", geometry, material);
-    mesh->SetWorldPosition(math::vec3(0, 0, -5));
-    scene->AddNode(mesh);
+    GeometryBuilder geometry_builder;
+    MaterialBuilder material_builder;
 
-    camera = std::make_shared<Camera>(math::vec3(0.0, 0.0, 0.0));
-    scene->AddNode(camera);
-    renderer->Init(scene);
+    auto entity = scene.create();
+    scene.emplace<Transform>(entity, math::vec3(0, 0, -5));
+    Material material = material_builder.BuildSimpleMaterial();
+    Geometry geometry = geometry_builder.BuildCubeGeometry();
+    scene.emplace<Mesh>(entity, "mesh", geometry, material);
 
-    auto gui_store = std::make_shared<GuiStore>();
-    gui_store.scene = scene;
-    gui->Init(gui_store, params_.window);
+    camera_entity = scene.create();
+    scene.emplace<Transform>(camera_entity, math::vec3(0, 0, 0));
+    scene.emplace<Camera>(camera_entity, math::vec3(0, 0, 0));
+
+    renderer.Init(scene);
+
+    auto gui_store = std::make_shared<GuiStore>(scene);
+    gui.Init(gui_store.get(), params_.window);
   }
 
   void Render() override {
-    renderer->Render(scene, camera);
-    gui->Draw();
+    renderer.Render(scene, camera_entity);
+    gui.Draw();
   }
 
-  std::shared_ptr<Gui> gui;
-  std::shared_ptr<Camera> camera;
-  std::shared_ptr<Renderer> renderer;
-  std::shared_ptr<Scene> scene;
+  Gui gui;
+  EntityHandle camera_entity;
+  Renderer renderer;
+  Scene scene;
 };
 
 } // namespace zen

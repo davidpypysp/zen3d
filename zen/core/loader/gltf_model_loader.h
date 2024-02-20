@@ -4,6 +4,7 @@
 
 #include "zen/core/base/scene.h"
 #include "zen/core/renderer/mesh.h"
+#include "zen/core/renderer/material_builder.h"
 
 namespace zen {
 
@@ -41,6 +42,8 @@ public:
 
 protected:
   tinygltf::TinyGLTF loader_;
+
+  MaterialBuilder material_builder_;
 };
 
 } // namespace zen

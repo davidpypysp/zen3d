@@ -23,8 +23,9 @@ void RenderingPipeline::InitMeshes(Scene& scene) {
                                                            geometry.indices);
 
     auto& material = mesh.material;
-    material.shader_program = graphic_api_->CreateShaderProgram(
-        material.vertex_shader_path, material.fragment_shader_path);
+    material.shader->handle = graphic_api_->CreateShaderProgram(
+        material.shader->vertex_shader_path,
+        material.shader->fragment_shader_path);
   }
 }
 
@@ -44,18 +45,18 @@ void RenderingPipeline::PrepareDraw(const Material& material,
                                     const Camera& camera,
                                     const math::mat4& world_transform,
                                     Transform& camera_transform) {
-  graphic_api_->EnableShaderProgram(material.shader_program);
+  graphic_api_->EnableShader(material.shader->handle);
   // material PrepareRender(graphic_api_, camera, world_transform);
 
   // flat mesh material draw
-  graphic_api_->SetShaderMat4Param(material.shader_program, "model",
+  graphic_api_->SetShaderMat4Param(material.shader->handle, "model",
                                    world_transform);
   constexpr float kRatio = 3600.0 / 1800.0;
-  graphic_api_->SetShaderMat4Param(material.shader_program, "projection",
+  graphic_api_->SetShaderMat4Param(material.shader->handle, "projection",
                                    camera.GetPerspectiveMatrix(kRatio));
   const auto& camera_view_matrix =
       camera.GetViewMatrix(camera_transform.WorldPosition());
-  graphic_api_->SetShaderMat4Param(material.shader_program, "view",
+  graphic_api_->SetShaderMat4Param(material.shader->handle, "view",
                                    camera_view_matrix);
 }
 

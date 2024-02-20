@@ -13,8 +13,8 @@ cc_library(
 )
 
 cc_library(
-    name = "shader_program",
-    hdrs = ["shader_program.h"],
+    name = "shader",
+    hdrs = ["shader.h"],
 )
 
 cc_library(
@@ -29,7 +29,7 @@ cc_test(
     name = "shader_program_test",
     srcs = ["shader_program_test.cc"],
     deps = [
-        ":shader_program",
+        ":shader",
         "//zen/libs:gtest_main",
     ],
 )
@@ -39,7 +39,7 @@ cc_library(
     srcs = ["graphic_api.h"],
     deps = [
         ":geometry_handle",
-        ":shader_program",
+        ":shader",
         ":texture",
         ":vertex",
     ],
@@ -58,6 +58,7 @@ cc_library(
 cc_test(
     name = "opengl_api_test",
     srcs = ["opengl_api_test.cc"],
+    linkopts = ["-lGL"],
     deps = [
         ":opengl_api",
         "//zen/libs:gtest_main",

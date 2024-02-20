@@ -43,5 +43,6 @@ python3 debug.py //zen/demo:gltf_model_loader_demo
 
 ## run wasm server with dir and port (requires python3.7)
 ```
+# run this first `bazel build //zen/demo:imgui_demo_wasm`
 python3 wasm_server.py ./bazel-bin/zen/demo/imgui_demo_wasm/ -p 8080
 ```

@@ -32,7 +32,9 @@ cc_library(
     name = "material",
     hdrs = ["material.h"],
     deps = [
-        "//zen/core/graphic_api:shader_program",
+        "//zen/core/graphic_api:shader",
+        "//zen/core/graphic_api:graphic_api",
+        ":camera",
     ],
 )
 
