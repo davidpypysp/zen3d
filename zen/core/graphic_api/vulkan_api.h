@@ -7,11 +7,14 @@
 
 namespace zen {
 
+
+
 class VulkanAPI : public GraphicAPI {
 public:
   VulkanAPI();
 
   void Init() override;
+
 
   ShaderHandle CreateShaderProgram(const std::string& vertex_path,
                                    const std::string& fragment_path,
@@ -44,6 +47,29 @@ public:
 
 protected:
   GLint texture_map_[3] = {GL_RED, GL_RGB, GL_RGBA};
+
+  // Vulkan specific
+  void SetupDebugMessenger();
+
+  void PopulateDebugMessengerCreateInfo(
+      VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+
+  bool CheckValidationLayerSupport();
+
+  void CreateInstance();
+
+  std::vector<const char*> GetRequiredExtensions();
+
+  void Cleanup();
+
+  VkInstance instance_;
+
+  bool enable_validation_layers_ = true;
+
+  const std::vector<const char*> validation_layers_ = {
+      "VK_LAYER_LUNARG_standard_validation"};
+  
+   VkDebugUtilsMessengerEXT debug_messager_;
 };
 
 } //  namespace zen

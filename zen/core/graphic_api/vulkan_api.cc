@@ -4,8 +4,42 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cstring> 
+#include "vulkan_api.h"
 
 namespace zen {
+
+VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+    auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+        return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+    } else {
+        return VK_ERROR_EXTENSION_NOT_PRESENT;
+    }
+}
+
+void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
+    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+        func(instance, debugMessenger, pAllocator);
+    }
+}
+
+static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData) {
+
+    void *userData = pUserData;
+
+
+    std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+    return VK_FALSE;
+}
+
+
+
 
 VulkanAPI::VulkanAPI() : GraphicAPI() {}
 
@@ -24,6 +58,8 @@ void VulkanAPI::Init() {
     glm::vec4 vec;
     auto test = matrix * vec;
 
+    CreateInstance();
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
     }
@@ -31,6 +67,111 @@ void VulkanAPI::Init() {
     glfwDestroyWindow(window);
 
     glfwTerminate();
+}
+
+std::vector<const char*> VulkanAPI::GetRequiredExtensions() {
+    uint32_t glfwExtensionCount = 0;
+    const char** glfwExtensions;
+    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+    std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+    if (enable_validation_layers_) {
+        extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    }
+
+    return extensions;
+}
+
+void VulkanAPI::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
+    createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+    createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+    createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+    createInfo.pfnUserCallback = debugCallback;
+}
+
+void VulkanAPI::SetupDebugMessenger() {
+  if (!enable_validation_layers_) return;
+
+  VkDebugUtilsMessengerCreateInfoEXT createInfo;
+  PopulateDebugMessengerCreateInfo(createInfo);
+
+  if (CreateDebugUtilsMessengerEXT(instance_, &createInfo, nullptr, &debug_messager_) != VK_SUCCESS) {
+      throw std::runtime_error("failed to set up debug messenger!");
+  }
+}
+
+
+bool VulkanAPI::CheckValidationLayerSupport() {
+  uint32_t layerCount;
+  vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+  std::vector<VkLayerProperties> availableLayers(layerCount);
+  vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+  for(const char* layerName : validation_layers_) {
+    bool layerFound = false;
+    for(const auto& layerProperties : availableLayers) {
+      if(strcmp(layerName, layerProperties.layerName) == 0) {
+        layerFound = true;
+        break;
+      }
+    }
+
+    if (!layerFound)
+    {
+      return false;
+    }
+    
+  }
+
+  return true;
+
+}
+
+void VulkanAPI::CreateInstance() {
+  if(enable_validation_layers_ && !CheckValidationLayerSupport()) {
+    throw std::runtime_error("Validation layers requested, but not available!");
+  }
+
+  // appInfo;
+  VkApplicationInfo appInfo{};
+  appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+  appInfo.pApplicationName = "Hello Triangle";
+  appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+  appInfo.pEngineName = "No Engine";
+  appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+  appInfo.apiVersion = VK_API_VERSION_1_0;
+
+  //  createInfo;
+  VkInstanceCreateInfo createInfo{};
+  createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+  createInfo.pApplicationInfo = &appInfo;
+
+  uint32_t glfwExtensionCount = 0;
+  const char** glfwExtensions;
+  glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+  createInfo.enabledExtensionCount = glfwExtensionCount;
+  createInfo.ppEnabledExtensionNames = glfwExtensions;
+  createInfo.enabledLayerCount = 0;
+
+  VkResult result = vkCreateInstance(&createInfo, nullptr, &instance_);
+
+  if(enable_validation_layers_) {
+    createInfo.enabledLayerCount = static_cast<uint32_t>(validation_layers_.size());
+    createInfo.ppEnabledLayerNames = validation_layers_.data();
+  } else {
+    createInfo.enabledLayerCount = 0;
+  }
+}
+
+void VulkanAPI::Cleanup() {
+  if(enable_validation_layers_) {
+    DestroyDebugUtilsMessengerEXT(instance_, debug_messager_, nullptr);
+  }
+  vkDestroyInstance(instance_, nullptr);
 }
 
 ShaderHandle VulkanAPI::CreateShaderProgram(const std::string& vertex_path,
