@@ -3,11 +3,18 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include <optional>
 #include "zen/core/graphic_api/graphic_api.h"
 
 namespace zen {
 
+struct QueueFamilyIndices {
+    std::optional<uint32_t> graphics_family;
 
+    bool IsComplete() {
+        return graphics_family.has_value();
+    }
+};
 
 class VulkanAPI : public GraphicAPI {
 public:
@@ -60,14 +67,18 @@ protected:
 
   std::vector<const char*> GetRequiredExtensions();
 
+  void PickPhysicalDevice();
+
   void Cleanup();
 
   VkInstance instance_;
 
+  VkPhysicalDevice physical_device_ = VK_NULL_HANDLE;
+
   bool enable_validation_layers_ = true;
 
   const std::vector<const char*> validation_layers_ = {
-      "VK_LAYER_LUNARG_standard_validation"};
+      "VK_LAYER_KHRONOS_validation"};
   
    VkDebugUtilsMessengerEXT debug_messager_;
 };

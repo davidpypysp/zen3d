@@ -25,6 +25,37 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
     }
 }
 
+
+QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) {
+    QueueFamilyIndices indices;
+
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+    int i = 0;
+    for (const auto& queueFamily : queueFamilies) {
+        if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+            indices.graphics_family = i;
+        }
+
+        if (indices.IsComplete()) {
+            break;
+        }
+
+        i++;
+    }
+
+    return indices;
+}
+
+bool IsDeviceSuitable(VkPhysicalDevice device) {
+    QueueFamilyIndices indices = FindQueueFamilies(device);
+    return indices.IsComplete();
+}
+
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -74,6 +105,7 @@ std::vector<const char*> VulkanAPI::GetRequiredExtensions() {
     const char** glfwExtensions;
     glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
+
     std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
     if (enable_validation_layers_) {
@@ -100,6 +132,7 @@ void VulkanAPI::SetupDebugMessenger() {
   if (CreateDebugUtilsMessengerEXT(instance_, &createInfo, nullptr, &debug_messager_) != VK_SUCCESS) {
       throw std::runtime_error("failed to set up debug messenger!");
   }
+
 }
 
 
@@ -157,13 +190,41 @@ void VulkanAPI::CreateInstance() {
   createInfo.ppEnabledExtensionNames = glfwExtensions;
   createInfo.enabledLayerCount = 0;
 
-  VkResult result = vkCreateInstance(&createInfo, nullptr, &instance_);
 
   if(enable_validation_layers_) {
     createInfo.enabledLayerCount = static_cast<uint32_t>(validation_layers_.size());
     createInfo.ppEnabledLayerNames = validation_layers_.data();
   } else {
     createInfo.enabledLayerCount = 0;
+  }
+
+  VkResult result = vkCreateInstance(&createInfo, nullptr, &instance_);
+  if(result != VK_SUCCESS) {
+    throw std::runtime_error("failed to create vk instance!");
+  }
+  LOG(Info) << "Create instance success!";
+
+}
+
+void VulkanAPI::PickPhysicalDevice() {
+  uint32_t device_count = 0;
+  vkEnumeratePhysicalDevices(instance_, &device_count, nullptr);
+  if(device_count == 0) {
+    throw std::runtime_error("failed to find GPUs with Vulkan support!");
+  }
+
+  std::vector<VkPhysicalDevice> devices(device_count);
+  vkEnumeratePhysicalDevices(instance_, &device_count, devices.data());
+
+  for (const auto& device : devices) {
+      if (IsDeviceSuitable(device)) {
+          physical_device_ = device;
+          break;
+      }
+  }
+
+  if (physical_device_ == VK_NULL_HANDLE) {
+      throw std::runtime_error("failed to find a suitable GPU!");
   }
 }
 
