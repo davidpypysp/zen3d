@@ -69,11 +69,18 @@ protected:
 
   void PickPhysicalDevice();
 
+  void CreateLogicalDevice();
+
   void Cleanup();
 
   VkInstance instance_;
 
   VkPhysicalDevice physical_device_ = VK_NULL_HANDLE;
+
+  // Logical device
+  VkDevice device_;
+
+  VkQueue graphics_queue_;
 
   bool enable_validation_layers_ = true;
 

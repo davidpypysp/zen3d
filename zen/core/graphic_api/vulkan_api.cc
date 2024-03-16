@@ -70,8 +70,6 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 }
 
 
-
-
 VulkanAPI::VulkanAPI() : GraphicAPI() {}
 
 void VulkanAPI::Init() { 
@@ -228,11 +226,47 @@ void VulkanAPI::PickPhysicalDevice() {
   }
 }
 
+void VulkanAPI::CreateLogicalDevice() {
+  QueueFamilyIndices indices = FindQueueFamilies(physical_device_);
+
+  VkDeviceQueueCreateInfo queue_create_info{};
+  queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+  queue_create_info.queueFamilyIndex = indices.graphics_family.value();
+  queue_create_info.queueCount = 1;
+
+  float queue_priority = 1.0f;
+  queue_create_info.pQueuePriorities = &queue_priority;
+
+  VkPhysicalDeviceFeatures device_features{};
+
+  VkDeviceCreateInfo create_info{};
+  create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+  create_info.pQueueCreateInfos = &queue_create_info;
+  create_info.queueCreateInfoCount = 1;
+
+  create_info.pEnabledFeatures = &device_features;
+  create_info.enabledExtensionCount = 0;
+
+  if (enable_validation_layers_) {
+      create_info.enabledLayerCount = static_cast<uint32_t>(validation_layers_.size());
+      create_info.ppEnabledLayerNames = validation_layers_.data();
+  } else {
+      create_info.enabledLayerCount = 0;
+  }
+
+  if(vkCreateDevice(physical_device_, &create_info, nullptr, &device_) != VK_SUCCESS) {
+    throw std::runtime_error("failed to create logical device!");
+  }
+  vkGetDeviceQueue(device_, indices.graphics_family.value(), 0, &graphics_queue_);
+}
+
 void VulkanAPI::Cleanup() {
   if(enable_validation_layers_) {
     DestroyDebugUtilsMessengerEXT(instance_, debug_messager_, nullptr);
   }
   vkDestroyInstance(instance_, nullptr);
+  vkDestroyDevice(device_, nullptr);
+
 }
 
 ShaderHandle VulkanAPI::CreateShaderProgram(const std::string& vertex_path,
