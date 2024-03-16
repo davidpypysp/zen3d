@@ -10,9 +10,10 @@ namespace zen {
 
 struct QueueFamilyIndices {
     std::optional<uint32_t> graphics_family;
+    std::optional<uint32_t> present_family;
 
     bool IsComplete() {
-        return graphics_family.has_value();
+        return graphics_family.has_value() && present_family.has_value();
     }
 };
 
@@ -63,6 +64,8 @@ protected:
 
   bool CheckValidationLayerSupport();
 
+  void InitWindow();
+
   void CreateInstance();
 
   std::vector<const char*> GetRequiredExtensions();
@@ -70,6 +73,12 @@ protected:
   void PickPhysicalDevice();
 
   void CreateLogicalDevice();
+
+  void CreateSurface();
+
+  QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
+
+  bool IsDeviceSuitable(VkPhysicalDevice device);
 
   void Cleanup();
 
@@ -81,6 +90,12 @@ protected:
   VkDevice device_;
 
   VkQueue graphics_queue_;
+
+  VkQueue present_queue_;
+
+  VkSurfaceKHR surface_;
+
+  GLFWwindow* window_;
 
   bool enable_validation_layers_ = true;
 
