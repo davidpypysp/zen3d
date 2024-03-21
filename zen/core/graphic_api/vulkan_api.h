@@ -3,18 +3,18 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#include <optional>
 #include "zen/core/graphic_api/graphic_api.h"
+#include <optional>
 
 namespace zen {
 
 struct QueueFamilyIndices {
-    std::optional<uint32_t> graphics_family;
-    std::optional<uint32_t> present_family;
+  std::optional<uint32_t> graphics_family;
+  std::optional<uint32_t> present_family;
 
-    bool IsComplete() {
-        return graphics_family.has_value() && present_family.has_value();
-    }
+  bool IsComplete() {
+    return graphics_family.has_value() && present_family.has_value();
+  }
 };
 
 class VulkanAPI : public GraphicAPI {
@@ -22,7 +22,6 @@ public:
   VulkanAPI();
 
   void Init() override;
-
 
   ShaderHandle CreateShaderProgram(const std::string& vertex_path,
                                    const std::string& fragment_path,
@@ -78,6 +77,8 @@ protected:
 
   QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 
+  bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
+
   bool IsDeviceSuitable(VkPhysicalDevice device);
 
   void Cleanup();
@@ -101,8 +102,11 @@ protected:
 
   const std::vector<const char*> validation_layers_ = {
       "VK_LAYER_KHRONOS_validation"};
-  
-   VkDebugUtilsMessengerEXT debug_messager_;
+
+  const std::vector<const char*> device_extensions_ = {
+      VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+  VkDebugUtilsMessengerEXT debug_messager_;
 };
 
 } //  namespace zen

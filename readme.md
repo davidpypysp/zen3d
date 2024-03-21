@@ -41,6 +41,12 @@ python3 debug.py //zen/demo:gltf_model_loader_demo
 ```
 
 
+### clang-format
+```
+sudo apt install clang-format
+```
+
+
 ## run wasm server with dir and port (requires python3.7)
 ```
 # run this first `bazel build //zen/demo:imgui_demo_wasm`
