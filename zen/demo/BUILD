@@ -122,3 +122,19 @@ zen_wasm_cc_binary(
         "//zen/ui/imgui:gui",
     ],
 )
+
+
+cc_binary(
+    name = "vulkan_setup",
+    srcs = ["vulkan_setup.cc"],
+    linkopts = [
+        "-lX11",
+        "-ldl",
+        "-lpthread",
+        "-lglfw",
+    ],
+    deps = [
+        "@glm//:glm",
+        "@rules_vulkan//vulkan:vulkan_cc_library"
+    ],
+)
