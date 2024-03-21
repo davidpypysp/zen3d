@@ -13,7 +13,7 @@ npm install -g @bazel/buildifier
 
 ### Local Requirement
 * local build use clang
-  * ubuntu: `apt install clang` 
+  * ubuntu: `apt install clang`
 * c++17
 * python3
 * glfw
@@ -21,7 +21,7 @@ npm install -g @bazel/buildifier
 
 
 ### Test minimal build
-local gltf_loader 
+local gltf_loader
 ```
 bazel run //zen/demo:gltf_model_loader_demo
 ```
@@ -45,4 +45,15 @@ python3 debug.py //zen/demo:gltf_model_loader_demo
 ```
 # run this first `bazel build //zen/demo:imgui_demo_wasm`
 python3 wasm_server.py ./bazel-bin/zen/demo/imgui_demo_wasm/ -p 8080
+```
+
+
+### Vulkan Dependencies
+
+Ubuntu (https://vulkan-tutorial.com/Development_environment#page_Vulkan-Packages)
+```
+sudo apt install vulkan-tools
+sudo apt install libvulkan-dev
+sudo apt install vulkan-validationlayers-dev spirv-tools
+
 ```
