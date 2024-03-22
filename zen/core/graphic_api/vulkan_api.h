@@ -17,6 +17,12 @@ struct QueueFamilyIndices {
   }
 };
 
+struct SwapChainSupportDetails {
+  VkSurfaceCapabilitiesKHR capabilities;
+  std::vector<VkSurfaceFormatKHR> formats;
+  std::vector<VkPresentModeKHR> present_modes;
+};
+
 class VulkanAPI : public GraphicAPI {
 public:
   VulkanAPI();
@@ -81,6 +87,18 @@ protected:
 
   bool IsDeviceSuitable(VkPhysicalDevice device);
 
+  SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
+
+  VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
+      const std::vector<VkSurfaceFormatKHR>& available_formats);
+
+  VkPresentModeKHR ChooseSwapPresentMode(
+      const std::vector<VkPresentModeKHR>& available_present_modes);
+
+  VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+  void CreateSwapChain();
+
   void Cleanup();
 
   VkInstance instance_;
@@ -95,6 +113,14 @@ protected:
   VkQueue present_queue_;
 
   VkSurfaceKHR surface_;
+
+  VkSwapchainKHR swap_chain_;
+
+  std::vector<VkImage> swap_chain_images_;
+
+  VkFormat swap_chain_image_format_;
+
+  VkExtent2D swap_chain_extent_;
 
   GLFWwindow* window_;
 
