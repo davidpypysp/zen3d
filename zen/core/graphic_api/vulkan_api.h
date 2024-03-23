@@ -99,6 +99,8 @@ protected:
 
   void CreateSwapChain();
 
+  void CreateImageViews();
+
   void Cleanup();
 
   VkInstance instance_;
@@ -121,6 +123,8 @@ protected:
   VkFormat swap_chain_image_format_;
 
   VkExtent2D swap_chain_extent_;
+
+  std::vector<VkImageView> swap_chain_image_views_;
 
   GLFWwindow* window_;
 
