@@ -11,37 +11,34 @@
 namespace zen {
 
 VkResult CreateDebugUtilsMessengerEXT(
-    VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-    const VkAllocationCallbacks* pAllocator,
-    VkDebugUtilsMessengerEXT* pDebugMessenger) {
+    VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* create_info,
+    const VkAllocationCallbacks* allocator,
+    VkDebugUtilsMessengerEXT* debug_messager) {
   auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
       instance, "vkCreateDebugUtilsMessengerEXT");
   if (func != nullptr) {
-    return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+    return func(instance, create_info, allocator, debug_messager);
   } else {
     return VK_ERROR_EXTENSION_NOT_PRESENT;
   }
 }
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance,
-                                   VkDebugUtilsMessengerEXT debugMessenger,
-                                   const VkAllocationCallbacks* pAllocator) {
+                                   VkDebugUtilsMessengerEXT debug_messager,
+                                   const VkAllocationCallbacks* allocator) {
   auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
       instance, "vkDestroyDebugUtilsMessengerEXT");
   if (func != nullptr) {
-    func(instance, debugMessenger, pAllocator);
+    func(instance, debug_messager, allocator);
   }
 }
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL
-debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-              VkDebugUtilsMessageTypeFlagsEXT messageType,
-              const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-              void* pUserData) {
-
-  void* userData = pUserData;
-
-  std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
+              VkDebugUtilsMessageTypeFlagsEXT message_type,
+              const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
+              void* user_data) {
+  std::cerr << "validation layer: " << callback_data->pMessage << std::endl;
   return VK_FALSE;
 }
 
@@ -86,16 +83,17 @@ std::vector<const char*> VulkanAPI::GetRequiredExtensions() {
 QueueFamilyIndices VulkanAPI::FindQueueFamilies(VkPhysicalDevice device) {
   QueueFamilyIndices indices;
 
-  uint32_t queueFamilyCount = 0;
-  vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+  uint32_t queue_family_count = 0;
+  vkGetPhysicalDeviceQueueFamilyProperties(device, &queue_family_count,
+                                           nullptr);
 
-  std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-  vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount,
-                                           queueFamilies.data());
+  std::vector<VkQueueFamilyProperties> queue_families(queue_family_count);
+  vkGetPhysicalDeviceQueueFamilyProperties(device, &queue_family_count,
+                                           queue_families.data());
 
   int i = 0;
-  for (const auto& queueFamily : queueFamilies) {
-    if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+  for (const auto& queue_familiy : queue_families) {
+    if (queue_familiy.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
       indices.graphics_family = i;
     }
 
@@ -339,22 +337,22 @@ void VulkanAPI::SetupDebugMessenger() {
 }
 
 bool VulkanAPI::CheckValidationLayerSupport() {
-  uint32_t layerCount;
-  vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+  uint32_t layer_count;
+  vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
 
-  std::vector<VkLayerProperties> availableLayers(layerCount);
-  vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+  std::vector<VkLayerProperties> available_layers(layer_count);
+  vkEnumerateInstanceLayerProperties(&layer_count, available_layers.data());
 
-  for (const char* layerName : validation_layers_) {
-    bool layerFound = false;
-    for (const auto& layerProperties : availableLayers) {
-      if (strcmp(layerName, layerProperties.layerName) == 0) {
-        layerFound = true;
+  for (const char* layer_name : validation_layers_) {
+    bool layer_found = false;
+    for (const auto& layer_properties : available_layers) {
+      if (strcmp(layer_name, layer_properties.layerName) == 0) {
+        layer_found = true;
         break;
       }
     }
 
-    if (!layerFound) {
+    if (!layer_found) {
       return false;
     }
   }
@@ -367,19 +365,19 @@ void VulkanAPI::CreateInstance() {
     throw std::runtime_error("Validation layers requested, but not available!");
   }
 
-  // appInfo;
-  VkApplicationInfo appInfo{};
-  appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-  appInfo.pApplicationName = "Hello Triangle";
-  appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-  appInfo.pEngineName = "No Engine";
-  appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-  appInfo.apiVersion = VK_API_VERSION_1_0;
+  // app_info;
+  VkApplicationInfo app_info{};
+  app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+  app_info.pApplicationName = "Hello Triangle";
+  app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+  app_info.pEngineName = "No Engine";
+  app_info.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+  app_info.apiVersion = VK_API_VERSION_1_0;
 
   //  create_info;
   VkInstanceCreateInfo create_info{};
   create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-  create_info.pApplicationInfo = &appInfo;
+  create_info.pApplicationInfo = &app_info;
 
   auto extensions = GetRequiredExtensions();
   create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
@@ -478,8 +476,8 @@ void VulkanAPI::CreateSurface() {
 }
 
 void VulkanAPI::Cleanup() {
-  for (auto imageView : swap_chain_image_views_) {
-    vkDestroyImageView(device_, imageView, nullptr);
+  for (auto image_view : swap_chain_image_views_) {
+    vkDestroyImageView(device_, image_view, nullptr);
   }
   vkDestroySwapchainKHR(device_, swap_chain_, nullptr);
   vkDestroyDevice(device_, nullptr);
