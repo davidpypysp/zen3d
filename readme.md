@@ -63,3 +63,15 @@ sudo apt install libvulkan-dev
 sudo apt install vulkan-validationlayers-dev spirv-tools
 
 ```
+
+Install glslc:
+
+- Download linux clang version from https://github.com/google/shaderc/blob/main/downloads.md.
+- Extract `bin/glslc` and copy into `/usr/local/bin`
+
+If met "glslc: /lib/x86_64-linux-gnu/libstdc++.so.6: version `GLIBCXX_3.4.32' not found (required by glslc)":
+```
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt-get update
+sudo apt-get install --only-upgrade libstdc++6
+```
