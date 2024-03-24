@@ -7,3 +7,10 @@ filegroup(
         "*.vert",
     ]),
 )
+
+filegroup(
+    name = "shader_spv",
+    srcs = glob([
+        "*.spv",
+    ]),
+)

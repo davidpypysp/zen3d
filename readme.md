@@ -5,15 +5,17 @@ https://bazel.build/install
 Use npm install bazelisk which contains bazel command
 
 ```
-npm install -g @bazel/bazelisk
+# Contains bazel command
+sudo npm install -g @bazel/bazelisk
 
-npm install -g @bazel/buildifier
+# Contains BUILD file linter
+sudo npm install -g @bazel/buildifier
 ```
 
 
 ### Local Requirement
 * local build use clang
-  * ubuntu: `apt install clang`
+  * ubuntu: `sudo apt install clang`
 * c++17
 * python3
 * glfw

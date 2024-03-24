@@ -71,6 +71,8 @@ protected:
 
   void InitWindow();
 
+  void InitVulkan();
+
   void CreateInstance();
 
   std::vector<const char*> GetRequiredExtensions();
@@ -100,6 +102,10 @@ protected:
   void CreateSwapChain();
 
   void CreateImageViews();
+
+  VkShaderModule CreateShaderModule(const std::vector<char>& code);
+
+  void CreateGraphicsPipeline();
 
   void Cleanup();
 

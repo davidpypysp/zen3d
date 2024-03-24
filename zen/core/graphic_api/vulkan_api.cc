@@ -33,20 +33,38 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance,
   }
 }
 
+static std::vector<char> ReadFile(const std::string& filename) {
+  std::ifstream file(filename, std::ios::ate | std::ios::binary);
+  if (!file.is_open()) {
+    throw std::runtime_error("failed to open file: " + filename);
+  }
+  size_t file_size = (size_t)file.tellg();
+  std::vector<char> buffer(file_size);
+
+  file.seekg(0);
+  file.read(buffer.data(), file_size);
+  file.close();
+
+  return buffer;
+}
+
 static VKAPI_ATTR VkBool32 VKAPI_CALL
-debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
+DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
               VkDebugUtilsMessageTypeFlagsEXT message_type,
               const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
               void* user_data) {
-  std::cerr << "validation layer: " << callback_data->pMessage << std::endl;
+  std::cerr << "Debug validation layer: " << callback_data->pMessage
+            << std::endl;
   return VK_FALSE;
 }
+
+// --------- VulkanAPI ---------
 
 VulkanAPI::VulkanAPI() : GraphicAPI() {}
 
 void VulkanAPI::Init() {
   InitWindow();
-  CreateInstance();
+  InitVulkan();
 
   // TODO: temp main look for testing
   while (!glfwWindowShouldClose(window_)) {
@@ -54,6 +72,17 @@ void VulkanAPI::Init() {
   }
 
   Cleanup();
+}
+
+void VulkanAPI::InitVulkan() {
+  CreateInstance();
+  SetupDebugMessenger();
+  CreateSurface();
+  PickPhysicalDevice();
+  CreateLogicalDevice();
+  CreateSwapChain();
+  CreateImageViews();
+  CreateGraphicsPipeline();
 }
 
 void VulkanAPI::InitWindow() {
@@ -258,8 +287,6 @@ void VulkanAPI::CreateSwapChain() {
     create_info.pQueueFamilyIndices = queue_family_indices;
   } else {
     create_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    create_info.queueFamilyIndexCount = 0;     // Optional
-    create_info.pQueueFamilyIndices = nullptr; // Optional
   }
 
   create_info.preTransform = swap_chain_support.capabilities.currentTransform;
@@ -309,6 +336,51 @@ void VulkanAPI::CreateImageViews() {
   }
 }
 
+void VulkanAPI::CreateGraphicsPipeline() {
+  auto vert_shader_code = ReadFile("zen/core/shader/vk_vert.spv");
+  auto frag_shader_code = ReadFile("zen/core/shader/vk_frag.spv");
+
+  VkShaderModule vert_shader_module = CreateShaderModule(vert_shader_code);
+  VkShaderModule frag_shader_module = CreateShaderModule(frag_shader_code);
+
+  VkPipelineShaderStageCreateInfo vert_shader_stage_info{};
+  vert_shader_stage_info.sType =
+      VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+  vert_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
+  vert_shader_stage_info.module = vert_shader_module;
+  vert_shader_stage_info.pName = "main";
+
+  VkPipelineShaderStageCreateInfo frag_shader_stage_info{};
+  frag_shader_stage_info.sType =
+      VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+  frag_shader_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+  frag_shader_stage_info.module = frag_shader_module;
+  frag_shader_stage_info.pName = "main";
+
+  VkPipelineShaderStageCreateInfo shader_stages[] = {vert_shader_stage_info,
+                                                     frag_shader_stage_info};
+
+  vkDestroyShaderModule(device_, frag_shader_module, nullptr);
+  vkDestroyShaderModule(device_, vert_shader_module, nullptr);
+
+  LOG(Info) << "Create shader module success!";
+}
+
+VkShaderModule VulkanAPI::CreateShaderModule(const std::vector<char>& code) {
+  VkShaderModuleCreateInfo create_info{};
+  create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+  create_info.codeSize = code.size();
+  create_info.pCode = reinterpret_cast<const uint32_t*>(code.data());
+
+  VkShaderModule shader_module;
+  if (vkCreateShaderModule(device_, &create_info, nullptr, &shader_module) !=
+      VK_SUCCESS) {
+    throw std::runtime_error("failed to create shader module!");
+  }
+
+  return shader_module;
+}
+
 void VulkanAPI::PopulateDebugMessengerCreateInfo(
     VkDebugUtilsMessengerCreateInfoEXT& create_info) {
   create_info = {};
@@ -320,7 +392,7 @@ void VulkanAPI::PopulateDebugMessengerCreateInfo(
   create_info.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
                             VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
                             VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-  create_info.pfnUserCallback = debugCallback;
+  create_info.pfnUserCallback = DebugCallback;
 }
 
 void VulkanAPI::SetupDebugMessenger() {
@@ -449,7 +521,9 @@ void VulkanAPI::CreateLogicalDevice() {
   create_info.pQueueCreateInfos = queue_create_infos.data();
 
   create_info.pEnabledFeatures = &device_features;
-  create_info.enabledExtensionCount = 0;
+  create_info.enabledExtensionCount =
+      static_cast<uint32_t>(device_extensions_.size());
+  create_info.ppEnabledExtensionNames = device_extensions_.data();
 
   if (enable_validation_layers_) {
     create_info.enabledLayerCount =

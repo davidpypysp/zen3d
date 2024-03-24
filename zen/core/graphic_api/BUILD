@@ -88,15 +88,32 @@ cc_library(
     deps = [
         ":graphic_api",
         "//zen/core/base:logging",
-        "@rules_vulkan//vulkan:vulkan_cc_library"
+        "@rules_vulkan//vulkan:vulkan_cc_library",
     ],
 )
 
 cc_test(
     name = "vulkan_api_test",
     srcs = ["vulkan_api_test.cc"],
+    data = [
+        "//zen/core/shader:shader_spv",
+    ],
     deps = [
         ":vulkan_api",
         "//zen/libs:gtest_main",
+    ],
+)
+
+cc_binary(
+    name = "vulkan_main",
+    srcs = ["vulkan_main.cc"],
+    linkopts = [
+        "-lX11",
+        "-ldl",
+        "-lpthread",
+        "-lglfw",
+    ],
+    deps = [
+        "@rules_vulkan//vulkan:vulkan_cc_library",
     ],
 )

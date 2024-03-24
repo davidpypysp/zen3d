@@ -5,7 +5,26 @@
             "name": "//zen/demo:gltf_model_loader_demo",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bazel-debug/execroot/zen/bazel-out/k8-dbg/bin/zen/demo/gltf_model_loader_demo",
+            "program": "${workspaceFolder}/bazel-debug/execroot/zen/bazel-out/k8-dbg/bin/zen/core/graphic_api/vulkan_api_test",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "//zen/core/graphic_api:vulkan_api_test",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bazel-debug/execroot/zen/bazel-out/k8-dbg/bin/zen/core/graphic_api/vulkan_api_test",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
