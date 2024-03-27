@@ -130,6 +130,8 @@ protected:
 
   VkExtent2D swap_chain_extent_;
 
+  VkPipelineLayout pipeline_layout_;
+
   std::vector<VkImageView> swap_chain_image_views_;
 
   GLFWwindow* window_;
