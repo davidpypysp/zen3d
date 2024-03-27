@@ -107,6 +107,8 @@ protected:
 
   void CreateGraphicsPipeline();
 
+  void CreateRenderPass();
+
   void Cleanup();
 
   VkInstance instance_;
@@ -131,6 +133,10 @@ protected:
   VkExtent2D swap_chain_extent_;
 
   VkPipelineLayout pipeline_layout_;
+
+  VkRenderPass render_pass_;
+
+  VkPipeline pipeline_;
 
   std::vector<VkImageView> swap_chain_image_views_;
 
