@@ -111,6 +111,13 @@ protected:
 
   void CreateFramebuffers();
 
+  void CreateCommandPool();
+
+  void CreateCommandBuffer();
+
+  void RecordCommandBuffer(VkCommandBuffer command_buffer,
+                           uint32_t image_index);
+
   void Cleanup();
 
   VkInstance instance_;
@@ -143,6 +150,10 @@ protected:
   std::vector<VkImageView> swap_chain_image_views_;
 
   std::vector<VkFramebuffer> swap_chain_framebuffers_;
+
+  VkCommandPool command_pool_;
+
+  VkCommandBuffer command_buffer_;
 
   GLFWwindow* window_;
 
