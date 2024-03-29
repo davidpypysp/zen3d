@@ -109,6 +109,8 @@ protected:
 
   void CreateRenderPass();
 
+  void CreateFramebuffers();
+
   void Cleanup();
 
   VkInstance instance_;
@@ -139,6 +141,8 @@ protected:
   VkPipeline pipeline_;
 
   std::vector<VkImageView> swap_chain_image_views_;
+
+  std::vector<VkFramebuffer> swap_chain_framebuffers_;
 
   GLFWwindow* window_;
 
