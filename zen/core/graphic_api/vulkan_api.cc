@@ -66,12 +66,17 @@ void VulkanAPI::Init() {
   InitWindow();
   InitVulkan();
 
-  // TODO: temp main look for testing
-  while (!glfwWindowShouldClose(window_)) {
-    glfwPollEvents();
-  }
+  MainLoop();
 
   Cleanup();
+}
+
+void VulkanAPI::MainLoop() {
+  while (!glfwWindowShouldClose(window_)) {
+    glfwPollEvents();
+    DrawFrame();
+  }
+  vkDeviceWaitIdle(device_);
 }
 
 void VulkanAPI::InitVulkan() {
@@ -87,6 +92,7 @@ void VulkanAPI::InitVulkan() {
   CreateFramebuffers();
   CreateCommandPool();
   CreateCommandBuffer();
+  CreateSyncObjects();
 }
 
 void VulkanAPI::InitWindow() {
@@ -665,12 +671,12 @@ void VulkanAPI::CreateRenderPass() {
 
   // TODO: this is not in the tutorial
   VkSubpassDependency dependency{};
-  // dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-  // dependency.dstSubpass = 0;
-  // dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-  // dependency.srcAccessMask = 0;
-  // dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-  // dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+  dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+  dependency.dstSubpass = 0;
+  dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+  dependency.srcAccessMask = 0;
+  dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+  dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
   VkRenderPassCreateInfo render_pass_info{};
   render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -678,8 +684,8 @@ void VulkanAPI::CreateRenderPass() {
   render_pass_info.pAttachments = &color_attachment;
   render_pass_info.subpassCount = 1;
   render_pass_info.pSubpasses = &subpass;
-  // render_pass_info.dependencyCount = 1;
-  // render_pass_info.pDependencies = &dependency;
+  render_pass_info.dependencyCount = 1;
+  render_pass_info.pDependencies = &dependency;
 
   if (vkCreateRenderPass(device_, &render_pass_info, nullptr, &render_pass_) !=
       VK_SUCCESS) {
@@ -723,7 +729,77 @@ void VulkanAPI::CreateCommandPool() {
   }
 }
 
+void VulkanAPI::CreateSyncObjects() {
+  VkSemaphoreCreateInfo semaphore_info{};
+  semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+  VkFenceCreateInfo fence_info{};
+  fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+  fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+  if (vkCreateSemaphore(device_, &semaphore_info, nullptr,
+                        &image_available_semaphore_) != VK_SUCCESS ||
+      vkCreateSemaphore(device_, &semaphore_info, nullptr,
+                        &render_finished_semaphore_) != VK_SUCCESS ||
+      vkCreateFence(device_, &fence_info, nullptr, &in_flight_fence_) !=
+          VK_SUCCESS) {
+    throw std::runtime_error(
+        "failed to create synchronization objects for a frame!");
+  }
+}
+
+void VulkanAPI::DrawFrame() {
+  vkWaitForFences(device_, 1, &in_flight_fence_, VK_TRUE, UINT64_MAX);
+  vkResetFences(device_, 1, &in_flight_fence_);
+
+  uint32_t image_index;
+  vkAcquireNextImageKHR(device_, swap_chain_, UINT64_MAX,
+                        image_available_semaphore_, VK_NULL_HANDLE,
+                        &image_index);
+  vkResetCommandBuffer(command_buffer_, 0);
+  RecordCommandBuffer(command_buffer_, image_index);
+
+  VkSubmitInfo submit_info{};
+  submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+  VkSemaphore wait_semaphores[] = {image_available_semaphore_};
+  VkPipelineStageFlags wait_stages[] = {
+      VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+  submit_info.waitSemaphoreCount = 1;
+  submit_info.pWaitSemaphores = wait_semaphores;
+  submit_info.pWaitDstStageMask = wait_stages;
+
+  submit_info.commandBufferCount = 1;
+  submit_info.pCommandBuffers = &command_buffer_;
+
+  VkSemaphore signal_semaphores[] = {render_finished_semaphore_};
+  submit_info.signalSemaphoreCount = 1;
+  submit_info.pSignalSemaphores = signal_semaphores;
+
+  if (vkQueueSubmit(graphics_queue_, 1, &submit_info, in_flight_fence_) !=
+      VK_SUCCESS) {
+    throw std::runtime_error("failed to submit draw command buffer!");
+  }
+
+  VkPresentInfoKHR present_info{};
+  present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+  present_info.waitSemaphoreCount = 1;
+  present_info.pWaitSemaphores = signal_semaphores;
+
+  VkSwapchainKHR swap_chains[] = {swap_chain_};
+  present_info.swapchainCount = 1;
+  present_info.pSwapchains = swap_chains;
+
+  present_info.pImageIndices = &image_index;
+
+  vkQueuePresentKHR(present_queue_, &present_info);
+}
+
 void VulkanAPI::Cleanup() {
+  vkDestroySemaphore(device_, image_available_semaphore_, nullptr);
+  vkDestroySemaphore(device_, render_finished_semaphore_, nullptr);
+  vkDestroyFence(device_, in_flight_fence_, nullptr);
   vkDestroyCommandPool(device_, command_pool_, nullptr);
   for (auto framebuffer : swap_chain_framebuffers_) {
     vkDestroyFramebuffer(device_, framebuffer, nullptr);

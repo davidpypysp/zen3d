@@ -118,6 +118,12 @@ protected:
   void RecordCommandBuffer(VkCommandBuffer command_buffer,
                            uint32_t image_index);
 
+  void CreateSyncObjects();
+
+  void DrawFrame();
+
+  void MainLoop();
+
   void Cleanup();
 
   VkInstance instance_;
@@ -152,8 +158,11 @@ protected:
   std::vector<VkFramebuffer> swap_chain_framebuffers_;
 
   VkCommandPool command_pool_;
-
   VkCommandBuffer command_buffer_;
+
+  VkSemaphore image_available_semaphore_;
+  VkSemaphore render_finished_semaphore_;
+  VkFence in_flight_fence_;
 
   GLFWwindow* window_;
 
