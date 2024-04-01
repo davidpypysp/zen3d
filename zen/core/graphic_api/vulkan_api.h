@@ -71,6 +71,9 @@ protected:
 
   void InitWindow();
 
+  static void FramebufferResizeCallback(GLFWwindow* window, int width,
+                                        int height);
+
   void InitVulkan();
 
   void CreateInstance();
@@ -101,6 +104,10 @@ protected:
 
   void CreateSwapChain();
 
+  void RecreateSwapChain();
+
+  void CleanupSwapChain();
+
   void CreateImageViews();
 
   VkShaderModule CreateShaderModule(const std::vector<char>& code);
@@ -113,7 +120,7 @@ protected:
 
   void CreateCommandPool();
 
-  void CreateCommandBuffer();
+  void CreateCommandBuffers();
 
   void RecordCommandBuffer(VkCommandBuffer command_buffer,
                            uint32_t image_index);
@@ -158,11 +165,15 @@ protected:
   std::vector<VkFramebuffer> swap_chain_framebuffers_;
 
   VkCommandPool command_pool_;
-  VkCommandBuffer command_buffer_;
+  std::vector<VkCommandBuffer> command_buffers_;
 
-  VkSemaphore image_available_semaphore_;
-  VkSemaphore render_finished_semaphore_;
-  VkFence in_flight_fence_;
+  std::vector<VkSemaphore> image_available_semaphores_;
+  std::vector<VkSemaphore> render_finished_semaphores_;
+  std::vector<VkFence> in_flight_fences_;
+
+  uint32_t current_frame_ = 0;
+
+  const int kMaxFramesInFlight = 2;
 
   GLFWwindow* window_;
 
@@ -175,6 +186,8 @@ protected:
       VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
   VkDebugUtilsMessengerEXT debug_messager_;
+
+  bool framebuffer_resized_ = false;
 };
 
 } //  namespace zen
