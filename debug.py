@@ -19,7 +19,7 @@ def get_target_path(target: str):
 
 def generate_debug_config(target: str):
      return {
-        "name": "//zen/demo:gltf_model_loader_demo",
+        "name": target,
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/" + DEBUG_FOLDER + "/execroot/zen/bazel-out/k8-dbg/bin/" + get_target_path(target),
