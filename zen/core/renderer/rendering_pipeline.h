@@ -10,6 +10,10 @@
 
 namespace zen {
 
+/**
+ * @brief Hold graphic_api and render meshes in pipeline.
+ *
+ */
 class RenderingPipeline {
 public:
   RenderingPipeline(std::shared_ptr<GraphicAPI> graphic_api);
