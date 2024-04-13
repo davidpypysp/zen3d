@@ -77,3 +77,8 @@ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install --only-upgrade libstdc++6
 ```
+
+Example usages:
+```
+glslc zen/core/shader/vk_shader.vert -o vk_vert.spv
+```

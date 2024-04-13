@@ -6,6 +6,12 @@
 #include "zen/core/graphic_api/graphic_api.h"
 #include <optional>
 
+#include <chrono>
+
+#define GLM_FORCE_RADIANS
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 namespace zen {
 
 struct QueueFamilyIndices {
@@ -47,6 +53,12 @@ struct VulkanAPIVertex {
 
     return attribute_descriptions;
   }
+};
+
+struct UniformBufferObject {
+  alignas(16) glm::mat4 model;
+  alignas(16) glm::mat4 view;
+  alignas(16) glm::mat4 proj;
 };
 
 const std::vector<VulkanAPIVertex> vertices = {
@@ -156,6 +168,8 @@ protected:
 
   void CreateRenderPass();
 
+  void CreateDescriptorSetLayout();
+
   void CreateFramebuffers();
 
   uint32_t FindMemoryType(uint32_t type_filter,
@@ -171,6 +185,12 @@ protected:
 
   void CreateIndexBuffer();
 
+  void CreateUniformBuffers();
+
+  void CreateDescriptorPool();
+
+  void CreateDescriptorSets();
+
   void CreateCommandPool();
 
   void CreateCommandBuffers();
@@ -179,6 +199,8 @@ protected:
                            uint32_t image_index);
 
   void CreateSyncObjects();
+
+  void UpdateUniformBuffer(uint32_t current_image);
 
   void DrawFrame();
 
@@ -211,6 +233,8 @@ protected:
 
   VkRenderPass render_pass_;
 
+  VkDescriptorSetLayout descriptor_set_layout_;
+
   VkPipeline pipeline_;
 
   std::vector<VkImageView> swap_chain_image_views_;
@@ -222,6 +246,13 @@ protected:
   VkDeviceMemory vertex_buffer_memory_;
   VkBuffer index_buffer_;
   VkDeviceMemory index_buffer_memory_;
+
+  std::vector<VkBuffer> uniform_buffers_;
+  std::vector<VkDeviceMemory> uniform_buffers_memory_;
+  std::vector<void*> uniform_buffers_mapped_;
+
+  VkDescriptorPool descriptor_pool_;
+  std::vector<VkDescriptorSet> descriptor_sets_;
 
   std::vector<VkCommandBuffer> command_buffers_;
 
