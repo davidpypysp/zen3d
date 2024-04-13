@@ -37,7 +37,7 @@ struct VulkanAPIVertex {
   }
 
   static std::array<VkVertexInputAttributeDescription, 2>
-  getAttributeDescriptions() {
+  GetAttributeDescriptions() {
     std::array<VkVertexInputAttributeDescription, 2> attribute_descriptions =
         {};
 

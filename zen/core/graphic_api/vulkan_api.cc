@@ -425,8 +425,16 @@ void VulkanAPI::CreateGraphicsPipeline() {
   VkPipelineVertexInputStateCreateInfo vertex_input_info{};
   vertex_input_info.sType =
       VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-  vertex_input_info.vertexBindingDescriptionCount = 0;
-  vertex_input_info.vertexAttributeDescriptionCount = 0;
+
+  auto binding_description = VulkanAPIVertex::GetBindingDescription();
+  auto attribute_descriptions = VulkanAPIVertex::GetAttributeDescriptions();
+
+  vertex_input_info.vertexBindingDescriptionCount = 1;
+  vertex_input_info.vertexAttributeDescriptionCount =
+      static_cast<uint32_t>(attribute_descriptions.size());
+  vertex_input_info.pVertexBindingDescriptions = &binding_description;
+  vertex_input_info.pVertexAttributeDescriptions =
+      attribute_descriptions.data();
 
   VkPipelineInputAssemblyStateCreateInfo input_assembly{};
   input_assembly.sType =
@@ -1049,7 +1057,6 @@ void VulkanAPI::UpdateUniformBuffer(uint32_t current_image) {
 }
 
 void VulkanAPI::DrawFrame() {
-  LOG(Info) << "debug current frame: " << current_frame_;
   vkWaitForFences(device_, 1, &in_flight_fences_[current_frame_], VK_TRUE,
                   UINT64_MAX);
 
