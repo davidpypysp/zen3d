@@ -91,6 +91,8 @@ void VulkanAPI::InitVulkan() {
   CreateGraphicsPipeline();
   CreateFramebuffers();
   CreateCommandPool();
+  CreateVertexBuffer();
+  CreateIndexBuffer();
   CreateCommandBuffers();
   CreateSyncObjects();
 }
@@ -773,6 +775,139 @@ void VulkanAPI::CreateCommandPool() {
   }
 }
 
+uint32_t VulkanAPI::FindMemoryType(uint32_t type_filter,
+                                   VkMemoryPropertyFlags properties) {
+  VkPhysicalDeviceMemoryProperties mem_properties;
+  vkGetPhysicalDeviceMemoryProperties(physical_device_, &mem_properties);
+
+  for (uint32_t i = 0; i < mem_properties.memoryTypeCount; i++) {
+    if ((type_filter & (1 << i)) &&
+        (mem_properties.memoryTypes[i].propertyFlags & properties) ==
+            properties) {
+      return i;
+    }
+  }
+  throw std::runtime_error("failed to find suitable memory type!");
+}
+
+void VulkanAPI::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
+                             VkMemoryPropertyFlags properties, VkBuffer& buffer,
+                             VkDeviceMemory& buffer_memory) {
+  VkBufferCreateInfo buffer_info{};
+  buffer_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+  buffer_info.size = size;
+  buffer_info.usage = usage;
+  buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+  if (vkCreateBuffer(device_, &buffer_info, nullptr, &buffer) != VK_SUCCESS) {
+    throw std::runtime_error("failed to create buffer!");
+  }
+
+  VkMemoryRequirements memory_requirements;
+  vkGetBufferMemoryRequirements(device_, buffer, &memory_requirements);
+
+  VkMemoryAllocateInfo alloc_info{};
+  alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+  alloc_info.allocationSize = memory_requirements.size;
+  alloc_info.memoryTypeIndex =
+      FindMemoryType(memory_requirements.memoryTypeBits, properties);
+
+  if (vkAllocateMemory(device_, &alloc_info, nullptr, &buffer_memory) !=
+      VK_SUCCESS) {
+    throw std::runtime_error("failed to allocate buffer memory!");
+  }
+
+  vkBindBufferMemory(device_, buffer, buffer_memory, 0);
+}
+
+void VulkanAPI::CopyBuffer(VkBuffer src_buffer, VkBuffer dst_buffer,
+                           VkDeviceSize size) {
+
+  VkCommandBufferAllocateInfo alloc_info{};
+  alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+  alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+  alloc_info.commandPool = command_pool_;
+  alloc_info.commandBufferCount = 1;
+
+  VkCommandBuffer command_buffer;
+  vkAllocateCommandBuffers(device_, &alloc_info, &command_buffer);
+
+  VkCommandBufferBeginInfo begin_info{};
+  begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+  begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+  vkBeginCommandBuffer(command_buffer, &begin_info);
+
+  VkBufferCopy copy_region{};
+  copy_region.size = size;
+  vkCmdCopyBuffer(command_buffer, src_buffer, dst_buffer, 1, &copy_region);
+
+  vkEndCommandBuffer(command_buffer);
+
+  VkSubmitInfo submit_info{};
+  submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+  submit_info.commandBufferCount = 1;
+  submit_info.pCommandBuffers = &command_buffer;
+
+  vkQueueSubmit(graphics_queue_, 1, &submit_info, VK_NULL_HANDLE);
+  vkQueueWaitIdle(graphics_queue_);
+
+  vkFreeCommandBuffers(device_, command_pool_, 1, &command_buffer);
+}
+
+void VulkanAPI::CreateVertexBuffer() {
+  VkDeviceSize buffer_size = sizeof(vertices[0]) * vertices.size();
+
+  VkBuffer staging_buffer;
+  VkDeviceMemory staging_buffer_memory;
+  CreateBuffer(buffer_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+                   VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+               staging_buffer, staging_buffer_memory);
+
+  void* data;
+  vkMapMemory(device_, staging_buffer_memory, 0, buffer_size, 0, &data);
+  memcpy(data, vertices.data(), (size_t)buffer_size);
+  vkUnmapMemory(device_, staging_buffer_memory);
+
+  CreateBuffer(buffer_size,
+               VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+                   VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+               VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertex_buffer_,
+               vertex_buffer_memory_);
+
+  CopyBuffer(staging_buffer, vertex_buffer_, buffer_size);
+
+  vkDestroyBuffer(device_, staging_buffer, nullptr);
+  vkFreeMemory(device_, staging_buffer_memory, nullptr);
+}
+
+void VulkanAPI::CreateIndexBuffer() {
+  VkDeviceSize buffer_size = sizeof(indices[0]) * indices.size();
+
+  VkBuffer staging_buffer;
+  VkDeviceMemory staging_buffer_memory;
+  CreateBuffer(buffer_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+                   VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+               staging_buffer, staging_buffer_memory);
+
+  void* data;
+  vkMapMemory(device_, staging_buffer_memory, 0, buffer_size, 0, &data);
+  memcpy(data, indices.data(), (size_t)buffer_size);
+  vkUnmapMemory(device_, staging_buffer_memory);
+
+  CreateBuffer(
+      buffer_size,
+      VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, index_buffer_, index_buffer_memory_);
+
+  CopyBuffer(staging_buffer, index_buffer_, buffer_size);
+
+  vkDestroyBuffer(device_, staging_buffer, nullptr);
+  vkFreeMemory(device_, staging_buffer_memory, nullptr);
+}
+
 void VulkanAPI::CreateSyncObjects() {
   image_available_semaphores_.resize(kMaxFramesInFlight);
   render_finished_semaphores_.resize(kMaxFramesInFlight);
@@ -874,6 +1009,12 @@ void VulkanAPI::Cleanup() {
   vkDestroyPipelineLayout(device_, pipeline_layout_, nullptr);
 
   vkDestroyRenderPass(device_, render_pass_, nullptr);
+
+  vkDestroyBuffer(device_, index_buffer_, nullptr);
+  vkFreeMemory(device_, index_buffer_memory_, nullptr);
+
+  vkDestroyBuffer(device_, vertex_buffer_, nullptr);
+  vkFreeMemory(device_, vertex_buffer_memory_, nullptr);
 
   for (size_t i = 0; i < kMaxFramesInFlight; i++) {
     vkDestroySemaphore(device_, image_available_semaphores_[i], nullptr);

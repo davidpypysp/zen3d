@@ -17,6 +17,46 @@ struct QueueFamilyIndices {
   }
 };
 
+struct VulkanAPIVertex {
+  glm::vec2 pos;
+  glm::vec3 color;
+
+  static VkVertexInputBindingDescription GetBindingDescription() {
+    VkVertexInputBindingDescription binding_description = {};
+    binding_description.binding = 0;
+    binding_description.stride = sizeof(VulkanAPIVertex);
+    binding_description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+    return binding_description;
+  }
+
+  static std::array<VkVertexInputAttributeDescription, 2>
+  getAttributeDescriptions() {
+    std::array<VkVertexInputAttributeDescription, 2> attribute_descriptions =
+        {};
+
+    attribute_descriptions[0].binding = 0;
+    attribute_descriptions[0].location = 0;
+    attribute_descriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+    attribute_descriptions[0].offset = offsetof(VulkanAPIVertex, pos);
+
+    attribute_descriptions[1].binding = 0;
+    attribute_descriptions[1].location = 1;
+    attribute_descriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+    attribute_descriptions[1].offset = offsetof(VulkanAPIVertex, color);
+
+    return attribute_descriptions;
+  }
+};
+
+const std::vector<VulkanAPIVertex> vertices = {
+    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}};
+
+const std::vector<uint16_t> indices = {0, 1, 2, 2, 3, 0};
+
 struct SwapChainSupportDetails {
   VkSurfaceCapabilitiesKHR capabilities;
   std::vector<VkSurfaceFormatKHR> formats;
@@ -118,6 +158,19 @@ protected:
 
   void CreateFramebuffers();
 
+  uint32_t FindMemoryType(uint32_t type_filter,
+                          VkMemoryPropertyFlags properties);
+
+  void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
+                    VkMemoryPropertyFlags properties, VkBuffer& buffer,
+                    VkDeviceMemory& buffer_memory);
+
+  void CopyBuffer(VkBuffer src_buffer, VkBuffer dst_buffer, VkDeviceSize size);
+
+  void CreateVertexBuffer();
+
+  void CreateIndexBuffer();
+
   void CreateCommandPool();
 
   void CreateCommandBuffers();
@@ -165,6 +218,11 @@ protected:
   std::vector<VkFramebuffer> swap_chain_framebuffers_;
 
   VkCommandPool command_pool_;
+  VkBuffer vertex_buffer_;
+  VkDeviceMemory vertex_buffer_memory_;
+  VkBuffer index_buffer_;
+  VkDeviceMemory index_buffer_memory_;
+
   std::vector<VkCommandBuffer> command_buffers_;
 
   std::vector<VkSemaphore> image_available_semaphores_;
