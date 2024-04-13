@@ -80,5 +80,5 @@ sudo apt-get install --only-upgrade libstdc++6
 
 Example usages:
 ```
-glslc zen/core/shader/vk_shader.vert -o vk_vert.spv
+glslc zen/core/shader/vk_shader.vert -o zen/core/shader/vk_vert.spv
 ```

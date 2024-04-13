@@ -66,6 +66,8 @@ void VulkanAPI::Init() {
   InitWindow();
   InitVulkan();
 
+  LOG(Info) << "Init Vulkan success!";
+
   MainLoop();
 
   Cleanup();
@@ -1047,6 +1049,7 @@ void VulkanAPI::UpdateUniformBuffer(uint32_t current_image) {
 }
 
 void VulkanAPI::DrawFrame() {
+  LOG(Info) << "debug current frame: " << current_frame_;
   vkWaitForFences(device_, 1, &in_flight_fences_[current_frame_], VK_TRUE,
                   UINT64_MAX);
 
@@ -1105,7 +1108,7 @@ void VulkanAPI::DrawFrame() {
 
   present_info.pImageIndices = &image_index;
 
-  vkQueuePresentKHR(present_queue_, &present_info);
+  result = vkQueuePresentKHR(present_queue_, &present_info);
 
   if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
       framebuffer_resized_) {
